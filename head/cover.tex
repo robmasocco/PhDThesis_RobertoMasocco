@@ -1,0 +1,49 @@
+% This page has different margin settings
+\newgeometry{
+    inner=2.5cm,  % Inner margin
+    outer=2.5cm,  % Outer margin
+    top=2.5cm,    % Top margin
+    bottom=1.5cm  % Bottom margin
+}
+
+\begin{titlepage}
+
+\pagestyle{empty}
+
+% Title
+\begin{center}
+    \Large{\textbf{\Uni}} \\ \vspace{0.5cm}
+
+    % Logo
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[height=5.5cm]{images/utv_logo.pdf}
+        \end{center}
+    \end{figure}
+
+    \Large{\FACULTY} \\ \vspace{1.5cm}
+    \Large{\COURSE} \\ \vspace{1.25cm}
+    \textbf{\Thesis} \\ \vspace{1.25cm}
+    \LARGE{\TITLE} \\ \vspace{1.5cm}
+
+    \large
+    \begin{tabbing}
+        \textbf{ADVISOR} \= \hspace{9cm} \= \hfill \textbf{CANDIDATE}\\ \\
+        \advisor \>  \> \candidate
+    \end{tabbing}
+    \vspace{0.1cm}
+    \begin{tabbing}
+        \textbf{CO-ADVISOR}
+    \end{tabbing}
+    \begin{tabbing}
+        \coadvisor
+    \end{tabbing}
+
+    \vspace{0.1cm}
+    \vfill
+    \Large{\DATE}
+\end{center}
+
+\end{titlepage}
+
+\restoregeometry

@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%		Thesis Custom Settings
+%
+%		UTV Template
+%		2024
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% *********** Change the header style ***********
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\fancyhead[RE]{\textbf{\leftmark}}
+\fancyhead[LE]{\textbf{\chaptername\ \thechapter\ }}
+\fancyhead[LO]{\textbf{\leftmark}}
+\fancyhead[RO]{\textbf{\chaptername\ \thechapter\ }}
+
+% If you use chapter* instead of chapter use %\chaptermark{Introduction}
+% To do some oher fancy stuff click this link:
+% https://en.wikibooks.org/wiki/LaTeX/Customizing_Page_Headers_and_Footers#Style_customization
+
+% *********** Chemistry Libraries ***********
+\usepackage[version=4]{mhchem}
+\usepackage{chemist}
+\usepackage{chemfig}
+
+% *********** The APA citation style ***********
+\usepackage{csquotes} % needed for biblatex
+\usepackage[backend=biber,style=apa]{biblatex} % uses APA style
+\addbibresource{tail/References.bib}
+
+% Additional library to copy and paste the references in-line (not used here)
+% \usepackage{bibentry}
+% \addbibresource{tail/References.bib}
+% \nobibliography*
+% \bibliography{tail/References.bib}
+
+% *********** Adjusting the footnotes symbols ***********
+% Uncomment only the needed one here XD:
+
+% Option [1]: To only use roman enumeration
+\renewcommand{\thefootnote}{\Roman{footnote}}
+
+% Option [2]: To use Arabic numbering (The default option)
+% \renewcommand{\thefootnote}{\arabic{footnote}} % 
+
+% Option [3]: To symbols instead of numbers (un comment both lines)
+% \usepackage[symbol]{footmisc}
+% \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% Option [4]: To use different styles for normal notes and citations' notes:
+% The source: https://tex.stackexchange.com/questions/408527/differentiate-between-footcite-and-footnote
+% \usepackage{manyfoot}
+% \newfootnote{A}
+% \newcounter{footnoteA}
+% \newcommand{\footnoteA}{%
+% \stepcounter{footnoteA}%
+% \Footnotemark\thefootnoteA \FootnotetextA{}}
+% \renewcommand{\thefootnoteA}{\alph{footnoteA}}

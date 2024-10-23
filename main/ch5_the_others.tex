@@ -1,0 +1,47 @@
+\chapter{The others (\textit{not the movie})}
+\section{Useful stuff for citation}
+\par
+This is to cite stuff in-line \verb*|cite{bla-bla}| $\xrightarrow{}$ \cite{REF:3, REF:1}, but to put citations in brackets should appear something like dis \verb*|autocite{bla-bla}| $\xrightarrow{}$ \autocite{REF:3, REF:1}.
+\par
+Now for brief foot citations we do it like dis by using biblatex package \verb*|footcite{bla-bla}| $\xrightarrow{}$ look down\footcite{REF:1}; for fully-detailed citation we do it like dis \verb*|footfullcite{bla-bla}| $\xrightarrow{}$ look down\footfullcite{REF:1} and another one for fun\footfullcite{REF:3}.
+\par
+To cite the author only we do dis \verb*|citeauthor{bla-bla}| $\xrightarrow{}$ \citeauthor{REF:1}; the only year god only knows why we could use it but here we go \verb*|citeyear{bla-bla}| $\xrightarrow{}$ \citeyear{REF:1}.
+\par
+This is just a normal footnote \footnote{I'm just a normal footnote minding my own business}.
+
+\section{Useful stuff chemical formulae}
+\begin{itemize}
+    \item The first style:\newline~\newline
+\ce{Na2SO4 ->[H2O] Na+ + SO4^2-}
+\ce{(2Na+,SO4^2- ) + (Ba^2+, 2Cl- ) -> BaSO4 v + 2NaCl}
+~\newline~\newline
+\item The second style:\newline~\newline
+\begin{chemmath}
+  Na_{2}SO_{4}
+  \reactrarrow{0pt}{1.5cm}{\ChemForm{H_2O}}{}
+  Na^{+} + SO_{4}^{2-}
+\end{chemmath}
+\begin{chemmath}
+  (2 Na^{+},SO_{4}^{2-}) + (Ba^{2+},2 Cl^{-})
+  \reactrarrow{0pt}{1cm}{}{}
+  BaSO_{4} + 2 NaCl
+\end{chemmath}
+~\newline~\newline
+\item The third style:\newline~\newline
+\schemestart
+\chemfig{Na_2SO_4}
+\arrow{->[\footnotesize\chemfig{H_2O}]}
+\chemfig{Na^+}\+\chemfig{SO_2^{-}}
+\schemestop
+\schemestart
+(2\chemfig{Na^+}, \chemfig{SO_4^{2-}})
+\+
+(\chemfig{Ba^{2+}}, 2\chemfig{Cl^{-}})
+\arrow(.mid east--.mid west)
+\chemname[1pt]{\chemfig{BaSO_4}}{\chemfig{-[,0.75]-[5,.3,,,-stealth]}}\+2\chemfig{NaCl}
+\schemestop
+
+\end{itemize}
+
+\newpage
+just an empty page \dots

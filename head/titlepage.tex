@@ -1,0 +1,53 @@
+% This page has different margin settings
+\newgeometry{
+    inner=2.5cm,  % Inner margin
+    outer=2.5cm,  % Outer margin
+    top=2.5cm,    % Top margin
+    bottom=2.5cm  % Bottom margin
+}
+
+\pagestyle{empty}
+
+% Wide logo
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[height=3.8cm]{images/utv_logo_wide.pdf}
+    \end{center}
+\end{figure}
+
+% Department name
+\begin{center}
+\vspace{1cm}
+\Large\textit{\DEPARTMENT}
+\end{center}
+
+% Title
+\begin{center}
+\vspace{2cm}
+\Large\textbf{\fontsize{30}{30}\selectfont{\TITLE}}\\
+\vspace{1cm}
+\Large\textit{\THESIS}\\
+\vspace{2cm}
+\end{center}
+
+% Names and signatures
+\begin{table}[h]
+\begin{tabular}{lll}
+\textit{Advisor:}	    & \hspace{190pt} &\\
+\textbf{\advisor}	    & \hspace{190pt} & Signature:\line(1,0){120} \vspace{0.5cm}\\
+\textit{Co-advisor:}	& \hspace{190pt} &\\
+\textbf{\coadvisor}	    & \hspace{190pt} & Signature:\line(1,0){120} \vspace{0.5cm}\\
+\textit{Candidate:}	    & \hspace{190pt} &\\
+\textbf{\candidate}	    & \hspace{190pt} & Signature:\line(1,0){120} \vspace{0.5cm}\\ 
+\end{tabular}
+\end{table}
+
+% Footer
+\begin{center} 
+\vspace{4cm}
+\DATE\\
+\Uni, \Faculty\\
+\uniaddress
+\end{center}
+
+\restoregeometry
