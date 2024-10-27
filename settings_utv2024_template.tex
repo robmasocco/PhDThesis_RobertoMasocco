@@ -18,7 +18,7 @@
 \setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
 \setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
 \setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-\setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm 
+\setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
 \setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{0pt}
@@ -92,7 +92,7 @@
 %\renewcommand{\thechapter}{\Roman{chapter}}
 \titleformat{\chapter}[display]  % Type (section,chapter,etc...) to vary,  shape (e.g. display-type)
 	{\normalfont\bfseries\Huge} % Format of the chapter
-	{\gdef\chapterlabel{\thechapter\ }} % The label 
+	{\gdef\chapterlabel{\thechapter\ }} % The label
  	{0pt} % Separation between label and chapter-title
  	  {\begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-8cm] at (current page.north west)
@@ -117,7 +117,7 @@
 \newcommand*\partlabel{}
 \titleformat{\part}[display] % Type (section, chapter, etc.) to vary,  shape (e.g. display-type)
 	{\normalfont\bfseries\Huge} % Format of the part
-	{\gdef\partlabel{\thepart\ }} % The label 
+	{\gdef\partlabel{\thepart\ }} % The label
  	{0pt} % Separation between label and part-title
  	  {\setlength{\unitlength}{20mm}
 	  \addtocounter{myparts}{1}
