@@ -1,0 +1,18 @@
+\chapter{The case of autonomous robots}
+\label{ch:robots}
+\doublespacing
+\vspace{-2.5cm}
+
+The previous \Cref{ch:dua} introduced the Distributed Unified Architecture, the novel framework proposed in this work. Its design and implementation has been described, from the system abstraction layer to the unit template structure. The various features and functionalities of the framework, provided by either existing tools presented in \Cref{ch:tools} or custom-made components, have been described in detail and discussed.
+
+This work is the result of multiple years in the field of autonomous and distributed systems, as stated at the very beginning of this text. The Distributed Unified Architecture is the materialization of multiple attempts and ideas whose goal was to simplify research work involving autonomous systems and control architectures, as well as single developers or small teams in which the author has had the pleasure to work during the same period. Many of the ideas, concepts, and requirements on which DUA is based stemmed from fruitful discussions with colleagues and friends, usually held after a research project was completed, to assess what went well and what could be improved during the development process. This Chapter and the next tell about the fruits of these practical experiences, showing some first applications of the DUA framework and the technologies that it integrates in real-world scenarios.
+
+Although DUA is now a general-purpose framework for distributed systems, its first versions were designed with a single application in mind, which is also the subject of this Chapter: autonomous robotics. As discussed in \Cref{ch:prb,ch:tools}, autonomous robots of today are intrinsically distributed systems, from both the hardware and the software perspectives. DUA was designed to offer a unified approach to the development of such systems, providing a common ground for the integration of heterogeneous components and tools, and enabling the development of complex behaviors and functionalities in a modular and scalable way.
+
+The contents of this Chapter summarize the additional features that the DUA framework provides to the autonomous robotics domain, as well as the first results obtained by applying it and its technologies to a real-world scenario. First, some robotics software packages developed for and integrated into DUA are presented. Then, to provide a concise yet explanatory example of the capabilities of the framework, two software modules developed with DUA are discussed: their design and development process and the challenges it posed were among the main motivations for the creation of the framework. Finally, some preliminary results obtained by applying the technologies and solutions on which DUA is based to real-world scenarios are illustrated.
+
+\section{Robotic software utilities: dua-utils}
+\label{sec:dua-utils}
+With the system abstraction layer and the unit template finalized, a single problem is left to solve. It is of practical nature, and arises only when one starts to use the framework and, in particular, the middleware tools integrated into it for robotics software development, such as ROS 2 which is introduced in \Cref{sec:ros2}.
+
+% Wait for developers to fix/add, distribute with DUA in the meantime
