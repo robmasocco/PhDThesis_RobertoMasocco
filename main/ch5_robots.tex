@@ -154,7 +154,7 @@ Finally, the \texttt{simple\_actionclient} library also provides a method to han
 Internally, the method performs each step by requesting each operation to the server and then synchronously waiting for the response, spinning the node. As the call progresses, the method checks for timeouts and cancels the goal if necessary, handling all possible outcomes and return values. When the return value of this method is accessed, by the way it is designed as a tuple holding the three values discussed above, the caller can immediately determine how the action call went since those three values together encode every possible outcome of the sequence of operations that the method performs. This method is the most powerful and flexible of the library, and is intended to be used in the vast majority of cases where an action is called. The other methods are provided for convenience, and to allow the user to handle each step of the action call lifecycle separately if needed. For more advanced use cases, the original ROS 2 API is again the best choice.
 \begin{center}
 \begin{minipage}[t]{.9\textwidth}
-\begin{lstlisting}[caption={Signature of the \texttt{Client::call\_sync} class method from the \texttt{simple\_actionclient\_cpp} library \cite{masocco_simple_actionclient_nodate}.}, label={lst:callsync}]
+\begin{lstlisting}[caption={Signature of the \texttt{Client::call\_sync} class method from the C++ action client wrapper library \texttt{simple\_actionclient\_cpp} \cite{masocco_simple_actionclient_nodate}.}, label={lst:callsync}]
 std::tuple<bool,rclcpp_action::ResultCode,std::shared_ptr<ActionResultT>>
   call_sync(
     const typename ActionT::Goal & goal_msg,
