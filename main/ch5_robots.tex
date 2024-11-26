@@ -316,4 +316,118 @@ ENV PATH=/opt/Fast-DDS-Gen/scripts:${PATH}
 \end{minipage}
 \end{center}
 
-% Setting up an autonomous drone using these two units, once the SBC has been flashed, is a matter of minutes since the integration issues have all been solved. One only has to create the project repository and add the units to the targets.
+\subsection{zed\_drivers}
+\label{sec:dua_modules_zed_drivers}
+One of the hardest problems that autonomous robots face is that of localization: when a robot is deployed in an environment, which could be either known, partially known or completely unknown, to be able to move it must first know where it is. This information is usually represented as a pose, which is a combination of the robot's position and orientation in the environment. Robots are equipped with sensors, whose variety ranges from inertial measurement units to cameras, LiDARs, and GNSS receivers. These devices provide data that can later be used, either directly or by appropriate post-processing algorithms, to obtain an estimate of the current pose of the robot. Providing a summary of the techniques employed in this field lies beyond the scope of this work, but it is worth mentioning that the most common approach is that of sensor fusion, which consists of combining the data from multiple sensors to obtain a more accurate and reliable estimate of the robot's pose.
+
+Among the many classes of sensors, RGB\footnote{Red-Green-Blue, \emph{i.e.}, cameras that operate in the visible range of the spectrum and produce color image frames.} cameras are one of the most versatile and widely used in robotics. They can range from cheap and lightweight solutions including, \emph{e.g.}, a single optic and producing only a video stream, to more expensive but sophisticated ones that include more optics and can provide additional information, such as depth maps. One of the most famous series of cameras aimed at robotics applications is the ZED series by Stereolabs \cite{stereolabs_stereolabs_nodate}. The ZED cameras are stereoscopic cameras, \emph{i.e.}, they mimic the human eye by housing two identical optics that are separated by a fixed, known distance. The sensors on each optic are synchronized, thus the frames they produce can be used to compute a depth map of the scene that the camera is viewing. This depth map can be then be expressed in a variety of formats, from grayscale images to point clouds, and can be employed in a variety of contexts, from obstacle avoidance to 3D environment mapping. ZED cameras have emerged as a cost-effective solutions also due to their software support offered by Stereolabs: the ZED SDK \cite{stereolabs_zed_nodate} is a complete and versatile software development kit that enables programmers to easily interface with a ZED camera and get its data from a variety of programming languages and environments. One of the most famous disadvantages of working with images in real-time is the high cost in terms of computational power that is demanded to the host system: processing pictures usually requires a lot of memory and CPU power, and the more complex the processing, the more resources are needed. The ZED SDK, however, has been designed to take advantage of Nvidia GPU devices present on the host, being it either a desktop computer or an SBC: thanks to the CUDA parallel computing platform and its many hardware and software optimizations, the internal algorithms of the ZED SDK can run in real-time and produce high-quality results even on low-power SBCs and similar devices. Thanks to this feature, the ZED SDK integrates a positional tracking module that, if activated, provides a real-time estimate of the pose of the camera in the environment, with respect to a reference frame that is placed at the camera's starting position. This estimate is obtained internally by the SDK algorithms by fusing the data from the camera's optics and the IMU.
+
+In the context of a robotics software architecture based on ROS 2, the integration of a sensor like a ZED camera requires the development of a specific module that abstracts it and publishes its data to the ROS network in standard formats. Such a module is usually called, in the ROS world, a \emph{driver node}: note that it is not a device driver in the sense that this term usually implies in the operating systems world, but rather a software module that interfaces with a device and exposes its functionalities to the rest of the software architecture. It is called \emph{driver} because its task is that of driving the device, \emph{i.e.}, of making it work and of providing a clear and consistent interface to the rest of the nodes in the architecture, who should not be concerned with the technicalities of the device itself. The code of the driver node would be based on the SDK of the device itself, if any, which is the ZED SDK in the case of the package discussed in this Section: the \texttt{zed\_drivers} package \cite{masocco_zed_drivers_nodate}.
+
+Like the other software modules discussed so far, \texttt{zed\_drivers} is a DUA unit that contains multiple ROS 2 software packages. The main package is called \texttt{zed\_driver}, and it is the subject of the current discussion. To briefly introduce it, let us first consider the task at hand that the node that this package compiles to has to solve: a ZED camera is a hardware device that must be first opened, specifying a set of configuration parameters for its various functions, then started, and finally its data must be read, processed, and published to the ROS 2 network. This is, in essence, a summary of the structure of the \texttt{zed\_driver} node implemented by the package. At the time of writing, the \texttt{zed\_drivers} unit supports and has been tested with version 4.1 of the ZED SDK and with the ZED Mini and ZED 2i cameras, but the support for newer ZED X series cameras should be ensured by the ZED SDK itself; testing on these newer platforms is planned in the near future.
+
+At startup, the ROS 2 node parses its own parameters, eventually read from a configuration file: these parameters specify many configuration options of the supported functionalities of the camera, ranging from resolution and framerate, to depth sensing mode and depth map size, to IMU sampling rate; providing a full list here would again be outside the scope of this work. The node then initializes the ZED camera, setting it up according to the options that the parameters specified, and starts it. The node then enters a loop where it reads the data produced by the camera: one convenient feature of the ZED SDK is that when a new frame sample is made available to the program, \emph{i.e.}, a new iteration of the loop beings, all the computations belonging to the SDK including those running in GPU have been performed. The data, readily available to be read and used, can be divided in four main categories: RGB frames, depth maps, positional tracking data, and IMU samples. Each of these four sets of data must be processed before it can be published over the ROS 2 network, if anything it has to be copied by the program memory to properly-formatted ROS 2 messages that encode standard sensor data types. This process, especially on low-power devices like SBCs, can be computationally expensive. For this reason, the \texttt{zed\_driver} node runs four parallel threads that handle each kind of data separately at the same time, optimizing the use of system resources to minimize latencies and ensure that the data is published before the camera produces the next frames, so that the node can keep up with the camera's framerate; the IMU thread, in particular, runs at a higher frequency sampling the camera IMU independently of the optics, since it runs at a higher rate. RGB frames must be converted to ROS 2 image messages, depth maps to point cloud messages, positional tracking data to pose messages and transformations, and IMU samples to IMU messages. The node then publishes these messages over appropriate topics.
+
+To summarize the node's capabilities, here are the ZED SDK functionalities that it supports, each with a complete set of configuration options exposed as node parameters:
+\begin{itemize}
+  \item RGB video stream.
+  \item Depth maps and point clouds computation.
+  \item IMU sampling.
+  \item Pose estimation with the positional tracking module.
+  \item Raw camera data logging in SVO file.
+  \item Real-time video stream over the network with NVENC encoding \cite{nvidia_nvidia_nodate-1}.
+\end{itemize}
+To achieve this, the code of the node makes wide use of the ZED SDK C++ API. Coming back to the scope of this work, this means that a compatible installation of the ZED SDK must be present on the host system to which the camera is connected. According to the official documentation, setting it up is easy since it is distributed as a script that first install dependencies and then the SDK itself; this is true, supposing that the system on which the script is run meets a certain set of requirements: it must be a Ubuntu \cite{canonical_ubuntu_nodate} system with some dependencies already in place, and it must have a Nvidia GPU with a version of the CUDA toolkit \cite{nvidia_cuda_nodate-1} installed which is also compatible with the version of the ZED SDK that one is installing. In the case of Jetson SBCs, things get a bit more complex because additional libraries, distributed by Nvidia via the JetPack SDK installation, are required. The \texttt{zed\_drivers} DUA unit automates all these setup steps, making the installation of the ZED SDK and the configuration of the project repository a matter of minutes.
+
+Before delving into two example unit configuration Dockerfiles, please recall that the system environments offered by DUA base units are stable and configured in a way to offer a good set of system packages that are ensured to be compatible with each other. Still, to install an SDK that is distributed as a self-installing script, one must do some level of work on each target to ensure that the installation runs smoothly in a reproducible way, and that it actually results in a usable SDK. This clarifies once more the necessity of a framework like DUA to cut down setup times while doing research and prototyping, and to ensure that the software that is developed is portable and reliable enough that once a prototype is ready for testing, any subsequent issue that arises can be traced back to the software itself and not to its system environment.
+
+For reasons that should be clear at this point, the \texttt{zed\_drivers} unit supports only targets aimed at systems that may have an Nvidia GPU. \Cref{lst:zeddriversjetson5} shows the unit configuration for the \texttt{jetson5} target. In this case, the setup is pretty straightforward: after an initial set of system dependencies that the SDK installer necessarily expects, the ZED SDK installation script is downloaded and executed. Note that, due to a compatibility issue with an Nvidia library, the version that is downloaded supports a higher JetPack version than the one on which the base unit is based: this is one of the many kinds of integration issues that usually happen in this field and that, to be solved, might require many reinstallation or board reflashes. The DUA framework, on the other hand, grants the developer the possibility to make many quick subsequent attempts without the need to reflash the Jetson board each time, by simply modifying the Dockerfile and rebuilding the image. The only critical configuration step is then the creation of a fake \texttt{/etc/nv\_tegra\_release} file that the SDK installer expects to find to correctly identify the system on which it is running, which apperas to be missing in Nvidia JetPack Docker images.
+
+The unit configuration for the \texttt{x86-cudev} target is shown in \Cref{lst:zeddriversx86cudev}: surprisingly, this is more intricate than the one for the Jetson boards. First, due to other incompatibilities with the contents of the official Nvidia image, cuDNN \cite{nvidia_cuda_nodate} and cuBLAS libraries must be upgraded to the latest version, the latter of which even requires a manual installation from the contents of its system package. Then, finally, the ZED SDK can be installed by downloading its installer script and running it, requiring no additional steps.
+
+At the end of this Section, after these units have been discussed as examples of how the DUA framework can help solve integration issues and provide replicable and reliable development environments, it is possible to note that thanks to the contents of these units a working prototype of a complex autonomous system such that of an autonomous drone could be set up in a matter of minutes: first, a DUA project would have to be created, adding the units to it and configuring supported targets as illustrated in \Cref{sec:dua_template_configuration}. Then, the project can be deployed onto a compatible SBC to be installed on the prototype, and what is left to be done is just downloading the base unit image and building the target image on top of it. A development could then also be set up to build and flash the microcontroller firmware. The necessary software modules would then be ready to be built, configured, and run on the SBC, and the prototype could be tested right away.
+
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{lstlisting}[caption={Unit configuration of the \texttt{jetson5} target of the \texttt{zed\_drivers} DUA unit \cite{masocco_zed_drivers_nodate} as of November 26, 2024.}, label={lst:zeddriversjetson5}]
+# zed_drivers START #
+# Install ZED SDK dependencies
+# (Nvidia stuff should already be installed in the base unit)
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+  apt-transport-https \
+  udev \
+  zstd && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install the ZED SDK
+# We currently support version 4.1
+# Do some more black magic here to enable streaming features
+# on Jetson inside a container.
+# The syntax for the echo is:
+# R${L4T_MAJOR_VERSION} (release), \
+#   REVISION: ${L4T_MINOR_VERSION}.${L4T_PATCH_VERSION}
+# NOTE: We install an SDK version for a newer version of JetPack
+# than that of this base image, due to an incompatibility with the
+# deprecated libnvbuf.
+RUN echo "# R35 (release), REVISION: 2.1" > /etc/nv_tegra_release && \
+  wget --no-check-certificate -nc -O zed_sdk.run \
+  https://download.stereolabs.com/zedsdk/4.1/l4t35.4/jetsons && \
+  chmod +x zed_sdk.run && \
+  ./zed_sdk.run -- silent skip_python && \
+  rm zed_sdk.run && \
+  ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 \
+  /usr/lib/aarch64-linux-gnu/libv4l2.so && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/* && \
+  chgrp -R internal /usr/local/zed && \
+  chmod -R g+rwx /usr/local/zed
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/zed/lib
+ENV LOGNAME=neo
+# zed_drivers END #
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{lstlisting}[caption={Unit configuration of the \texttt{x86-cudev} target of the \texttt{zed\_drivers} DUA unit \cite{masocco_zed_drivers_nodate} as of November 26, 2024.}, label={lst:zeddriversx86cudev}]
+# zed_drivers START #
+# Install ZED SDK dependencies
+# NOTE: Here we require an upgrade to make sure
+# we have the latest Nvidia libraries.
+RUN apt-get update && apt-get install -y \
+  --no-install-recommends --allow-change-held-packages \
+  libcudnn8 \
+  libcudnn8-dev \
+  zstd && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install libcublas-12-0 libraries manually
+# to fix some incompatibilities in ZED SDK dependencies
+WORKDIR /tmp
+RUN apt-get update && \
+  apt-get download libcublas-12-0 && \
+  mkdir contents && \
+  dpkg-deb -xv libcublas-12-0_12.0.2.224-1_amd64.deb contents/ && \
+  mv contents/usr/local/cuda-12.0/targets/x86_64-linux/lib/* \
+  /usr/local/cuda/lib64/ && \
+  rm -rf contents libcublas-12-0_12.0.2.224-1_amd64.deb && \
+  ldconfig && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+WORKDIR /root
+
+# Install the ZED SDK
+# We currently support version 4.1
+RUN wget -nc -O zed_sdk.run \
+  https://download.stereolabs.com/zedsdk/4.1/cu118/ubuntu22 && \
+  chmod +x zed_sdk.run && \
+  ./zed_sdk.run -- silent skip_python && \
+  rm zed_sdk.run && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/* && \
+  chgrp -R internal /usr/local/zed && \
+  chmod -R g+rwx /usr/local/zed
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/zed/lib
+# zed_drivers END #
+\end{lstlisting}
+\end{minipage}
+\end{center}
