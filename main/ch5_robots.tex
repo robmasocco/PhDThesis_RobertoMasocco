@@ -244,7 +244,7 @@ The flight management unit (FMU) is usually capable of passing all the necessary
 
 The \texttt{flight\_stack} repository contains five ROS 2 packages, the main three of which are called \texttt{px4\_msgs}, \texttt{micrortps\_agent}, and \texttt{flight\_control}. Its current design is based on the PX4 firmware version v1.13.3, with which it is compatible, and has been derived first by forking packages with the same name originally maintained by a part of the PX4 development community. At the time of writing the 1.13.3 is not the most up-to-date version of the PX4 firmware, but it is the one that the author has used in the most recent projects; updates of the supported firmware and subsequently to the \texttt{flight\_stack} are planned in the near future.
 
-The \texttt{px4\_msgs} package comes first since it contains a set of message definitions that are used to communicate with the FMU in both directions. These definitions are crucial, since they correspond both in terms of fields and data types with the data packets that the modules of the PX4 firmware exchange internally among themselves. Thanks to this similarity, a module of the PX4 firmware easily serializes and deserializes packets coming from a serial UART link that connects the FMU with the companion computer. This module is called the \texttt{micrortps\_client}, and it is one of the real-time tasks of PX4; its peculiarity is that it follows the same real-time data transmission protocol that is implemented as part of the DDS standard presented in \Cref{sec:dds}. The other end of this communication is a task that runs on the companion computer, implemented as a ROS 2 node in the \texttt{micrortps\_agent} package. The operational task that this node performs is that of managing the serial interface connected to the FMU and interfacing it with the ROS 2 domain. For every different function of the PX4 firmware, there is a dedicated message type and a dedicated ROS 2 topic that the FMU either publishes or subscribes to. To make this possible, the \texttt{micrortps\_agent} node publishes or subscribes to the same ROS 2 topics that it offers as communication interfaces towards the FMU to other ROS 2 nodes running on the companion computer, handling FMU data serialization and deserialization.
+The \texttt{px4\_msgs} package comes first since it contains a set of message definitions that are used to communicate with the FMU in both directions. These definitions are crucial, since they correspond both in terms of fields and data types with the data packets that the modules of the PX4 firmware exchange internally among themselves. Thanks to this similarity, a module of the PX4 firmware easily serializes and deserializes packets coming from a serial UART link that connects the FMU with the companion computer. This module is called the \texttt{micrortps\_client}, and it is one of the real-time tasks of PX4; its peculiarity is that it follows the same real-time data transmission protocol that is implemented as part of the DDS standard presented in \Cref{sec:dds}. The other end of this communication is a task that runs on the companion computer, implemented as a ROS 2 node in the \texttt{micrortps\_agent} package. The operational task that this node performs is that of managing the serial interface connected to the FMU and interfacing it with the ROS 2 domain. For every different function of the PX4 firmware, there is a dedicated pair of message type and ROS 2 topic that the FMU either publishes or subscribes to. To make this possible, the \texttt{micrortps\_agent} node publishes or subscribes to the same ROS 2 topics that it offers as communication interfaces towards the FMU to other ROS 2 nodes running on the companion computer, handling FMU data serialization and deserialization as well as managing the serial UART link. To efficiently interface itself with the physical layer, as well as with ROS 2, the \texttt{micrortps\_agent} makes use of both ROS 2 RMW and bare DDS APIs at the same time, the latter of which are provided by the eProsima Fast DDS implementation \cite{eprosima_fast_nodate}.
 
 Having available a set of ROS 2 topics that expose all the functionalities of the PX4 firmware solves only the first half of the problem: abstracting the serial communication link and its technicalities, like message queueing and flow control, translating it into a set of publish-subscribe communication primitives. What remains to be addressed is the abstraction of the whole drone, offering to the higher layers of the control architecture only a set of communication primitives which may even be more sophisticated than simple message topics, but still hide a lot of complications concerning the execution of elementary tasks that the drone must perform such as, \emph{e.g.}, takeoff and movement. This is the purpose of the \texttt{flight\_control} package, which is the core of the \texttt{flight\_stack} DUA unit.
 
@@ -268,3 +268,52 @@ More complex functions are implemented using services and actions, that other no
   \item FMU reboot.
 \end{itemize}
 For each of these functions, the \texttt{flight\_control} action and service servers exchange data with specific topics handled by the \texttt{micrortps\_agent}, gathering feedback and handling all possible outcomes and error conditions. The node also internally keeps track of the current operational state of the drone, \emph{e.g.}, if it is armed or not, to allow every client to request only the operations that are possible in the current state. The \texttt{flight\_control} node is also in charge of handling the synchronization of the requests that it receives, to avoid that multiple clients request conflicting operations at the same time, and to ensure that the drone is always in a consistent state.
+
+The relevant portion of the \texttt{flight\_stack} within the context of this work is its configuration as a DUA unit. It currently supports, and has been tested with, multiple targets ranging from SBC ones such as \texttt{jetson5}, to development ones such as \texttt{x86-cudev}. The unit configuration section of the Dockerfile for the \texttt{jetson5} target, intended for Nvidia Jetson SBCs presented in \Cref{sec:dua_supported_platforms_sbc}, is shown in \Cref{lst:flightstack}. Since no firmware development must be performed on the SBC that is to be installed on the drone, the only configurations required concern the dependencies that are necessary for the \texttt{micrortps\_agent} to work. These include some Python packages, as well as an installation of the Fast-DDS-Gen tool by eProsima \cite{eprosima_fast-dds-gen_nodate}: this is required to generate IDL files that define messages for both the ROS and the serial side of the communications that the \texttt{micrortps\_agent} must handle, since IDL definitions used for the serial link hold the same data types and fields but use different padding and serialization techniques to reduce the size of the packets that are sent over the link. Other SBC-oriented targets in the repository are configured in a similar way.
+
+Development targets must add to the aforementioned dependencies additional setup steps that configure what is required to build the PX4 firmware. For reference, \Cref{lst:flightstackdev} in \Cref{app:units} reports the unit configuration of the \texttt{x86-cudev} target. Alongside the same steps performed in SBC targets, more dependencies are installed which are necessary to build the NuttX RTOS \cite{apache_software_foundation_apache_nodate}, which is the preferred real-time operating system to run the PX4 firmware on Pixhawk boards. Furthermore, since a cross-compiler is required to build the firmware in an x86 environment, version 9 of GCC \cite{free_software_foundation_gcc_nodate} for ARM is downloaded and decompressed. Finally, version 2.10.1 of eProsima Fast DDS and its dependencies are downloaded and built from source, to provide support for the compilation of the PX4-side of the communication protocol that the \texttt{micrortps\_agent} handles.
+
+The \texttt{flight\_stack} DUA unit is a clear example of how DUA can be used to solve the integration issues that arise when developing software for autonomous systems. Focusing in to the development targets, the initial dependencies are easily installed since they are distributed as packages for the system package manager, and thus may be made part of the host system installation. The latter tools, however, must be built from source and then installed system-wide, a process that may only be scripted at best. In contrast, DUA automates these integration and setup steps in a way that is transparent to the developer who, to use this unit, only needs to add it configuring their project targets as described in \Cref{sec:dua_template_configuration}. Furthermore, all these setup steps assume that the Linux distribution being employed is Ubuntu \cite{canonical_ubuntu_nodate}, which is the case inside DUA containers but may not be so on the host system.
+
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{lstlisting}[caption={Unit configuration of the \texttt{jetson5} target of the \texttt{flight\_stack} DUA unit \cite{masocco_flight_stack_nodate} as of November 26, 2024.}, label={lst:flightstack}]
+# flight_stack START #
+# Install PX4 general dependencies required by microRTPS Bridge
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  astyle \
+  libxml2-dev \
+  libgstreamer-plugins-base1.0-dev \
+  rsync && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install PX4 Python dependencies required by microRTPS Bridge
+RUN . /opt/dua-venv/bin/activate && yes | pip3 install -U \
+  future \
+  jinja2>=2.8 \
+  jsonschema \
+  kconfiglib \
+  lxml \
+  psutil \
+  pygments \
+  pymavlink \
+  pyulog
+
+# Build and install Fast-DDS-Gen (required by microRTPS Bridge)
+WORKDIR /opt
+RUN git clone --recursive --single-branch --branch 'v2.4.0' \
+  https://github.com/eProsima/Fast-DDS-Gen.git && \
+  cd Fast-DDS-Gen && \
+  ./gradlew assemble && \
+  ln -s /opt/Fast-DDS-Gen/scripts/fastddsgen scripts/fastrtpsgen && \
+  cd .. && \
+  chgrp -R internal Fast-DDS-Gen && \
+  chmod -R g+rw Fast-DDS-Gen
+WORKDIR /root
+ENV PATH=/opt/Fast-DDS-Gen/scripts:${PATH}
+# flight_stack END #
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+% Setting up an autonomous drone using these two units, once the SBC has been flashed, is a matter of minutes since the integration issues have all been solved. One only has to create the project repository and add the units to the targets.
