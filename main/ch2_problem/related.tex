@@ -50,21 +50,21 @@ Finally, a MARTe2-based architecture is usually divided in one or more applicati
     \hline
     & \textbf{Modularity} & \textbf{Development} & \textbf{Abstraction} & \textbf{Overhead} \\
     \hline
-    \textbf{RoboStack} & \checkmark & & & \checkmark \\
+    \textbf{RoboStack} & \checkmark & \xmark & \plusmark & \checkmark \\
     \hline
-    \textbf{Vulcanexus} & & \checkmark & & \checkmark \\
+    \textbf{Vulcanexus} & \xmark & \plusmark & \plusmark & \checkmark \\
     \hline
-    \textbf{EPICS} & \checkmark & \checkmark & & \checkmark \\
+    \textbf{EPICS} & \checkmark & \checkmark & \xmark & \checkmark \\
     \hline
-    \textbf{BlockNet} & \checkmark & \checkmark & \checkmark & \\
+    \textbf{BlockNet} & \checkmark & \plusmark & \plusmark & \xmark \\
     \hline
-    \textbf{F Prime} & \checkmark & \checkmark & \checkmark & \\
+    \textbf{F Prime} & \checkmark & \plusmark & \plusmark & \checkmark \\
     \hline
-    \textbf{MARTe2} & \checkmark & \checkmark & \checkmark & \\
+    \textbf{MARTe2} & \checkmark & \plusmark & \plusmark & \checkmark \\
     \hline
     \textbf{DUA} & & & & \\
     \hline
   \end{tabular}
-  \caption{Comparison of the solutions presented in \Cref{sec:prb_related_work} with respect to the requirements listed in \Cref{sec:prb_requirements}; is DUA, the framework presented later on in this work, going to meet them?}
+  \caption{Comparison of the solutions presented in \Cref{sec:prb_related_work} with respect to the requirements listed in \Cref{sec:prb_requirements}; ``\checkmark'' denotes a completely satisfied requirement, ``\plusmark'' indicates that the solutions provided do not fully satisfy a requirement, and ``\xmark'' marks an unsatisfied requirement. Is DUA, the framework presented later on in this work, going to meet them?}
   \label{tab:related_work}
 \end{table}

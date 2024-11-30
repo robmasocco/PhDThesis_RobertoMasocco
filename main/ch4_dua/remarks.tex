@@ -1,0 +1,35 @@
+\section{Remarks}
+\label{sec:dua_remarks}
+
+Recalling \Cref{tab:related_work}, it is now possible to compare DUA against the other frameworks presented in \Cref{sec:prb_related_work}. The comparison is summarized in \Cref{tab:related_work_dua}.
+
+As one can see, the Modularity (M) requirement is satisfied by almost all frameworks. This is a common feature of modern software engineering practices, and in the context of distributed and autonomous systems it clearly improves the development process and the overall system maintainability. The Overhead (O) requirement is also satisfied by most of the frameworks, which is a good indicator of the efficiency of the solutions presented, including DUA. Using the same framework for both development and deployment is clearly a good intention, thus the overhead that it introduces should be minimal.
+
+DUA is the only framework to completely satisfy the Abstraction (A) requirement. This is a key feature of DUA, as it allows the developer to focus on the high-level aspects of the system, while the framework takes care of the low-level details. This is a clear advantage of DUA over the other frameworks, as the developer who uses it can focus on the functionality of the system, rather than on the system configuration. The key feature of the implementation of DUA that allows this is the use of the base units discussed in \Cref{sec:dua_foundation}.
+
+The only requirement that DUA does not fully satisfy is the Development (D) requirement, which is also an issue for other frameworks. Because of how the requirement is stated, there are a lot of aspects that may be considered while evaluating it. The issue that DUA still does not solve is that of facilitating testing and debugging processes: the system abstraction layer of \texttt{dua-foundation} does a great job at simplifying the development process over different platforms, but it does nothing to help the developer while testing their modules among the many different targets on which they may run. Moreover, there is currently no support for cross-compilation or network-based debugging, which would be a great addition to the framework. These aspects have been identified as future work for DUA, and will definitely be addressed in subsequent versions of the framework, but for now have been overlooked due to time constraints during the development of this work.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    & \textbf{Modularity} & \textbf{Development} & \textbf{Abstraction} & \textbf{Overhead} \\
+    \hline
+    \textbf{RoboStack} & \checkmark & \xmark & \plusmark & \checkmark \\
+    \hline
+    \textbf{Vulcanexus} & \xmark & \plusmark & \plusmark & \checkmark \\
+    \hline
+    \textbf{EPICS} & \checkmark & \checkmark & \xmark & \checkmark \\
+    \hline
+    \textbf{BlockNet} & \checkmark & \plusmark & \plusmark & \xmark \\
+    \hline
+    \textbf{F Prime} & \checkmark & \plusmark & \plusmark & \checkmark \\
+    \hline
+    \textbf{MARTe2} & \checkmark & \plusmark & \plusmark & \checkmark \\
+    \hline
+    \textbf{DUA} & \checkmark & \plusmark & \checkmark & \checkmark \\
+    \hline
+  \end{tabular}
+  \caption{Comparison of DUA against the solutions presented in \Cref{sec:prb_related_work}, with respect to the requirements listed in \Cref{sec:prb_requirements}; ``\checkmark'' denotes a completely satisfied requirement, ``\plusmark'' indicates that the solutions provided do not fully satisfy a requirement, and ``\xmark'' marks an unsatisfied requirement.}
+  \label{tab:related_work_dua}
+\end{table}
