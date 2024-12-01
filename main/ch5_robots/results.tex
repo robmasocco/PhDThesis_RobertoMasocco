@@ -87,7 +87,7 @@ Valid corridors result in edge insertion with costs equal to the Euclidean dista
 
 \subsubsection{Supervision}
 \label{sec:robots_results_paperdrone2021_supervision}
-The software architecture culminates in a finite-state machine that implements high-level supervision logic. This FSM presents the drone as an automaton executing complete missions within the Leonardo Drone Contest parameters while managing contingencies such as hardware failures, battery depletion, and localization system degradation or complete failure. State transitions trigger formulation of requests to subordinate modules, with transitions conditioned upon both current state and intervening events.
+The top level of the software architecture is a finite-state machine that implements high-level supervision logic. This FSM presents the drone as an automaton executing complete missions within the Leonardo Drone Contest parameters while managing contingencies such as hardware failures, battery depletion, and localization system degradation or complete failure. State transitions trigger formulation of requests to subordinate modules, with transitions conditioned upon both current state and intervening events.
 
 The implementation integrates with the distributed architecture through a \ROS node that facilitates bidirectional communication with other modules via service calls and alert reception. System initialization comprises a comprehensive status verification of all modules through \ROS middleware APIs; mission execution begins only upon confirmation of full operational readiness across all subsystems.
 
@@ -107,7 +107,84 @@ The structure of the FSM mirrors mission dynamics as specified in the Contest ru
 
 \subsubsection{Experimental results}
 \label{sec:robots_results_paperdrone2021_results}
+The system hereby described has been tested, in both its single parts and its operational capabilities as a whole, also to evaluate the robustness of the proposed FSM. Due to limited space available in the University facilities, laboratory tests allowed to perform partial evaluations, especially regarding the possible outcomes of the various phases of the mission. The complete verification of the functioning of all the modules and the FSM was performed during the 2021 Leonardo Drone Contest.
 
+The first tests performed in the laboratory were aimed at assessing the capabilities of the VSLAM algorithm implementation. Performance evaluation of the custom implementation was conducted in an indoor office environment under variable illumination conditions to assess trajectory estimation accuracy. The evaluation methodology compared the estimated trajectory against ground truth measurements. Due to limitations in acquiring continuous ground truth data, the assessment utilized five discrete reference points measured using a laser sensor with a precision of $\pm$\SI{2}{\milli\meter}. The experimental hardware matched that of the UAS prototype as detailed previously. \Cref{fig:ldc21orb2validation} presents the experiment, depicting the ORB-SLAM2 estimated trajectory alongside the reference trajectory and ground truth waypoints where Root Mean Square Error (RMSE) calculations were performed. \Cref{tab:ldc21orb2validation} quantifies the RMSE between ORB-SLAM2 estimated positions and corresponding ground truth measurements at the five reference waypoints. The analysis demonstrates that ORB-SLAM2 maintains functional performance on this novel platform architecture, despite its intrinsic differences from the original target platform, while indicating potential areas for further optimization.
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch5/ldc21_orb2_validation.pdf}
+  \caption{VSLAM algorithm performance evaluation test.}
+  \label{fig:ldc21orb2validation}
+\end{figure}
+\begin{table}[t]
+	\centering
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Waypoint position (x, y) [m]} & \textbf{ORB-SLAM2 position (x, y) [m]} \\[0.5ex]
+		\hline
+		\begin{tabular}{c @{\hspace{0.5\tabcolsep}} c}
+			(4.788,  & 7.901)  \\
+			(7.826,  & 8.501)  \\
+			(12.986, & 10.626) \\
+			(2.053,  & 5.634)  \\
+			(2.053,  & 1.676)  \\
+		\end{tabular}    &
+		\begin{tabular}{c @{\hspace{0.5\tabcolsep}} c}
+			(4.718,  & 8.158)  \\
+			(7.925,  & 8.871)  \\
+			(13.329, & 11.146) \\
+			(1.980,  & 5.729)  \\
+			(2.034,  & 1.665)  \\
+		\end{tabular}  \\
+		\hline
+		\textbf{RMSE} & 0.352~m  \\
+		\hline
+	\end{tabular}
+	\caption{RMSE between the ORB-SLAM2 estimated trajectory and the ground truth waypoints.}
+	\label{tab:ldc21orb2validation}
+\end{table}
+
+Next, laboratory validation testing was conducted to evaluate the performance of the full system. The test sequence began with an exploration and perception phase, during which the system constructed an environmental map while localizing itself within it. An ArUco marker fixed to the ground, serving as a simulated robot target, was successfully identified during this phase. Upon completion of exploration, the mission phase commenced, comprising navigation and landing operations targeting two designated pads. To validate the FSM error handling capabilities, the first target pad was intentionally removed, which triggered the execution by the FSM of a proximity search routine at the expected location. Upon failing to locate the first pad, the system proceeded to the second landing position, where the pad was successfully identified and a precision landing was performed on it. \Cref{fig:ldc21aula} illustrates the complete flight trajectory. Despite spatial constraints of the laboratory environment, the facility proved adequate for comprehensive algorithm validation prior to Contest deployment. The test execution spanned $7$ minutes and $33$ seconds, covering $52$ meters at a maximum velocity of \SI{1.7}{km/h}. The trajectory demonstrates high precision with one notable exception: a significant oscillation near the conclusion of the initial exploration loop, attributed to computational resource saturation on the Xavier NX companion computer -- an issue subsequently resolved. Quantitative performance evaluation of the navigation subsystems was conducted through Root Mean Squared Error (RMSE) analysis along each spatial axis, with results presented in \Cref{tab:ldc21aula}.
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch5/ldc21_aula.png}
+  \caption{Laboratory test of the 2021 Leonardo Drone Contest mission; the green path represents the setpoints while the red one represents the estimated trajectory.}
+  \label{fig:ldc21aula}
+\end{figure}
+\begin{table}[t]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{RMSE$_x$ [m]} & \textbf{RMSE$_y$ [m]} & \textbf{RMSE$_z$ [m]} \\[0.5ex]
+    \hline
+    0.37 & 0.47 & 0.29 \\
+    \hline
+  \end{tabular}
+  \caption{Laboratory test RMSE (m) along each axis.}
+  \label{tab:ldc21aula}
+\end{table}
+
+The Contest environment required extended flight durations to complete full mission profiles, with the quadcopter demonstrating $14$-minute endurance capabilities while traversing $118$ meters. The presented data corresponds to the fourth of the four Contest runs. This particular execution involved an abbreviated exploration phase, transitioning to mission operations immediately upon robot detection to commence the search for landing pads. \Cref{fig:ldc21run} illustrates the flight trajectory executed during the Contest run, during which five successful precision landings were achieved. Quantitative performance analysis yielded RMSE measurements across the trajectory as detailed in \Cref{tab:ldc21run}. The $(x,y)$ planar error demonstrates superior performance compared to laboratory testing, attributed to immediate execution of the initial loop enabling ORB-SLAM2 to construct a reliable map with reduced temporal overhead. Conversely, the increased RMSE along the $z$ axis reflects the increased magnitude of vertical maneuvers required during Contest operations.
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch5/ldc21_gara.png}
+  \caption{2021 Leonardo Drone Contest mission run; the green path represents the setpoints while the red one represents the estimated trajectory.}
+  \label{fig:ldc21run}
+\end{figure}
+\begin{table}[t]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \textbf{RMSE$_x$ [m]} & \textbf{RMSE$_y$ [m]} & \textbf{RMSE$_z$ [m]} \\[0.5ex]
+    \hline
+    0.21 & 0.24 & 0.38 \\
+    \hline
+  \end{tabular}
+  \caption{2021 Leonardo Drone Contest run RMSE (m) along each axis.}
+  \label{tab:ldc21run}
+\end{table}
+
+Regarding the overall performance of the UAS prototype also in terms of its full software architecture, the implementation was a success. The FSM was able to manage the mission phases and the drone behavior, correctly transmitting data back to the GCS, which was an essential requirement for the Contest. Despite some technical issues that compromised the first two out of four runs, the team was able to sort those out and the UAS prototype completed its mission in the last two runs. Thanks to extensive press coverage offered by Leonardo in 2021, \Cref{fig:ldc21_preclands} shows the moments right before and after some of the most successful and exciting precision landings performed by the UAS prototype during the Contest. It is interesting to note how, once the procedure was started, the prototype always brought it to completion landing right within the central black portion of each pad, correcting localization errors by aligning its center with the ArUco marker on the ground. The Tor Vergata team was awarded the second prize in 2021, paving the way for a successful streak in the following years: the 2022 edition saw the team winning the second prize again, while the third prize was won in 2023 together with the jury prize. In 2024, the team finally won the first prize demonstrating also the effectiveness of the proposed DUA architecture, which in the meantime has been developed and adopted in this project.
 \begin{figure}[t!]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/ch5/ldc21_frame1.jpg} \\
