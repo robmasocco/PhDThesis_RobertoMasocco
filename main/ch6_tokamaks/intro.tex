@@ -28,3 +28,24 @@ The control infrastructure of a tokamak fusion device represents a sophisticated
 The operational complexity extends beyond hardware considerations to include intricate control schemes for plasma magnetic confinement, comprehensive diagnostic systems for plasma state monitoring, and experimental execution frameworks. These systems must operate in concert to maintain plasma stability while facilitating scientific investigation. The human interface component adds another layer of complexity, requiring control rooms staffed by teams of skilled operators managing different aspects of machine operation. The supervision infrastructure must provide interfaces ranging from detailed module-level control to high-level Supervisory Control and Data Acquisition (SCADA) systems, enabling both fine-grained control and system-wide monitoring.
 
 Such operational sophistication demands a robust and well-structured architectural foundation. The control system design must accommodate real-time requirements, ensure fault tolerance, and facilitate system maintenance and upgrades. A distributed systems paradigm offers particularly compelling advantages in this context, providing natural solutions for parallel operation, redundancy, and scalability. This approach enables effective management of the inherent complexity of the system while maintaining the flexibility necessary for experimental physics operations.
+
+\subsection{The Tokamak à Configuration Variable}
+\label{sec:tcv}
+There are various dimensional parameters that can be used to evaluate the size of a tokamak device; one of these is the \emph{major radius} $R_0$, which is the distance from the center of the torus to the outer wall of the vessel. With a major radius $R_0=\SI{0.88}{\meter}$, TCV is classified as a medium-scale fusion research device. It is operated at the Swiss Plasma Center (SPC) of the École Polytechnique Fédérale de Lausanne (EPFL), Switzerland \cite{lister_control_1997}. The device designation reflects its exceptional plasma shaping capabilities, enabled by an extensive array of independent Poloidal Field (PF) coils in conjunction with a distinctive rectangular vacuum vessel geometry, achieving toroidal magnetic fields up to \SI{1.54}{\tesla}.
+
+The PF coil system, illustrated in \Cref{fig:tcv_layout}, comprises four distinct subsystems.
+\begin{itemize}
+  \item The \textbf{OH coils}, consisting of a central solenoid (OH1) and an up-down symmetric arrangement of 6 series-connected coils (OH2), provide plasma current drive functionality.
+  \item The \textbf{E coils}, comprising 8 independently controlled circuits positioned on the high-field side.
+  \item The \textbf{F coils}, featuring 8 independent circuits located on the low-field side.
+  \item The \textbf{G coils}, consisting of two up-down symmetric in-vessel coils in anti-series configuration for vertical stabilization of the plasma.
+\end{itemize}
+The device architecture accommodates removable \emph{baffles} \cite{reimerdes_initial_2021} that enhance plasma core-divertor separation. The configuration depicted in \Cref{fig:tcv_layout} shows the Short-Inner-Long-Outer (SI-LO) baffles arrangement.
+\begin{figure}[t!]
+  \centering
+  \includegraphics[scale=.6]{images/ch6/tcv_layout.eps}
+  \caption{TCV poloidal cross-section with an example plasma configuration (lower single-null). The OH, E, F, and G coils are highlighted in different yellow, green, blue, and red, respectively. Removable baffles appear in the cross-section in gray protruding inward in the bottom part of the vessel.}
+  \label{fig:tcv_layout}
+\end{figure}
+
+The exceptional plasma shaping capabilities of TCV, combined with its continuously enhanced control architecture, have established this device as a significant contributor to international fusion research \cite{duval_experimental_2024}. Through successive upgrades to both hardware and control systems spanning its three decades of operation, TCV has maintained its position at the forefront of experimental fusion science. Its contributions span multiple international research campaigns \cite{joffrin_overview_2024}, including investigations of advanced plasma configurations and real-time control developments.
