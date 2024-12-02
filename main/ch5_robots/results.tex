@@ -49,7 +49,7 @@ The hardware architecture was composed by three distinct systems: a Holybro Pixh
     OS  & NuttX 10.0.0\\
     \hline
   \end{tabular}
-  \caption{Main technical specifications of the SBCs used in the implementation.}
+  \caption{Main technical specifications of the SBCs used in the implementation of \cite{bianchi_novel_2023}.}
   \label{tab:ldc21_sbcs}
 \end{table}
 
@@ -192,3 +192,63 @@ Regarding the overall performance of the UAS prototype also in terms of its full
 	\caption{Successful precision landings performed on the ArUco landing pads during the 2021 Leonardo Drone Contest.}
 	\label{fig:ldc21_preclands}
 \end{figure}
+
+\subsection{Efficient sensor fusion for autonomous agents}
+\label{sec:robots_results_iccad23}
+In \Cref{sec:dua_modules_zed_drivers}, the problem of pose estimation for an autonomous robot has been briefly presented. Its complexity has been outlined, together with the variety of sensors that might be used to achieve a reliable and accurate estimate of the position and orientation of a robot. The concept of \emph{sensor fusion} has also been mentioned, as a family of techniques consisting in merging data coming from multiple, even heterogeneous sensors, to produce a single final pose estimate. The advantage of sensor fusion, over its increased complexity both in terms of mathematical formulation and implementation, is the possibility to overcome the issues of one sensor by leveraging the other ones. Over the years, many sensor fusion algorithms have been proposed, each one with its own strengths and weaknesses, and each one suitable for a specific kind of sensor or application. Explaining the details of each one of them goes out of the scope of this work, but a good summary can be found in \cite{bianchi_efficient_2023} together with a novel, synthetic approach to the problem.
+
+In \cite{bianchi_efficient_2023}, the challenge of efficient position measurement fusion in a horizontal plane $(x,y)$ is addressed for autonomous systems equipped with multiple visual sensors. The proposed methodology diverges from existing approaches by prioritizing reduced computational complexity and minimal sensor-specific information requirements. This design philosophy facilitates both rapid deployment on physical platforms and seamless integration of heterogeneous visual sensors within the system architecture, as validated through experimental evaluation. The fundamental research objective is to develop a computationally efficient sensor fusion framework that maintains high accuracy while minimizing implementation complexity and sensor-specific dependencies. This stands in contrast to conventional approaches that often require extensive computational resources and detailed sensor characterization. Describing this work is instrumental to this thesis since it has been carried out using a preliminary version of the DUA framework presented in \Cref{ch:dua}, so the following discussion briefly summarizes the main results and then moves to the description of the implementation details.
+
+\subsubsection{The blending algorithm}
+\label{sec:robots_results_iccad23_algo}
+Sensor fusion methodologies enhance measurement accuracy and reliability by combining data from multiple sources, achieving superior performance compared to individual sensor utilization. A fundamental challenge in sensor fusion implementation arises from the inherent diversity of sensor characteristics, with each device exhibiting distinct advantages and limitations that vary based on operational requirements and environmental conditions. Effective fusion systems must therefore incorporate mechanisms for dynamic sensor trustworthiness evaluation while maintaining operational capability during partial sensor failures.
+
+Established fusion methodologies predominantly rely on precise characterization of data sources through covariance matrices, noise parameters, and mathematical models. However, accurate determination of these parameters presents significant challenges in practical implementations, particularly for real-time estimation from operational data streams. The accuracy of these parameters directly impacts the performance of estimation algorithms and, consequently, the robustness of the complete localization system. This limitation serves as the primary motivation for the proposed fusion architecture: to achieve enhanced robustness with respect to sensor-specific parameters while maintaining architectural simplicity. The framework proposed in \cite{bianchi_efficient_2023} minimizes dependence on precise sensor characterization, thereby reducing implementation complexity while maintaining system reliability. This approach represents a departure from conventional methodologies that require extensive sensor modeling and parameter estimation. By reducing reliance on detailed sensor models, the system achieves improved robustness to parameter uncertainty while facilitating practical deployment in operational environments.
+
+A detailed description of the mathematical foundation of the proposed method is out of the scope of this work, the interested reader can see \cite{bianchi_efficient_2023} for a complete discussion. The aspects that concern this work, completely instrumental to the characterization of the implementation that achieved the experimental results presented in the paper, are limited to the structure of the algorithm. The algorithm, called \emph{blending}, can be summarized as follows: first, new samples are gathered from every sensor, and their values are subtracted the previous sample to obtain an incremental measurement rejecting bias. Secondly, the incremental measurements are filtered using an appropriate method, to further reduce noise and reject outliers. Finally, the blending stage happens, where all incremental samples are combined to obtain a final increment to add to the previous one. The result of this last addition is the final position estimate, which is then used to control the robot.
+
+Formally, let one suppose that $n\in\mathbb{N}$ sensors are available, each one producing data at a same rate $f_s\in\mathbb{R}_{>0}$. The incremental, filtered sample at time $k\in\mathbb{Z}_{\geq 0}$ corresponding to each sensor may then be denoted by $\Delta_{i,f}[k]$ for $i=1,\dotsc,n$. Each sensor also provides information about its functioning state, considered either on or off for simplicity and denoted by $s_i[k]\in\{0,1\}$ for $i=1,\dotsc,n$. Let $\bar{\Delta}_f[k] = [\Delta_{1,f}[k]',\dotsc,\Delta_{n,f}[k]']'$, $\bar{s}[k] = [s_1[k],\dotsc,s_n[k]]'$, and $\alpha_1,\dotsc,\alpha_n\in\mathbb{R}$ such that $\sum_i \alpha_i = 1$. The blending stage of the algorithm is summarized by the following equations:
+\begin{subequations}
+  \label{eq:iccad23:blending}
+  \begin{align}
+    \mathfrak{B}(\bar{\Delta}_f[k],\bar{s}[k]) = \sum_{i=1}^{n} \bar{\alpha}_i[k]\Delta_{i,f}[k]\,,\\
+    \bar{\alpha}_i[k] = s_i[k]\alpha_i\left(1 + \frac{\sum_{j=1}^{n} (1-s_j[k])\alpha_j}{\sum_{j=1}^{n}s_j[k]\alpha_j}\right)\quad & i = 1,\dotsc,n\,.
+  \end{align}
+\end{subequations}
+The formulation presented in \eqref{eq:iccad23:blending} exhibits simplicity while incorporating several advantageous characteristics. The parameters $(\alpha_1,\dotsc,\alpha_n)$ enable fine-tuned calibration to accommodate varying levels of sensor accuracy and reliability. The responsiveness of the method to sensor operational states facilitates resilient operation during both transient and permanent sensor failures, as demonstrated in the experimental validation discussed in \cite{bianchi_efficient_2023}. From a computational perspective, \eqref{eq:iccad23:blending} demonstrates high efficiency, as it reduces to a series of scalar products that can be executed with minimal computational overhead on standard microprocessor architectures.
+
+\subsubsection{The distributed implementation}
+\label{sec:robots_results_iccad23_impl}
+The experimental platform developed in \cite{bianchi_efficient_2023} has been designed to integrate only visual senors, for both simplicity and because they are among the most subject to the issues mentioned in the previous section. The chosen sensors were a ZED Mini camera (see \Cref{sec:dua_modules_zed_drivers}) and an Intel RealSense D435i depth camera. The first, through an early version of the \texttt{zed\_driver} package presented in \Cref{sec:dua_modules_zed_drivers}, produced samples of its position estimate, while the latter was used to run the ORB-SLAM2 algorithm in the same IRD mode as described in \Cref{sec:robots_results_paperdrone2021_impl}.
+
+The hardware architecture was again distributed, including a Nvidia Jetson Xavier NX SBC and an Up Squared x86 SBC; the former was responsible for driving the ZED camera, while the latter had the task of interfacing with the D435i and running the ORB-SLAM2 system. The choice of a x86 SBC to run ORB-SLAM2, in contrast to what has been shown in \Cref{sec:robots_results_paperdrone2021}, was motivated by the possibility to leverage the vector instruction sets of the x86 architecture to speed up the computations of the algorithm in a way that is closer to its original implementation. The two SBCs were interconnected by an Ethernet connection, and all of the software modules were implemented as \ROS nodes. Finally, to better resemble the situation of an autonomous robot, a microcontroller was added, in the form of a Pixhawk 4 flight controller running PX4 (see \Cref{sec:dua_modules_flight_stack}). This FMU acted only as a microcontroller, receiving fused position estimates and interpolating them with data coming from its internal IMU. A summary of the technical characteristics of the hardware modules is given in \Cref{tab:iccad23:sbcs}.
+\begin{table}[t]
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Up Squared}}\\
+    \hline
+    CPU & Intel Pentium N4200 (4C/4T, up to \SI{2.5}{GHz})\\
+    RAM & \SI{8}{GB} LPDDR4\\
+    OS  & Ubuntu Linux 20.04\\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Nvidia Jetson Xavier NX}}\\
+    \hline
+    CPU & NVIDIA Carmel ARM v8.2 (6C/6T, up to \SI{1.4}{GHz})\\
+    RAM & \SI{8}{GB} LPDDR4x\\
+    GPU & NVIDIA Volta (384 CUDA Cores, 48 Tensor Cores)\\
+    OS  & Ubuntu Linux 20.04\\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Holybro Pixhawk 4}}\\
+    \hline
+    CPU & STM32F765 (ARM Cortex-M7, up to \SI{216}{MHz})\\
+    RAM & \SI{512}{KB}\\
+    OS  & NuttX 10.0.0\\
+    \hline
+  \end{tabular}
+  \vspace{5pt}
+  \caption{Main technical specifications of the SBCs used in the implementation of \cite{bianchi_efficient_2023}.}
+  \label{tab:iccad23:sbcs}
+\end{table}
+
+The software framework used to manage the experimental implementation in \cite{bianchi_efficient_2023} was a first, embryonic version of what has subsequently become the DUA framework presented in \Cref{ch:dua}. There were, in fact, a variety of software tools involved, ranging from middleware like, \emph{e.g.}, \ROS, to the implementation of the ORB-SLAM2 algorithm and the ZED SDK (see \Cref{sec:dua_modules_zed_drivers}). All of these software required its own dependencies, as well as specific setup steps that were slightly different on each of the two boards. For this reason, Docker was introduced as a tool to manage the software dependencies and setup steps, as well as to ensure a consistent and reproducible behavior across all the boards and the development PCs. This allowed developers to focus on the solution and implementation of the sensor fusion and blending algorithm, streamlining the experimental validation presented in the paper. Different Docker images were created for each of the different platforms, including development PCs, which integrated all the necessary dependencies and software. The techniques applied to the creation of these Docker images have led to the development of the base units of \texttt{dua-foundation}, introduced in \Cref{sec:dua_foundation}. Then, the rest of the framework followed.
