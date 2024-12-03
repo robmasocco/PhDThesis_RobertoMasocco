@@ -1,4 +1,4 @@
-\section{An introduction to magnetic confinement fusion}
+\section{Magnetic confinement fusion on TCV}
 \label{sec:tokamaks_intro}
 
 Nuclear fusion occurs when light atomic nuclei combine to form heavier elements. This process powers stellar bodies and represents a promising avenue for clean, sustainable energy generation. These reactions, such as the fusion of Deuterium and Tritium nuclei to produce an $\alpha$-particle and a high-energy neutron, release substantial energy with the potential for efficient power generation.
@@ -66,15 +66,15 @@ The transition to the MARTe2 framework (see \Cref{sec:related_work_marte2}) mark
 
 The SCD hardware architecture comprises multiple computational nodes interconnected through dedicated networks. The main processing units consist of industrial PCs operating under real-time Linux, specifically customized with the \texttt{PREEMPT\_RT} patch, CPU isolation, and specialized kernel parameters. These modifications enable deterministic operation while maintaining a conventional operating system environment, avoiding the complexity of custom-compiled kernels. A summary schematic of the system is given in \Cref{fig:scd}.
 
-Input and output operations rely on high-density ADC/DAC modules. A dedicated reflective memory network (RFM) provides sub-microsecond latency communication at \SI{170}{\mega\byte/\second} between computational nodes. This infrastructure is complemented by an EtherCAT real-time industrial network deployed to manage distributed low-count I/O subsystems, each handling up to 10 analog channels, with a total capacity of approximately 500 channels. The computational nodes, each performing specific functions in the control architecture, are organized as follows.
+Input and output operations rely on high-density ADC/DAC modules. A dedicated reflective memory network (RFM) provides communication at \SI{170}{\mega\byte/\second} with sub-microsecond latency between computational nodes. This infrastructure is complemented by an EtherCAT real-time industrial network deployed to manage distributed low-count I/O subsystems, each handling up to 10 analog channels, with a total capacity of approximately 500 channels. The computational nodes, each performing specific functions in the control architecture, are organized as follows.
 \begin{itemize}
-  \item Node 01 operates the Far Infra Red interferometer (FIR) and related X ray diagnostics.
-  \item Node 02 and Node 03 constitute the main control nodes of the system. Node 02 serves as the primary controller while Node 03 acts as its twin for debugging and backup purposes, \emph{i.e.}, it runs the same code on the same hardware reading the same measurements but is not connected to any actuator. These nodes manage all coils, gas valves, and auxiliary heating systems.
-  \item Nodes 05 and 06 provide computational capabilities through 6-core high-speed Intel~i7 processors. One unit incorporates a real-time network analyzer for the reflective memory network.
-  \item Node 07 executes real-time MHD analysis, monitoring rotating tearing modes and locked modes.
-  \item Node 08 handles fast acquisition and real-time processing of Electron Cyclotron Emission data.
-  \item Node 09 manages real-time acquisition and processing of the Thomson scattering diagnostic, providing calibrated electron temperature and density profiles.
-  \item Node 10, designated as MANTIS, operates a sophisticated 10-camera multispectral imaging system. It captures spectrally filtered tangential images of the plasma at frequencies between \SI{200}{\hertz} and \SI{800}{\hertz}, enabling real-time processing for applications such as radiation front position estimation along the divertor.
+  \item \textbf{Node 01} operates the Far Infra Red interferometer (FIR) and related X ray diagnostics.
+  \item \textbf{Node 02} and \textbf{Node 03} constitute the main control nodes of the system. Node 02 serves as the primary controller while Node 03 acts as its twin for debugging and backup purposes, \emph{i.e.}, it runs the same code on the same hardware reading the same measurements but it is not connected to any actuator. These nodes manage all coils, gas valves, and auxiliary heating systems.
+  \item \textbf{Nodes 05} and \textbf{Node 06} provide computational capabilities through 6-core  Intel Core~i7 processors. One unit incorporates a real-time network analyzer to monitor the performance of the reflective memory network.
+  \item \textbf{Node 07} executes real-time MHD analysis, monitoring rotating tearing modes and locked modes.
+  \item \textbf{Node 08} handles fast acquisition and real-time processing of Electron Cyclotron Emission data.
+  \item \textbf{Node 09} manages real-time acquisition and processing of the Thomson scattering diagnostic, providing calibrated electron temperature and density profiles.
+  \item \textbf{Node 10}, designated as MANTIS, operates a sophisticated 10-camera multispectral imaging system. It captures spectrally filtered tangential images of the plasma at frequencies between \SI{200}{\hertz} and \SI{800}{\hertz}, enabling real-time processing for applications such as radiation front position estimation along the divertor.
 \end{itemize}
 The primary control functionality, implemented on Node 02 with Node 03 as backup, represents a critical component of the system. This subsystem interfaces with a 192-channel ADC module, sending data streams through two high-speed fiber optic links to both the industrial PCs that implement the nodes. This redundant configuration ensures synchronized data delivery to both nodes, enabling parallel operation during plasma discharges.
 
