@@ -1,0 +1,17 @@
+\chapter{Shape control of tokamak plants}
+\label{ch:allocation}
+\doublespacing
+\vspace{-2.5cm}
+
+In \Cref{ch:tokamaks}, the second application scenario of this work has been introduced. In particular, \Cref{sec:tcv} illustrated the Tokamak à Configuration Variable device, and \Cref{sec:scd} corroborated it with a thorough description of the Système de Contrôle Distribué that controls TCV. That description clarified how the distributed control system of TCV allows multiple diagnostics, algorithms, estimators, and controller to coexist and interact within a single control architecture. Thanks to this design, the experimental capabilities of TCV have been extended since the days of the original implementation of the SCD. One of the latest innovations in this context has been the introduction of a \emph{shape controller}, \emph{i.e.}, a subsystem that acts as a reference governor and PID controller for the coil power supplies in order to track a desired plasma shape. Its implementation currently works in coordination with other SCD subsystem, in particular those that generate feedback measurements concerning the equilibrium reconstruction, that are used to evaluate the control law in real-time.
+
+Plasma shapes, characterized by distinct cross-sectional geometries in the poloidal plane, exhibit varying properties regarding stability, performance, and interaction with vessel components. The plasma shape significantly influences the stability characteristics of global \emph{magnetohydrodynamic} (MHD) modes and regulates particle transport phenomena. Furthermore, precise plasma shaping enables optimization of chamber utilization and plasma volume while facilitating controlled management of power deposition from plasma-wall interactions in regions where energy escapes the confined plasma core.
+
+% TODO Clarify how important shape control is for TCV given its redundancy,
+% say that this chapter presents work that has been done in this context, giving a hint of how
+% the chapter is structured
+
+\input{main/ch7_allocation/sota_shapectrl}
+\input{main/ch7_allocation/sota_tcvshapectrl}
+\input{main/ch7_allocation/limitations}
+\input{main/ch7_allocation/sota_allocation}
