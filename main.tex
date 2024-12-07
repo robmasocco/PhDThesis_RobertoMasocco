@@ -9,6 +9,11 @@
 \input{settings_utv2024_template}
 \input{settings_custom} % Place your custom packages, etc. in this file!
 
+% Enable selective compilation of chapters to speed up development.
+% For this to work, the full document has to be compiled at least once.
+% DO NOT FORGET TO COMMENT THIS LINE BEFORE PUSHING!
+% \includeonly{main/ch7_allocation/ch7}
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,13 +50,13 @@
 %%%%% MAIN: Mainmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
-\input{main/ch1_introduction/ch1}
-\input{main/ch2_problem/ch2}
-\input{main/ch3_tools/ch3}
-\input{main/ch4_dua/ch4}
-\input{main/ch5_robots/ch5}
-\input{main/ch6_tcvscd/ch6}
-\input{main/ch7_allocation/ch7}
+\include{main/ch1_introduction/ch1}
+\include{main/ch2_problem/ch2}
+\include{main/ch3_tools/ch3}
+\include{main/ch4_dua/ch4}
+\include{main/ch5_robots/ch5}
+\include{main/ch6_tcvscd/ch6}
+\include{main/ch7_allocation/ch7}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% TAIL: Backmatter
