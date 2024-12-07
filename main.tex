@@ -11,7 +11,7 @@
 
 % Enable selective compilation of chapters to speed up development.
 % For this to work, the full document has to be compiled at least once.
-% DO NOT FORGET TO COMMENT THIS LINE BEFORE PUSHING!
+% DO NOT FORGET TO COMMENT THESE LINES BEFORE PUSHING!
 % \includeonly{main/ch1_introduction/ch1}
 % \includeonly{main/ch2_problem/ch2}
 % \includeonly{main/ch3_tools/ch3}
@@ -26,12 +26,12 @@
 %%%%% HEAD: Frontmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frontmatter
-\input{head/cover}
-\input{head/titlepage}
-\input{head/dedication}
+\include{head/cover}
+\include{head/titlepage}
+\include{head/dedication}
 \setcounter{page}{0}
-\input{head/acknowledgements}
-\input{head/preface}
+\include{head/acknowledgements}
+\include{head/preface}
 
 \singlespacing
 \tableofcontents
@@ -68,10 +68,11 @@
 %%%%% TAIL: Backmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-\input{tail/app/workflow}
-\input{tail/app/units}
+\renewcommand{\chaptername}{Appendix}
+\include{tail/app/workflow}
+\include{tail/app/units}
 
 \backmatter
-\input{tail/biblio}
+\include{tail/biblio}
 
 \end{document}
