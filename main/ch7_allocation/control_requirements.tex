@@ -1,0 +1,30 @@
+\section{Control requirements}
+\label{sec:all_prbs}
+As the literature review offered in \Cref{sec:sota_allocation} points out, the current landscape of dynamic control allocation problems and proposed results is quite wide. A dynamic control allocator for the TCV shape controller should be designed to integrate within the existing framework, not only in terms of its implementation but also of the the modeling techniques on which it is based.
+
+For this work, the following formulations of a dynamic control allocation problem have been considered. Their evaluation has led to theoretical results that are illustrated in the following and allowed the author to identify the most suitable approach for the TCV case.
+
+\subsection{Notation}
+\label{Sec:notation}
+The set $\N$ is defined as containing all the positive integer numbers, excluding $0$.
+Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively.
+Let $\R_{\geq0}=\{\textbf{a} \in \R:a\geq0\}$, $\Z_{\geq0}=\{\textbf{k} \in \Z:k\geq0\}$, $\C_0=\{\textbf{z} \in \C:\Re(\textbf{z})=0\}$, $\C_{<0}=\{\textbf{z} \in \C:\Re(\textbf{z})<0\}$,	and $\C_{\geq0}=\{\textbf{z} \in \C:\Re(\textbf{z})\geq0\}$.
+
+Given a vector $v\in\R^n$, the symbol $\left\Vert v \right\Vert_2$ denotes its Euclidean norm.
+Given a vector space $V$, $\dim(V)$ denotes its dimension.
+$e_j$ denotes the $j$-th vector of the canonical basis of	$\R^n$.
+The expression $\|v\|^{2}_R$ denotes the product $v'Rv$.
+
+Given a matrix $A$, $\Imag(A)$ denotes its image, $\ker(A)$ denotes its null space, $A'$ denotes its transpose,  $A^{\dagger}$ denotes its Moore-Penrose inverse, and $A^\perp$ denotes a basis matrix for its null space. $\spec(A)$ denotes the spectrum of the matrix $A$.
+Given two matrices $A,B\in\R^{m \times n}$ $A \odot B$ denotes their Hadamard, or entrywise, product, while $A \otimes B$ denotes their Kronecker product.
+Given the square matrices $\{A_1,\dotsc,A_n\}$, the operator $\diag(A_1,\dotsc,A_n)$ denotes the square matrix obtained by concatenating the former matrices on its diagonal.
+The symbol $I_n$ denotes the identity matrix of order $n$, the subscript is omitted when clear from the context.
+For a block partitioned matrix $\mathcal{M}$,	$\mathcal{M}_{[k,h]}$ is its $(k,h)-$th block, $\mathcal{M}_{[:,h]}$ is its $h-$th block column, and $\mathcal{M}_{[:,1:h]}$ is the sub-matrix formed by its first $h$ block columns.
+
+$\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that are square-integrable over the interval $[a,b]$.
+
+For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ indicates the value of $t$ modulo $T$.
+
+\subsection{Preliminary definitions}
+\label{sec:defs}
+It is instrumental to begin this discussion with a few preliminary definitions that are used throughout the chapter. Let $t\in\R_{\geq 0}$ be the time variable.
