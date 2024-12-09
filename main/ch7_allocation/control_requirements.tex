@@ -7,7 +7,7 @@ For this work, the following formulations of a dynamic control allocation proble
 \subsection{Notation}
 \label{Sec:notation}
 The set $\N$ is defined as containing all the positive integer numbers, excluding $0$.
-Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively.
+Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively. The imaginary unit is denoted as $j$.
 Let $\R_{\geq0}=\{\textbf{a} \in \R:a\geq0\}$, $\Z_{\geq0}=\{\textbf{k} \in \Z:k\geq0\}$, $\C_0=\{\textbf{z} \in \C:\Re(\textbf{z})=0\}$, $\C_{<0}=\{\textbf{z} \in \C:\Re(\textbf{z})<0\}$,	and $\C_{\geq0}=\{\textbf{z} \in \C:\Re(\textbf{z})\geq0\}$.
 
 Given a vector $v\in\R^n$, the symbol $\left\Vert v \right\Vert_2$ denotes its Euclidean norm.
@@ -87,10 +87,10 @@ Finally, the third assumption clarifies the role of the exosystem $\bbexo$ in th
 It is worth to point out that \Cref{ass:bbssresp} provides, in this context, the definition of a \emph{steady-state response} of the system described by eq. \eqref{eq:bbsys} (see \cite[Prop. 8.1.1]{isidori_nonlinear_1995}).
 Moreover, provided that \Cref{ass:bbiss} also holds, such a steady-state response is given by $\bbssstate(t)=\fbimap(\bbexostate(t))$ for any $t \geqslant 0$, which is therefore also periodic of period $\bbperiod$; subsequently, the performance and regulated outputs also admit steady-state responses denoted by $\bbssoutp(\cdot)$ and $\bbssouto(\cdot)$, respectively.
 
-Let $\tau_0\in\R$. The performance criteria with respect to which the behavior of $\bbsys$ may be optimized are expressed by the following \emph{Lagrange functional} of the form
+Let $t_0\in\R$. The performance criteria with respect to which the behavior of $\bbsys$ may be optimized are expressed by the following \emph{Lagrange functional} of the form
 \begin{equation}
   \label{eq:bbcost}
-  J(\bbaux) = \int_{\tau_0}^{\tau_0 + \bbperiod} \bbcost(\bbssoutp(\tau))\,d\tau\,,
+  J(\bbaux) = \int_{t_0}^{t_0 + \bbperiod} \bbcost(\bbssoutp(\tau))\,d\tau\,,
 \end{equation}
 where the function $\bbcost : \R^{\bboutpdim} \rightarrow \R_{\geqslant 0}$ is continuously differentiable, convex, and radially unbounded.
 
@@ -145,5 +145,3 @@ It is finally worth to point out that, in both problems, the optimization proces
   \caption{Block diagram of the system $\bbsys$ given by eq. \eqref{eq:bbsys} interconnected to the exosystem $\bbexo$ defined in eq. \eqref{eq:bbexosys} and to the input allocation device, enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:allbbsys}
 \end{figure}
-
-The results that follow in the rest of this chapter provide solutions to \Cref{prb:ssinv,prb:fullinv} based on different configurations of the model given in eq. \eqref{eq:bbsys}-\eqref{eq:bbexosys}. The case of \Cref{prb:ssinv} is examined considering both a linear and a nonlinear model for the system $\bbsys$ in eq. \eqref{eq:bbsys}. On the other hand, \Cref{prb:fullinv} is studied from the only point of view of linear systems but in multiple scenarios: when the model in eq. \eqref{eq:bbsys} is fully known, when it is affected by parametric uncertainties, and when it includes sampled data devices.

@@ -1,0 +1,130 @@
+\section{Design of dynamic control allocators}
+\label{sec:all_design}
+
+The results that follow in the rest of this chapter provide solutions to \Cref{prb:ssinv,prb:fullinv} based on different configurations of the model given in eq. \eqref{eq:bbsys}-\eqref{eq:bbexosys}. The case of \Cref{prb:ssinv} is examined considering both a linear and a nonlinear model for the system $\bbsys$ in eq. \eqref{eq:bbsys}. On the other hand, \Cref{prb:fullinv} is studied from the only point of view of linear systems but in multiple scenarios: when the model in eq. \eqref{eq:bbsys} is fully known, when it is affected by parametric uncertainties, and when it includes sampled data devices.
+
+\subsection{Dynamic allocation with steady-state output invisibility}
+\label{sec:all_design_ssinv}
+The case identified by \Cref{prb:ssinv} where the systems $\bbsys$ and $\bbexo$ in eq. \eqref{eq:bbsys}-\eqref{eq:bbexosys} are linear has been studied in the literature and multiple solutions have been proposed, as reported in \Cref{sec:sota_allocation}. However, none of these solutions retain their applicability when the model exhibits less convenient features, which is one of the reasons why the dynamic control allocation problem for nonlinear systems is still an open issue. This section presents the work that has been done in this direction, starting from the following motivating idea. Since, at its core, the dynamic control allocation problem is a constrained dynamic optimization problem, it is beneficial to reformulate it as such. This allows one to use approaches and tools belonging to the theory of optimal control, whose applicability also spans to nonlinear and broader classes of systems.
+
+This approach has been tested initially on a linear feedback model of the form of $\bbsys$, interconnected to a linear exosystem $\bbexo$ \cite{galeani_optimal_2023}. Consider a continuous-time, linear time-invariant dynamic system of the form
+\begin{equation}
+	\label{eq:linplant}
+	\plant := \left\{
+	\begin{aligned}
+		\dot{\plantstate}(t) & = \plantdynmat\plantstate(t) + \plantctrmat\plantinput(t)\,, \\
+		\plantoutput(t)      & = \plantoutmat\plantstate(t)\,,
+	\end{aligned}
+	\right.
+\end{equation}
+where $\plantstate(t)\in\R^\plantstatedim$ is the plant state, $\plantinput(t)\in\R^\plantinputdim$ is the control input, $\plantoutput(t)\in\R^\plantoutputdim$ is the plant output, and $\plantdynmat\in\R^{\plantstatedim \times \plantstatedim}$, $\plantctrmat\in\R^{\plantstatedim \times \plantinputdim}$, and $\plantoutmat\in\R^{\plantoutputdim \times \plantstatedim}$ are constant matrices. In the considered setting, the system \eqref{eq:linplant} is asymptotically stabilized by the action of a continuous-time, linear time-invariant feedback controller given by
+\begin{equation}
+	\label{eq:lincontroller}
+	\ctrl := \left\{
+	\begin{aligned}
+		\dot{\ctrlstate}(t) & = \ctrldynmat\ctrlstate(t) + \ctrlctrmat\plantoutput(t) + \ctrlrefmat\bbref(t)\,, \\
+		\ctrlouput(t)       & = \ctrloutmat\ctrlstate(t)\,,
+	\end{aligned}
+	\right.
+\end{equation}
+where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output. The interconnection of the plant $\plant$ and the control system $\ctrl$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, also yielding $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$ in eq. \eqref{eq:bbsys}, \emph{i.e.}, $\bbouto = \plantoutput$.
+
+For $s\in\C$, let $\planttf(s)$ be the transfer function of the system in eq. \eqref{eq:linplant} from the input $\plantinput$ to the output $\plantoutput$ and $\plantalltf(s)$ be the transfer function of the closed loop $\bbsys$ from the input $\bbaux$ to the output $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$.
+
+The exogenous input in this setting is defined as the state of the exosystem $\bbexo$ in eq. \eqref{eq:bbexosys}, which is a continuous-time linear time-invariant system of the form
+\begin{equation}
+	\label{eq:linexosystem}
+	\bbexo = \left\{
+	\begin{aligned}
+		\dot{\bbexostate}(t) & = \exodynmat\bbexostate(t)\,, \\
+		\bbref(t)            & = \bbexostate(t)\,,
+	\end{aligned}
+	\right.
+\end{equation}
+where $\exodynmat\in\R^{\bbexostatedim \times \bbexostatedim},\, \exodynmat = \diag(\exodynmat_0,\dotsc,\exodynmat_h)$ consists of the blocks defined as
+\begin{equation}
+	\label{eq:linexoblocks}
+	\begin{aligned}
+		\exodynmat_0 & = 0\,, \\
+		\exodynmat_i & = \begin{bmatrix} 0 & \omega_i \\ -\omega_i & 0 \end{bmatrix}\,, &  & i=1,\dotsc,h\,,
+	\end{aligned}
+\end{equation}
+with $\bbexostate(0) = \bbexostate_0$. The frequencies $\{\omega_1,\dotsc,\omega_h\}$ in eq. \eqref{eq:linexoblocks} are such that $\omega_i = k_i\frac{2\pi}{\bbperiod}$, $k_i\in\N$, $i=1,\dotsc,h$. 
+
+The feedback controller given in eq. \eqref{eq:lincontroller}, together with the definition of the exosystem dynamics \eqref{eq:linexoblocks}, ensure that \Cref{ass:bbiss,ass:bbssresp} are satisfied in the setting provided by this formulation. The complete block diagram of the system $\bbsys$ is shown in \Cref{fig:lqrall}.
+\begin{figure}[t!]
+  \centering
+  \includesvg[width=.9\textwidth]{images/ch7/lqrall/lqrall.svg}
+  \caption{Block diagram of the feedback control system $\bbsys$ given by eq. \eqref{eq:linplant}, \eqref{eq:lincontroller}, and \eqref{eq:linexosystem}; the input allocation device is enclosed in the $\mathcal{A}\ell\ell$ block.}
+  \label{fig:lqrall}
+\end{figure}
+
+Both the transfer matrices $\planttf(s)$ and $\plantalltf(s)$ admit left coprime polynomial factorizations of the form \cite[§7.8]{chen_linear_2009}
+\begin{subequations}
+	\label{eq:lqrall_lcfs}
+	\begin{align}
+		\planttf(s)      & = \plantlcfd^{-1}(s)\plantlcfn(s)\label{eq:lqrall_plantlcf}\,, \\
+		\plantalltf(s)   & = \plantalllcfd^{-1}(s)\plantalllcfn(s)\label{eq:lqrall_looplcf}\,,
+	\end{align}
+\end{subequations}
+where $\plantlcfd(s)$, $\plantalllcfd(s)$, $\plantlcfn(s)$ and $\plantalllcfn(s)$ are polynomial matrices. The following assumption is introduced in this setting to simplify the discussion, although it implies that the controller in eq. \eqref{eq:lincontroller} cannot embed an internal model of the exosystem in eq. \eqref{eq:linexosystem}.
+\begin{assumption}
+  \label{ass:lqrall_kernels}
+  The property
+	\begin{subequations}
+		\label{eq:lqrall_kernels}
+		\begin{align}
+			 & \ker(\plantalllcfn(0)) = \ker(\plantlcfn(0))\,,                                   \\
+			 & \ker(\plantalllcfn(j\omega_i)) = \ker(\plantlcfn(j\omega_i))\,, &  & i=1,\dotsc,h\,,
+		\end{align}
+	\end{subequations}
+	holds for any left coprime factorization \eqref{eq:lqrall_lcfs}.
+	\closestatement
+\end{assumption}
+
+Such factorizations are not unique in general but it is easy to see that \Cref{ass:lqrall_kernels} holds for one of them if and only if it holds for each one of them. The performance output in this case is defined as the plant input, \emph{i.e.}, $\bboutp = \plantinput$. The effort demanded to the actuators is thus evaluated by the instantaneous cost function $\ell(\bbssoutp(t)) = \left\Vert \plantssinput(t) \right\Vert^2_2$. Setting $t_0=0$ in eq. \eqref{eq:bbcost} yields the following formulation of the cost functional from eq. \eqref{eq:bbcost} in this scenario, completing the definition of \Cref{prb:ssinv} in this case:
+\begin{equation}
+  \label{eq:lqrall_sscost}
+  J(\plantssinput) = \frac{1}{2} \int_{0}^{T} \left\Vert \plantssinput(\tau) \right\Vert^2_2\,d\tau\,.
+\end{equation}
+
+Requirements (P), (I), and (O) of \Cref{prb:ssinv} reveal the connection between \emph{dynamic control allocation} on one hand and \emph{constrained optimal control} on the other: (P) requires the asymptotic behavior to be $\bbperiod$-periodic, (O) introduces the cost to be optimized, and finally (I) describes the constraint to be satisfied to ensure that the optimal steady-state solution does not impact the original steady-state output performance induced by the controller in eq. \eqref{eq:lincontroller}. To substantiate this intuition, the definition of a few more items is required. Let $(\feedbackdynmat,\feedbackctrmat,\feedbackoutmat,0)$ be a state-space realization of the feedback loop $\bbsys$ having $\bbexostate$ as input and $\ctrlouput$ as output. Let $\Pi\in\R^{\bbstatedim \times \bbexostatedim}$ be the solution of the Sylvester equation
+\begin{subequations}
+	\label{eq:lqrall_memontinv_mbar}
+	\begin{equation}
+		\label{eq:lqrall_memontinv}
+		\Pi \exodynmat = \feedbackdynmat\Pi + \feedbackctrmat\,,
+	\end{equation}
+	and define $\bar{M}\in\R^{\bbauxdim \times \bbexostatedim}$ as
+	\begin{equation}
+		\label{eq:lqrall_mbar}
+		\bar{M} = \feedbackoutmat\Pi\,.
+	\end{equation}
+\end{subequations}
+Let $\ctrlssoutput$ denote the steady-state controller output. It is possible to show that (see \cite{astolfi_model_2010,scarciotti_data-driven_2017} for a proof)
+\begin{equation}
+  \label{eq:lqrall_ssctrl}
+	\ctrlssoutput(t) = \bar{M}\bbexostate(t)
+\end{equation}
+for all $t$. The finite horizon optimal control problem corresponding to \Cref{prb:ssinv} can be formulated as follows.
+
+\begin{problem}
+	\label{prb:lqrall_optcont}
+	Consider a continuous-time feedback control system $\bbsys$ described by \eqref{eq:linplant}, \eqref{eq:lincontroller}, and \eqref{eq:linexosystem}. Suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_kernels} hold, and define $\bar{M}$ as in \eqref{eq:lqrall_memontinv_mbar}.
+	Determine, if it exists, a function $v^{\star}(\cdot)\in\mathcal{L}_2([0,\bbperiod])$ that
+	\begin{itemize}
+		\item[(i)] minimizes the cost functional
+		  \begin{equation}
+			  \label{eq:lqrall_optcontcost}
+			  J(v) = \frac{1}{2} \int_{0}^{T} \left\Vert \bar{M}\bbexostate(\tau) + v(\tau) \right\Vert^2_2\,d\tau
+		  \end{equation}
+		\item[(ii)] satisfies for all $t\in\R_{\geq 0}$ the integral constraint
+	    \begin{equation}
+	      \label{eq:lqrall_invint}
+	      \lim_{t_0 \to -\infty} \int_{t_0}^{t} \bboutmat e^{{\bbdynmat}(t - \tau)} \bbctrmat \hat{v}(\tau)\,d\tau = 0\,,
+	    \end{equation}
+	\end{itemize}
+	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$.\closestatement
+\end{problem}
+
+It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}. The relation between \Cref{prb:ssinv} and \Cref{prb:lqrall_optcont} establishes the basis for a deeper understanding of both. Having determined the solution $v^{\star}(\cdot)$ of \Cref{prb:lqrall_optcont}, it is possible to satisfy the requirements of \Cref{prb:ssinv} simply by injecting $\bbaux(t)=v^{\star}(\Mod(t,\bbperiod))$ into the closed loop; the linearity and asymptotic stability of $\bbsys$ imply that the resulting closed loop converges to a steady-state satisfying the requirements of \Cref{prb:ssinv}. Note that while an allocated closed loop using a generic allocator solving \Cref{prb:ssinv} generally exhibits transients in both $\bbaux(\cdot)$, which is computed asymptotically, and in the overall system response, the proposed approach directly generates the steady-state evolution of $\bbaux(\cdot)$, although the remaining signals in the overall system response will still present transients to reach their allocated evolution.

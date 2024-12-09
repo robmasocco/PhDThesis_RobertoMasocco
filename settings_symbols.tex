@@ -18,12 +18,23 @@
 \newcommand{\bbperiod}{T}
 \newcommand{\bbcost}{\ell}
 
+% *********** Black-box linear model ***********
+\newcommand{\bbdynmat}{A_\bbsys}
+\newcommand{\bbctrmat}{B_\bbsys}
+\newcommand{\bboutmat}{C_\bbsys}
+
+% *********** Black-box feedback model ***********
+% NOTE: This is introduced in LQRALL
+\newcommand{\feedbackdynmat}{A_\vartheta}
+\newcommand{\feedbackctrmat}{B_\vartheta}
+\newcommand{\feedbackoutmat}{C_\vartheta}
+
 % *********** Black-box model dimensions ***********
 \newcommand{\bbstatedim}{n}
 \newcommand{\bbauxdim}{m}
 \newcommand{\bboutdim}{q}
-\newcommand{\bboutpdim}{\bboutdim_p}
-\newcommand{\bboutodim}{\bboutdim_o}
+\newcommand{\bboutpdim}{{\bboutdim_p}}
+\newcommand{\bboutodim}{{\bboutdim_o}}
 
 % *********** Black-box model exosystem ***********
 \newcommand{\bbexo}{\mathcal{E}}
@@ -34,14 +45,52 @@
 \newcommand{\bbexostateset}{\mathcal{W}}
 \newcommand{\fbimap}{\pi}
 
+% *********** Linear exosystem dynamics ***********
+\newcommand{\exodynmat}{S}
+
 % *********** Black-box model exosystem dimensions ***********
-\newcommand{\bbexostatedim}{n_e}
-\newcommand{\bbrefdim}{n_r}
+\newcommand{\bbexostatedim}{{n_e}}
+\newcommand{\bbrefdim}{{n_r}}
 
 % *********** Generic allocator ***********
 \newcommand{\allin}{\varpi}
 \newcommand{\allout}{\nu}
 \newcommand{\allssout}{\tilde{\nu}}
+
+% *********** Plant ***********
+\newcommand{\plant}{\mathcal{P}}
+\newcommand{\plantstate}{x}
+\newcommand{\plantinput}{u}
+\newcommand{\plantoutput}{y}
+\newcommand{\plantssinput}{\tilde{\plantinput}}
+\newcommand{\plantstatedim}{{n_p}}
+\newcommand{\plantinputdim}{m}
+\newcommand{\plantoutputdim}{\bboutodim}
+
+% *********** Linear plant dynamics ***********
+\newcommand{\plantdynmat}{A}
+\newcommand{\plantctrmat}{B}
+\newcommand{\plantoutmat}{C}
+\newcommand{\planttf}{W_{\plantoutput\plantinput}}
+\newcommand{\plantalltf}{W_{\plantoutput\bbaux}}
+\newcommand{\plantlcfd}{D_p}
+\newcommand{\plantlcfn}{N_p}
+\newcommand{\plantalllcfd}{D_\Sigma}
+\newcommand{\plantalllcfn}{N_\Sigma}
+
+% *********** Controller ***********
+\newcommand{\ctrl}{\mathcal{C}}
+\newcommand{\ctrlstate}{\vartheta}
+\newcommand{\ctrlouput}{\rho}
+\newcommand{\ctrlssoutput}{\tilde{\rho}}
+\newcommand{\ctrlstatedim}{{n_c}}
+\newcommand{\ctrloutputdim}{m}
+
+% *********** Linear controller ***********
+\newcommand{\ctrldynmat}{F}
+\newcommand{\ctrlctrmat}{K}
+\newcommand{\ctrlrefmat}{G}
+\newcommand{\ctrloutmat}{H}
 
 % *********** Sets ***********
 \newcommand{\R}{\mathbb{R}}
