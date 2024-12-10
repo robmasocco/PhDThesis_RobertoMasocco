@@ -23,12 +23,6 @@
 \newcommand{\bbctrmat}{B_\bbsys}
 \newcommand{\bboutmat}{C_\bbsys}
 
-% *********** Black-box feedback model ***********
-% NOTE: This is introduced in LQRALL
-\newcommand{\feedbackdynmat}{A_\vartheta}
-\newcommand{\feedbackctrmat}{B_\vartheta}
-\newcommand{\feedbackoutmat}{C_\vartheta}
-
 % *********** Black-box model dimensions ***********
 \newcommand{\bbstatedim}{n}
 \newcommand{\bbauxdim}{m}
@@ -54,8 +48,8 @@
 
 % *********** Generic allocator ***********
 \newcommand{\allin}{\varpi}
-\newcommand{\allout}{\nu}
-\newcommand{\allssout}{\tilde{\nu}}
+\newcommand{\allout}{\varsigma}
+\newcommand{\allssout}{\tilde{\allout}}
 
 % *********** Plant ***********
 \newcommand{\plant}{\mathcal{P}}
@@ -63,6 +57,7 @@
 \newcommand{\plantinput}{u}
 \newcommand{\plantoutput}{y}
 \newcommand{\plantssinput}{\tilde{\plantinput}}
+\newcommand{\plantssoutput}{\tilde{\plantoutput}}
 \newcommand{\plantstatedim}{{n_p}}
 \newcommand{\plantinputdim}{m}
 \newcommand{\plantoutputdim}{\bboutodim}
@@ -80,7 +75,7 @@
 
 % *********** Controller ***********
 \newcommand{\ctrl}{\mathcal{C}}
-\newcommand{\ctrlstate}{\vartheta}
+\newcommand{\ctrlstate}{\varphi}
 \newcommand{\ctrlouput}{\rho}
 \newcommand{\ctrlssoutput}{\tilde{\rho}}
 \newcommand{\ctrlstatedim}{{n_c}}
@@ -91,6 +86,12 @@
 \newcommand{\ctrlctrmat}{K}
 \newcommand{\ctrlrefmat}{G}
 \newcommand{\ctrloutmat}{H}
+
+% *********** Controller-centric feedback model ***********
+% NOTE: This is introduced in LQRALL.
+\newcommand{\feedbackdynmat}{A_\ctrlstate}
+\newcommand{\feedbackctrmat}{B_\ctrlstate}
+\newcommand{\feedbackoutmat}{C_\ctrlstate}
 
 % *********** Sets ***********
 \newcommand{\R}{\mathbb{R}}

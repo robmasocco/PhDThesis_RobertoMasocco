@@ -148,7 +148,13 @@
    \gdef\partlabel{}
   } % Code before the title body
 
+\usepackage{array}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
 % Fix the problem with delimiter size caused by fourier and amsmath packages.
 \makeatletter
 \def\resetMathstrut@{%
@@ -164,21 +170,23 @@
 \usepackage{subfiles} % Compile sub-main files
 
 \usepackage[capitalise]{cleveref}
-\newtheorem{assumption}{Assumption}
+\newtheorem{assumption}{Assumption}[chapter]
 \crefname{assumption}{Assumption}{Assumptions}
-\newtheorem{definition}{Definition}
+\newtheorem{definition}{Definition}[chapter]
 \crefname{definition}{Definition}{Definitions}
-\newtheorem{problem}{Problem}
+\newtheorem{problem}{Problem}[chapter]
 \crefname{problem}{Problem}{Problems}
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[chapter]
 \crefname{theorem}{Theorem}{Theorems}
-\newtheorem{claim}{Claim}[theorem]
+\newtheorem{lemma}{Lemma}[chapter]
+\crefname{lemma}{Lemma}{Lemmas}
+\newtheorem{claim}{Claim}[chapter]
 \crefname{claim}{Claim}{Claims}
-\newtheorem{remark}{Remark}
+\newtheorem{remark}{Remark}[chapter]
 \crefname{remark}{Remark}{Remarks}
-\newtheorem{corollary}{Corollary}
+\newtheorem{corollary}{Corollary}[chapter]
 \crefname{corollary}{Corollary}{Corollaries}
-\newtheorem{proposition}{Proposition}
+\newtheorem{proposition}{Proposition}[chapter]
 \crefname{proposition}{Proposition}{Propositions}
 
 \usepackage[labelfont=bf]{caption}
