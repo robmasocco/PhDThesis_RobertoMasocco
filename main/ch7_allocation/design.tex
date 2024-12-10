@@ -27,9 +27,13 @@ where $\plantstate(t)\in\R^\plantstatedim$ is the plant state, $\plantinput(t)\i
 	\end{aligned}
 	\right.
 \end{equation}
-where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output. The interconnection of the plant $\plant$ and the control system $\ctrl$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, also yielding $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$ in eq. \eqref{eq:bbsys}, \emph{i.e.}, $\bbouto = \plantoutput$.
+where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output. The interconnection of the plant $\plant$ and the control system $\ctrl$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, also yielding $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$ in eq. \eqref{eq:bbsys}, \emph{i.e.}, $\bbouto = \plantoutput$. The following assumption characterizes the properties of the feedback interconnection.
+\begin{assumption}
+  \label{ass:lqrall_real}
+  The closed-loop feedback interconnection of \eqref{eq:linplant} and \eqref{eq:lincontroller} does not induce pole-zero cancellations.
+\end{assumption}
 
-For $s\in\C$, let $\planttf(s)$ be the transfer function of the system in eq. \eqref{eq:linplant} from the input $\plantinput$ to the output $\plantoutput$ and $\plantalltf(s)$ be the transfer function of the closed loop $\bbsys$ from the input $\bbaux$ to the output $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$.
+For $s\in\C$, let $\planttf(s)$ be the transfer matrix of the system in eq. \eqref{eq:linplant} from the input $\plantinput$ to the output $\plantoutput$ with $\ctrlouput=\bbaux=0$, and $\plantalltf(s)$ be the transfer matrix of the closed loop $\bbsys$ from the input $\bbaux$ to the output $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$. Thanks to \Cref{ass:lqrall_real}, the dimensions of $\planttf(s)$ and $\plantalltf(s)$ coincide with those of the realizations used to compute them.
 
 The exogenous input in this setting is defined as the state of the exosystem $\bbexo$ in eq. \eqref{eq:bbexosys}, which is a continuous-time linear time-invariant system of the form
 \begin{equation}
@@ -49,7 +53,7 @@ where $\exodynmat\in\R^{\bbexostatedim \times \bbexostatedim},\, \exodynmat = \d
 		\exodynmat_i & = \begin{bmatrix} 0 & \omega_i \\ -\omega_i & 0 \end{bmatrix}\,, &  & i=1,\dotsc,h\,,
 	\end{aligned}
 \end{equation}
-with $\bbexostate(0) = \bbexostate_0$. The frequencies $\{\omega_1,\dotsc,\omega_h\}$ in eq. \eqref{eq:linexoblocks} are such that $\omega_i = k_i\frac{2\pi}{\bbperiod}$, $k_i\in\N$, $i=1,\dotsc,h$. 
+with $\bbexostate(0) = \bbexostate_0$. The frequencies $\{\omega_1,\dotsc,\omega_h\}$ in eq. \eqref{eq:linexoblocks} are such that $\omega_i = k_i\frac{2\pi}{\bbperiod}$, $k_i\in\N$, $i=1,\dotsc,h$.
 
 The feedback controller given in eq. \eqref{eq:lincontroller}, together with the definition of the exosystem dynamics \eqref{eq:linexoblocks}, ensure that \Cref{ass:bbiss,ass:bbssresp} are satisfied in the setting provided by this formulation. The complete block diagram of the system $\bbsys$ is shown in \Cref{fig:lqrall}.
 \begin{figure}[t!]
@@ -110,7 +114,7 @@ for all $t$. The finite horizon optimal control problem corresponding to \Cref{p
 
 \begin{problem}
 	\label{prb:lqrall_optcont}
-	Consider a continuous-time feedback control system $\bbsys$ described by \eqref{eq:linplant}, \eqref{eq:lincontroller}, and \eqref{eq:linexosystem}. Suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_kernels} hold, and define $\bar{M}$ as in \eqref{eq:lqrall_memontinv_mbar}.
+	Consider a continuous-time feedback control system $\bbsys$ described by \eqref{eq:linplant}, \eqref{eq:lincontroller}, and \eqref{eq:linexosystem}. Suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_real,ass:lqrall_kernels} hold, and define $\bar{M}$ as in \eqref{eq:lqrall_memontinv_mbar}.
 	Determine, if it exists, a function $v^{\star}(\cdot)\in\mathcal{L}_2([0,\bbperiod])$ that
 	\begin{itemize}
 		\item[(i)] minimizes the cost functional
