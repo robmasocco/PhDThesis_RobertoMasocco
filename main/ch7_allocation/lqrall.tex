@@ -122,7 +122,12 @@ for all $t$. The finite horizon optimal control problem corresponding to \Cref{p
 	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$.\closestatement
 \end{problem}
 
-It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}. The relation between \Cref{prb:ssinv} and \Cref{prb:lqrall_optcont} establishes the basis for a deeper understanding of both. Having determined the solution $v^{\star}(\cdot)$ of \Cref{prb:lqrall_optcont}, it is possible to satisfy the requirements of \Cref{prb:ssinv} simply by injecting $\bbaux(t)=v^{\star}(\Mod(t,\bbperiod))$ into the closed loop; the linearity and asymptotic stability of $\bbsys$ imply that the resulting closed loop converges to a steady-state satisfying the requirements of \Cref{prb:ssinv}. Note that while an allocated closed loop using a generic allocator solving \Cref{prb:ssinv} generally exhibits transients in both $\bbaux(\cdot)$, which is computed asymptotically, and in the overall system response, the proposed approach directly generates the steady-state evolution of $\bbaux(\cdot)$, although the remaining signals in the overall system response will still present transients to reach their allocated evolution.
+It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}.
+
+\begin{remark}
+  \label{rem:lqrall_apply}
+  The relation between \Cref{prb:ssinv} and \Cref{prb:lqrall_optcont} establishes the basis for a deeper understanding of both. Having determined the solution $v^{\star}(\cdot)$ of \Cref{prb:lqrall_optcont}, it is possible to satisfy the requirements of \Cref{prb:ssinv} simply by injecting $\bbaux(t)=v^{\star}(\Mod(t,\bbperiod))$ into the closed loop; the linearity and asymptotic stability of $\bbsys$ imply that the resulting closed loop converges to a steady-state satisfying the requirements of \Cref{prb:ssinv}. Note that while an allocated closed loop using a generic allocator solving \Cref{prb:ssinv} generally exhibits transients in both $\bbaux(\cdot)$, which is computed asymptotically, and in the overall system response, the proposed approach directly generates the steady-state evolution of $\bbaux(\cdot)$, although the remaining signals in the overall system response will still present transients to reach their allocated evolution.
+\end{remark}
 
 It is possible to derive a closed-form solution to \Cref{prb:lqrall_optcont}. However, some preliminary technical results are required. For clarity, introduce the notation
 \begin{equation}
@@ -324,4 +329,51 @@ The following result is thus obtained collecting the intermediate ones provided 
   \closestatement
 \end{theorem}
 
-% Conclude saying why this was important, linking optimal control theory with dynamic allocation
+The results illustrated so far have been corroborated by means of some numerical simulations, whose reported below. The following numerical model has been adopted for the plant $\plant$ in eq. \eqref{eq:linplant}:
+\begin{equation}
+	\label{eq:lqrall_linplant}
+		A = \left[
+			\begin{array}{cccc}
+				0 & \,  1  & \, 0 & \, 0 \\
+				0 & \, -2  & \, 0 & \, 0 \\
+				0 & \, 0   & \, 0 & \, 3 \\
+				0 & \,  -4 & \, 1 & \, 0
+			\end{array}\right],\hspace{0.1cm}
+		B = \left[
+			\begin{array}{ccc}
+				1  & \,  0  & \,  -1 \\
+				1  & \, 0   & \,  1  \\
+				-1 & \, -1  & \,  0  \\
+				0  & \,  -1 & \, 1
+			\end{array}\right],\hspace{0.1cm}
+		C = \left[
+			\begin{array}{cccc}
+				1 \quad   0 \quad 1 \quad  0
+			\end{array}\right].
+\end{equation}
+The matrices describing the stabilizing controller $\ctrl$ in eq. \eqref{eq:lincontroller} have been obtained by an LQG design with identity weights, restricting it to only the first two input channels of the plant \eqref{eq:lqrall_linplant}. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three input channels of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, while its initial condition has been chosen equal to $w_0 = [2 \ 0 \ 4 \ 0 \ 6 \ 0]'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time equal to $t_f = 7~s$.
+
+The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases, showing that both solutions converge to the same steady-state cost, which is equal to $J(v^{\star})=155.836$. The behaviors of the differences between the outputs of the non-allocated and allocated closed loops for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}, where the convergence to zero of the considered signals proves the satisfaction of the steady-state output invisibility requirement. Finally, the outputs of the hybrid allocator together with the components of $v^{\star}(t)$, are reported in \Cref{fig:lqrall_ya} showing that both signals become coincident after a transient phase.
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=.9\textwidth]{images/ch7/lqrall/sscosts}
+	\caption{Cost in the presence of input allocation by means of a hybrid allocator (red), and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
+	\label{fig:lqrall_sscosts}
+\end{figure}
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/ch7/lqrall/ydiffs}
+	\caption{Differences between the outputs of the non-allocated and allocated closed loops, in the presence of a hybrid allocator (red) and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
+	\label{fig:lqrall_ydiffs}
+\end{figure}
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=.8\textwidth]{images/ch7/lqrall/ya}
+	\caption{Outputs of a hybrid allocator (red) versus the components of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
+	\label{fig:lqrall_ya}
+\end{figure}
+
+This study provides a first step towards the integration of optimal control theory tools and results within dynamic control allocation settings. The proposed approach allows the designer to build a control allocation device which acts, in essence, as a periodic function generator. Moreover, its dynamic model is entirely determined in terms of its frequency components by \Cref{thm:lqrall_solution}. Another proof of how powerful the tools of optimal control theory can be when applied to the design of dynamic control allocation devices is given by the fact that the previous state-of-the-art solution, confirming the validity of this approach, is described by more complex hybrid dynamics.
