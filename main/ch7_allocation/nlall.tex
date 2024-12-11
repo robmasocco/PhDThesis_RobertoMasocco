@@ -1,0 +1,79 @@
+To generalize the approach validated by \Cref{thm:lqrall_solution}, one has to go back to consider the original, nonlinear model. Thus, recall the dynamical system $\bbsys$ defined as in eq. \eqref{eq:bbsys}, subject to the exogenous input produced by the exosystem described by eq. \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model $\bbsys$ subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $t_0=0$ in \eqref{eq:bbcost}, yielding
+\begin{equation}
+  \label{eq:nlall_sscost}
+  J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau\,.
+\end{equation}
+In this scenario, as in the many others reported in the literature (see \Cref{sec:sota_allocation}), the most complex requirement set by \Cref{prb:ssinv} is the output invisibility item (I); in the linear case of \Cref{prb:lqrall_optcont}, it was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving $\bbsys$ and $\bbexo$ in eq. \eqref{eq:bbsys}-\eqref{eq:bbexosys} takes a different path: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by the use of \emph{soft constraints} for output invisibility \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
+
+To substantiate this intuition a few preliminary definitions are in order. Let $\bbstate_n(t)$, $\bbstate_a(t)\in\R^\bbstatedim$ denote the state evolution of \eqref{eq:bbsys} in the absence or in the presence of the allocator, respectively, that is
+\begin{subequations}
+  \label{eq:nlall_xnxa}
+  \begin{align}
+    \dot{\bbstate}_n & = \bbvecf(\bbstate_n, \bbref)\,,\label{eq:nlall_xn} \\
+    \dot{\bbstate}_a & = \bbvecf(\bbstate_a, \bbref) + \bbinmap(\bbstate_a)\bbaux\,,\label{eq:nlall_xa}
+  \end{align}
+\end{subequations}
+and let $\bbssstate_{n}(\cdot),\,\bbssstate_{a}(\cdot)$ denote the corresponding steady-state responses, provided the latter exists. Define the \emph{output invisibility function} $h_i(\bbstate_n, \bbstate_a) : \R^\bbstatedim\times\R^\bbstatedim \rightarrow \R$ such that
+\begin{equation}
+  \label{eq:nlall_hi}
+  h_i(\bbstate_n, \bbstate_a) = \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n) - \bboutmapo(\bbstate_a) \right\Vert_2^2\,.
+\end{equation}
+A constrained optimal control problem that approximates \Cref{prb:ssinv} involving soft constraints is formulated as follows.
+
+\begin{problem}
+  \label{prb:nlall_optcont}
+  Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Fix $\bbexostate_0\in\bbexostateset^{\circ}$, $\bbexostate(0) = \bbexostate_0$. Let $h_i(\bbstate_n,\bbstate_a)$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
+  \begin{subequations}
+    \label{eq:nlall_Js}
+    \begin{align}
+      J_p(v) & = \frac{1}{2} \int_0^\bbperiod \left\Vert \bboutmapp(\bbssstate_{a}(t), v(t)) \right\Vert_2^2\,dt\,,\label{eq:nlall_Jp} \\
+      J_i(v) & = \int_0^\bbperiod h_i(\bbssstate_{n}(t),\bbssstate_{a}(t))\,dt\,.\label{eq:nlall_Ji}
+    \end{align}
+  \end{subequations}
+  Determine, if it exists, a function $v^\star(\cdot)\in\mathcal{L}_2([0, \bbperiod])$, periodic of period $\bbperiod$, such that the cost functional
+  \begin{equation}
+    \label{eq:nlall_J}
+    J(v) = J_p(v) + \alpha J_i(v)\,,
+  \end{equation}
+  with $\alpha\in\R_{>0}$, is minimized, satisfying the differential constraints \eqref{eq:nlall_xn}-\eqref{eq:nlall_xa} with $\bbaux=v$.\closestatement
+\end{problem}
+
+\begin{remark}
+  \label{rem:nlall_prbrel}
+  The output invisibility requirement, \emph{i.e.}, item (I) of \Cref{prb:ssinv}, represents the main challenge of dynamic input allocation problems in general. In \Cref{prb:nlall_optcont}, by \eqref{eq:nlall_Ji} and \eqref{eq:nlall_J}, this requirement is included as part of the minimization objective, implying that the solutions to \Cref{prb:nlall_optcont} can only approximate the behavior of those to \Cref{prb:ssinv}. The quality of the approximation depends on the specific solutions to \Cref{prb:nlall_optcont} that can be determined, using numerical methods, as $\alpha\rightarrow +\infty$.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:nlall_ssua}
+  While a generic allocator that solves \Cref{prb:ssinv} may generally exhibits transients in its output $\allout$, the solution to \Cref{prb:nlall_optcont} consists of a steady-state behavior repeated over the time interval $[0,\bbperiod]$, similarly to the previous linear case \cite{galeani_optimal_2023}. However, there may still be transients in the overall system response of $\bbsys$ and the remaining signals as they converge to their steady-state, allocated behavior.\closeremark
+\end{remark}
+
+Let $\lambda_n(t),\lambda_a(t)\in\R^{\bbstatedim}$ be the costate variables, associated to the nominal (\emph{i.e.}, non-allocated) and allocated state variables, respectively. In the following, time dependencies are omitted to ease the notation. Recalling equations \eqref{eq:nlall_xnxa} to \eqref{eq:nlall_J}, define the Hamiltonian function
+\begin{equation}
+  \label{eq:nlall_H}
+    H(\bbstate_n,\bbstate_a,\lambda_n,\lambda_a,v) = \frac{1}{2}\left\Vert \bboutmapp(\bbstate_a,v) \right\Vert_2^2 + \alpha h_i(\bbstate_n,\bbstate_a) +\lambda_n'\bbvecf(\bbstate_n,\bbref) + \lambda_a'(\bbvecf(\bbstate_a,\bbref) + \bbinmap(\bbstate_a)v)\,.
+\end{equation}
+To simplify the notation, define
+\begin{equation}
+  \label{eq:nlall_dHdv}
+    H_v(\bbstate_a,\lambda_a,v) = \frac{\partial H(\bbstate_n,\bbstate_a,\lambda_n,\lambda_a,v)}{\partial v} = \bboutmapp(\bbstate_a,v)'\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial v} + \lambda_a'\bbinmap(\bbstate_a)\,,
+\end{equation}
+and note that the costate dynamics are given by
+\begin{subequations}
+  \label{eq:nall_lambdadot}
+  \begin{align}
+    \dot{\lambda}_n &= -\alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n,\bbref)}{\partial \bbstate_n}'\lambda_n\,,\label{eq:nlal_lambdandot}\\
+    \dot{\lambda}_a &= -\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial \bbstate_a}'\bboutmapp(\bbstate_a,v) - \alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a,\bbref)}{\partial \bbstate_a}'\lambda_a - \sum_{j=1}^{\bbauxdim}\left( v_j\frac{\partial \bbinmap_j(\bbstate_a)}{\partial \bbstate_a}' \right)\lambda_a \,,\label{eq:nlall_lambdaadot}
+  \end{align}
+\end{subequations}
+where $v_j$ and $\bbinmap_j$ denote the $j$-th component and column of $v$ and $\bbinmap$, respectively.
+Given $u(t)\in\R^\bbauxdim$, denote again with $\hat{u} : \R \rightarrow \R^\bbauxdim$ the periodic extension of $u(t)$, \emph{i.e.}, $\hat{u}(t) = u(\Mod(t, \bbperiod))$.
+Let $\beta,\gamma\in\R_{>0}$, $\hat{v}(t)\in\R^\bbauxdim$, and $\bbstate_n(t)\in\R^\bbstatedim$ be the solution of \eqref{eq:nlall_xn}. Pick a final time $t_f=a\bbperiod$ with $a\in\N$ large enough to include a reasonable number of periods, an arbitrary $v_0(t)\in\R^\bbauxdim$, let $(\lambda_n(t_f),\lambda_a(t_f))=(0,0)$, and define
+\begin{equation}
+    \label{eq:nlall_deltadH}
+    \delta(H_v(\bbstate_a,\lambda_a,v)) = \left( \int_{t_f-\bbperiod}^{t_f} \frac{\partial H(t)}{\partial v} \frac{\partial H(t)}{\partial v}'\,dt \right)^{1/2}\,.
+\end{equation}
+
+% The proposed method is summarized in \Cref{alg:sweep}, and its properties are characterized by the following statement.
+
+% Say that this also was a first step to link the two theories
