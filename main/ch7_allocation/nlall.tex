@@ -60,7 +60,7 @@ To simplify the notation, define
 \end{equation}
 and note that the costate dynamics are given by
 \begin{subequations}
-  \label{eq:nall_lambdadot}
+  \label{eq:nlall_lambdadot}
   \begin{align}
     \dot{\lambda}_n &= -\alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n,\bbref)}{\partial \bbstate_n}'\lambda_n\,,\label{eq:nlal_lambdandot}\\
     \dot{\lambda}_a &= -\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial \bbstate_a}'\bboutmapp(\bbstate_a,v) - \alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a,\bbref)}{\partial \bbstate_a}'\lambda_a - \sum_{j=1}^{\bbauxdim}\left( v_j\frac{\partial \bbinmap_j(\bbstate_a)}{\partial \bbstate_a}' \right)\lambda_a \,,\label{eq:nlall_lambdaadot}
@@ -73,7 +73,156 @@ Let $\beta,\gamma\in\R_{>0}$, $\hat{v}(t)\in\R^\bbauxdim$, and $\bbstate_n(t)\in
     \label{eq:nlall_deltadH}
     \delta(H_v(\bbstate_a,\lambda_a,v)) = \left( \int_{t_f-\bbperiod}^{t_f} \frac{\partial H(t)}{\partial v} \frac{\partial H(t)}{\partial v}'\,dt \right)^{1/2}\,.
 \end{equation}
+The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties are characterized by the following statement.
 
-% The proposed method is summarized in \Cref{alg:sweep}, and its properties are characterized by the following statement.
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{algorithm}[H]
+	\caption{Steady-state steepest descent algorithm \cite{masocco_dynamic_2024}.}
+	\label{alg:nlall_sweep}
+	\KwData{$\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t)$}
+	\KwResult{$\tilde{v}(t)$}
+  let $t\in[0,t_f]$\;
+  $\tilde{v}^{(0)}(t) \gets v_0(t)$\;
+  \For{$k=1,\dotsc$}{
+    $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
+    $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
+    \eIf{$\delta(H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})) < \beta$}
+    {
+      \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
+    }
+    {
+      $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})$\;
+      $u_p^{(k)}(\tau) \gets u^{(k)}(t_f - \bbperiod + \tau)$, with $\tau\in[0,\bbperiod]$\;
+      $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ /* Periodic extension. */\;
+    }
+  }
+\end{algorithm}
+\end{minipage}
+\end{center}
 
-% Say that this also was a first step to link the two theories
+\begin{theorem}
+  \label{thm:nlall_main}
+  Consider the system \eqref{eq:bbsys}, fix $\alpha>0$, and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Then, given $v_0 : \R \rightarrow \R^{\bbauxdim}$, and $t_f=a\bbperiod$, there exists a sequence $\{\gamma^{(k)}\}\subset\R_{>0}$ such that the sequence of successive updates $\{\Tilde{v}^{(k)}\}$ produced by \Cref{alg:nlall_sweep} converges to an extremal solution of \Cref{prb:nlall_optcont}. Furthermore, if \Cref{prb:nlall_optcont} admits an optimal solution $v^{\star}$ which is the unique extremal, then
+  \begin{equation}
+      \label{eq:nlall_limnu}
+      \lim_{k\rightarrow +\infty} \left\Vert \Tilde{v}^{(k)}(t) - v^{\star}(t)\right\Vert = 0,
+  \end{equation}
+  for all $t \in [t_0,t_f]$.\closestatement
+\end{theorem}
+\begin{proof}
+  The existence of the sequence $\{\gamma^{(k)}\}$, as well as its convergence properties, are guaranteed by the Steepest Descent Algorithm (see, \emph{e.g.}, \cite[Sec. 6.2]{kirk_optimal_1970}) adapted in \Cref{alg:nlall_sweep} to the steady-state optimal control problem formalized in \Cref{prb:nlall_optcont}.
+\end{proof}
+
+\begin{remark}
+  \label{rem:nlall_algparams}
+  In practical scenarios, the update step $\gamma$ may be selected as a constant value together with a suitably defined stopping criterion evaluating the norm of the gradient at each step, trading asymptotic convergence for implementation simplicity. Consequently, if the magnitude of the update step is large, it could induce oscillations around the solution which could be undesirable or even lead to an auxiliary input that violates \Cref{ass:bbiss}. Furthermore, the feasibility of \Cref{alg:nlall_sweep} may also depend on the value of the parameter $\alpha$. Recalling \eqref{eq:nlall_lambdaadot}, a large value could make the backward integration numerically unfeasible.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:nlall_dt}
+  Recall that, as noted in \cite{kirk_optimal_1970}, another parameter of interest concerning the numerical implementations of \Cref{alg:nlall_sweep} is the sampling interval with respect to which the time interval $[0,t_f]$ is discretized. The magnitude of the sampling interval must usually be small to allow for a feasible approximation of the continuous-time dynamics involved in \Cref{prb:ssinv} and has direct repercussions on the computational complexity of the integration steps.\closeremark
+\end{remark}
+
+The choice of the descent step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}. Unlike the finite-dimensional setting, the descent direction provided by the gradient method in the this context is infinite-dimensional. Nonetheless, the choice of the proper descent step constitutes a one-dimensional task in both settings. This makes the use of heuristic methods still viable in the infinite-dimensional setting.
+
+The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a temporary overlap of notation, the variables $s$ and $r$ store at each iteration, respectively, the values of $H_v$ and $H_v \odot H_v$ of the current and of the previous iterations. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}(\tau)$, as well as the operation $(\cdot)^{-1}$ on $((\hat{r}(\tau))^{1/2}+\delta)$, reported on line 17 of \Cref{alg:nlall_adam}, are both performed element-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the step size. In particular, an appropriate choice of these parameters allows discarding all the information related to less recent iterations, thus updating the step size by relying only on the most recent information. It is worth mentioning that this scheme adjusts the step size dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
+
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{algorithm}[H]
+	\caption{Steady-state ADAM algorithm \cite{masocco_dynamic_2024}.}
+	\label{alg:nlall_adam}
+	\KwData{$\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t),\,\rho_1,\,\rho_2,\,\delta$}
+	\KwResult{$\tilde{v}(t)$}
+  let $t\in[0,t_f]$\;
+  $\tilde{v}^{(0)}(t) \gets v_0(t)$\;
+  $s^{(0)}(t)\gets0$\;
+  $r^{(0)}(t)\gets0$\;
+  \For{$k=1,\dotsc$}{
+    $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
+    $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
+    \eIf{$\delta(H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})) < \beta$}
+    {
+      \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
+    }
+    {
+      let $\tau \in [0, \bbperiod]$, $\Bar{\tau} = t_f - \bbperiod + \tau$\;
+      $H_v \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$\;
+      $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v$\;
+      $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v\odot H_v$\;
+      $\hat{s}(\Bar{\tau}) \gets s(\Bar{\tau})/(1-\rho_1^k)$\;
+      $\hat{r}(\Bar{\tau}) \gets r(\Bar{\tau})/(1-\rho_2^k)$\;
+      $\Delta u^{(k)}(\Bar{\tau})\gets-\gamma\,\hat{s}(\Bar{\tau})\odot((\hat{r}(\Bar{\tau}))^{1/2}+\delta)^{-1}$\;
+      $u^{(k)}(\Bar{\tau}) \gets \tilde{v}^{(k-1)}(\Bar{\tau}) + \Delta u^{(k)}(\Bar{\tau}) $\;
+      $u_p^{(k)}(\tau) \gets u^{(k)}(\Bar{\tau})$\;
+      $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ /* Periodic extension. */\;
+    }
+  }
+\end{algorithm}
+\end{minipage}
+\end{center}
+
+The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in eq. \eqref{eq:bbexosys}:
+\begin{equation}
+  \label{eq:nlall_simexo}
+  \left\{
+    \begin{aligned}
+      \dot{\bbexostate} &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate\,,\\[1.5pt]
+      \bbref &= \begin{bmatrix} \bbexostate_1 + \bbexostate_3 \\ \bbexostate_2 \end{bmatrix}\,,
+    \end{aligned}
+  \right.
+\end{equation}
+with $\omega=2\pi f$, $f=0.2$, and $\bbexostate_0 = \begin{pmatrix} 0 & \omega & 2 \end{pmatrix}'$. Then, consider the following continuous-time system of the form \eqref{eq:bbsys}
+\begin{equation}
+  \label{eq:nlall_simplant}
+  \left\{
+    \begin{aligned}
+      \dot{\bbstate} &= \begin{bmatrix} 0 \\ \bbstate_1+\bbstate_2 \\ \bbstate_1-\bbstate_2 \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2} & 1 \\ e^{\bbstate_2} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate,r)+\bbaux)\,,\\
+      \bboutp &= h_c(\bbstate,\bbref) + \bbaux\,,\\
+      \bbouto &= (1+\bbstate_3)^3\,,
+    \end{aligned}
+  \right.
+\end{equation}
+where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate,\bbref)$ has been designed as a feedback-linearizing input operating only on the first input channel, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(x) = \begin{pmatrix} e^{\bbstate_2} & e^{\bbstate_2} & 0 \end{pmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
+
+\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 \equiv 0$, $\bbstate(0)$ initialized on the manifold described by $\bbstate=\pi(\bbexostate)$ consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different weights for the invisibility term after the algorithm terminated all the iterations: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a low output error.
+
+A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in around half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
+
+Regarding the resulting system input, \Cref{fig:nlall_hcn} shows the feedback-linearizing input alone, while \Cref{fig:nlall_ua} depicts the auxiliary input determined after all the iterations of \Cref{alg:nlall_adam} have been performed. Finally, \Cref{fig:nlall_hca} illustrates the variation in the system input induced by the allocation action. It is worth pointing out that, even if the nominal system input uses only one channel, the auxiliary one is distributed among both channels. Thus, the allocated system input is remodulated among both input channels and, accordingly to the definition of the performance output $\bboutp$ in this example, it exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch7/nlall/errs.eps}
+  \caption{Difference between the system output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
+  \label{fig:nlall_errs}
+\end{figure}
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=.8\textwidth]{images/ch7/nlall/cost.eps}
+    \caption{Cost during all the iterations performed with \Cref{alg:nlall_sweep} (red) versus those with \Cref{alg:nlall_adam} (blue).}
+    \label{fig:nlall_cost}
+\end{figure}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch7/nlall/hcn.eps}
+  \caption{Nominal, feedback-linearizing control law.}
+  \label{fig:nlall_hcn}
+\end{figure}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch7/nlall/ua.eps}
+  \caption{Optimal auxiliary input determined by \Cref{alg:nlall_adam}.}
+  \label{fig:nlall_ua}
+\end{figure}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=.8\textwidth]{images/ch7/nlall/hca.eps}
+  \caption{System input subject to input allocation determined by \Cref{alg:nlall_adam}.}
+  \label{fig:nlall_hca}
+\end{figure}

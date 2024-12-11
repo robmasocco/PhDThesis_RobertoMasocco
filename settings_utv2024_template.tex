@@ -155,6 +155,9 @@
 \usepackage{amsfonts}
 \usepackage{mathtools}
 
+\usepackage[noline,ruled,linesnumbered]{algorithm2e}
+\SetKwComment{Comment}{/* }{ */}
+
 % Fix the problem with delimiter size caused by fourier and amsmath packages.
 \makeatletter
 \def\resetMathstrut@{%
@@ -188,6 +191,8 @@
 \crefname{corollary}{Corollary}{Corollaries}
 \newtheorem{proposition}{Proposition}[chapter]
 \crefname{proposition}{Proposition}{Propositions}
+
+\crefname{algorithm}{Algorithm}{Algorithms}
 
 \usepackage[labelfont=bf]{caption}
 \usepackage{svg}
