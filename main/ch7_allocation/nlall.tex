@@ -63,10 +63,10 @@ and note that the costate dynamics are given by
   \label{eq:nlall_lambdadot}
   \begin{align}
     \dot{\lambda}_n &= -\alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n,\bbref)}{\partial \bbstate_n}'\lambda_n\,,\label{eq:nlal_lambdandot}\\
-    \dot{\lambda}_a &= -\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial \bbstate_a}'\bboutmapp(\bbstate_a,v) - \alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a,\bbref)}{\partial \bbstate_a}'\lambda_a - \sum_{j=1}^{\bbauxdim}\left( v_j\frac{\partial \bbinmap_j(\bbstate_a)}{\partial \bbstate_a}' \right)\lambda_a \,,\label{eq:nlall_lambdaadot}
+    \dot{\lambda}_a &= -\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial \bbstate_a}'\bboutmapp(\bbstate_a,v) - \alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a,\bbref)}{\partial \bbstate_a}'\lambda_a - \sum_{\iota=1}^{\bbauxdim}\left( v_\iota\frac{\partial \bbinmap_\iota(\bbstate_a)}{\partial \bbstate_a}' \right)\lambda_a \,,\label{eq:nlall_lambdaadot}
   \end{align}
 \end{subequations}
-where $v_j$ and $\bbinmap_j$ denote the $j$-th component and column of $v$ and $\bbinmap$, respectively.
+where $v_\iota$ and $\bbinmap_\iota$ denote the $\iota$-th component and column of $v$ and $\bbinmap$, respectively.
 Given $u(t)\in\R^\bbauxdim$, denote again with $\hat{u} : \R \rightarrow \R^\bbauxdim$ the periodic extension of $u(t)$, \emph{i.e.}, $\hat{u}(t) = u(\Mod(t, \bbperiod))$.
 Let $\beta,\gamma\in\R_{>0}$, $\hat{v}(t)\in\R^\bbauxdim$, and $\bbstate_n(t)\in\R^\bbstatedim$ be the solution of \eqref{eq:nlall_xn}. Pick a final time $t_f=a\bbperiod$ with $a\in\N$ large enough to include a reasonable number of periods, an arbitrary $v_0(t)\in\R^\bbauxdim$, let $(\lambda_n(t_f),\lambda_a(t_f))=(0,0)$, and define
 \begin{equation}

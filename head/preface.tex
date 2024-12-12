@@ -5,3 +5,26 @@
 \doublespacing
 
 {\color{red}This is the summary of three years of work spanning multiple areas. From the problem to the solution. It is inevitable to name some tools and concepts before they are explained later on among chapters. The project described herein is under active development and the contents of this document may not be completely up-to-date or they may already include fixes and update that are going to be deployed in the short term.}
+
+\section*{Notation}
+The set $\N$ is defined as containing all the positive integer numbers, excluding $0$, whereas $\Z$ denotes the set of all positive and negative integer numbers, including $0$. The sets of real and complex numbers are denoted $\R$ and $\C$, respectively.\\
+
+The imaginary unit is denoted as $j$.
+Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively.
+Let $\R_{\geq0}=\{a \in \R:a\geq0\}$, $\Z_{\geq0}=\{k \in \Z:k\geq0\}$, $\C_0=\{z \in \C:\Re(z)=0\}$, $\C_{<0}=\{z \in \C:\Re(z)<0\}$,	and $\C_{\geq0}=\{z \in \C:\Re(z)\geq0\}$.\\
+
+Given a vector $v\in\R^n$, the symbol $\left\Vert v \right\Vert_2$ denotes its Euclidean norm.
+Given a vector space $V$, $\dim(V)$ denotes its dimension.
+$e_j$ denotes the $j$-th vector of the canonical basis of	$\R^n$.
+The expression $\|v\|^{2}_R$ denotes the product $v'Rv$.\\
+
+Given a matrix $A$, $\Imag(A)$ denotes its image, $\ker(A)$ denotes its null space, $A'$ denotes its transpose,  $A^{\dagger}$ denotes its Moore-Penrose inverse, and $A^\perp$ denotes a basis matrix for its null space. $\spec(A)$ denotes the spectrum of the matrix $A$.
+Given two matrices $A,B\in\R^{m \times n}$ $A \odot B$ denotes their Hadamard, or entrywise, product, while $A \otimes B$ denotes their Kronecker product.
+Given the square matrices $\{A_1,\dotsc,A_n\}$, the operator $\diag(A_1,\dotsc,A_n)$ denotes the square matrix obtained by concatenating the former matrices on its diagonal.\\
+
+The symbol $I_n$ denotes the identity matrix of order $n$, the subscript is omitted when clear from the context.
+For a block partitioned matrix $\mathcal{M}$,	$\mathcal{M}_{[k,h]}$ is its $(k,h)-$th block, $\mathcal{M}_{[:,h]}$ is its $h-$th block column, and $\mathcal{M}_{[:,1:h]}$ is the sub-matrix formed by its first $h$ block columns.\\
+
+$\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that are square-integrable over the interval $[a,b]$.\\
+
+For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ denotes the value of $t$ modulo $T$.
