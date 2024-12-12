@@ -190,12 +190,12 @@ where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a feedback control law, and $\b
 
 A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in around half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
 
-Regarding the resulting system input, \Cref{fig:nlall_hcn} shows the feedback-linearizing input alone, while \Cref{fig:nlall_ua} depicts the auxiliary input determined after all the iterations of \Cref{alg:nlall_adam} have been performed. Finally, \Cref{fig:nlall_hca} illustrates the variation in the system input induced by the allocation action. It is worth pointing out that, even if the nominal system input uses only one channel, the auxiliary one is distributed among both channels. Thus, the allocated system input is remodulated among both input channels and, accordingly to the definition of the performance output $\bboutp$ in this example, it exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
+Regarding the performance output $\bboutp$, \Cref{fig:nlall_hcn} shows the nominal system input given by the feedback linearization process and \Cref{fig:nlall_ua} depicts the auxiliary input determined by \Cref{alg:nlall_adam}. Finally, \Cref{fig:nlall_hca} illustrates the performance output subject to the allocation action. It is worth pointing out that, even if the feedback-linearizing system input uses only one channel, the auxiliary one is distributed among both channels. Thus, the allocated system input is remodulated among both input channels and, in accordance with the definition of the performance output in this example, $\bboutp$ exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=.8\textwidth]{images/ch7/nlall/errs.eps}
-  \caption{Difference between the system output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
+  \caption{Difference between the regulated output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
   \label{fig:nlall_errs}
 \end{figure}
 
@@ -209,20 +209,20 @@ Regarding the resulting system input, \Cref{fig:nlall_hcn} shows the feedback-li
 \begin{figure}[t!]
   \centering
   \includegraphics[width=.8\textwidth]{images/ch7/nlall/hcn.eps}
-  \caption{Nominal, feedback-linearizing control law.}
+  \caption{Nominal feedback-linearizing system input.}
   \label{fig:nlall_hcn}
 \end{figure}
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=.8\textwidth]{images/ch7/nlall/ua.eps}
-  \caption{Optimal auxiliary input determined by \Cref{alg:nlall_adam}.}
+  \caption{Auxiliary input determined by \Cref{alg:nlall_adam}.}
   \label{fig:nlall_ua}
 \end{figure}
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=.8\textwidth]{images/ch7/nlall/hca.eps}
-  \caption{System input subject to input allocation determined by \Cref{alg:nlall_adam}.}
+  \caption{Performance output subject to the input allocation determined by \Cref{alg:nlall_adam}.}
   \label{fig:nlall_hca}
 \end{figure}
