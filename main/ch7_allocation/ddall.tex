@@ -1,0 +1,61 @@
+Recalling the generic model of $\bbsys$ introduced in eq. \eqref{eq:bbsys}, consider now a continuous-time, linear time-invariant model given by
+\begin{subequations}
+  \label{eq:ddall_sys}
+  \begin{align}
+    \dot{\bbstate} &= A(\mu)\bbstate + B(\mu)\bbaux + P(\mu)\bbexostate\,, \label{eq:ddall_sys_x}\\
+    \bbouto & = C_1(\mu)\bbstate + D_{11}(\mu)\bbaux + D_{12}(\mu)\bbexostate\,, \label{eq:ddall_sys_z0}\\
+    \bboutp & = C_2(\mu)\bbstate + D_{21}(\mu)\bbaux + D_{22}(\mu)\bbexostate\,, \label{eq:ddall_sys_z}
+  \end{align}
+\end{subequations}
+with $\bbstate\in\R^\bbstatedim$ denoting the state of the system, $\bbaux\in\R^\bbauxdim$ as the auxiliary input, $\bbexostate\in\R^\bbexostatedim$ as the exogenous input, and $\bbouto\in\R^{\bboutodim}$ and $\bboutp\in\R^{\bboutpdim}$ as the regulated and the performance outputs, respectively. In this scenario, the exogenous input is again taken as the full state of the exosystem $\bbexo$ in eq. \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem is described by the linear time-invariant model
+\begin{align}
+  \label{eq:ddall_exo}
+  \dot{\bbexostate} &= \exodynmat\bbexostate\,,
+\end{align}
+with some initial condition $\bbexostate(0) = \bbexostate_0$. The model corresponds to the one depicted in \Cref{fig:bbsys}.
+
+It is assumed that the matrices in \eqref{eq:ddall_sys} depend continuously on an unmeasured vector $\mu$ belonging to a set $\mathcal{M}$ that contains the origin: the case $\mu = 0$ describes the nominal plant and it is known by assumption. Although in similar cases studied in the literature (see, \emph{e.g.}, \cite{cocetti_linear_2018}), the set $\mathcal{M}$ is assumed to be fully described and compact, these properties are not necessary for the results that follow. To simplify the notation in the following, the dependence of the matrices in \eqref{eq:ddall_sys} on $\mu$ is omitted unless strictly necessary. The properties of the uncertain model are characterized by the following assumption.
+
+\begin{assumption}
+  \label{ass:ddall_plant_exo}
+  The matrix $A$ in \eqref{eq:ddall_sys_x} is Hurwitz for any $\mu\in\mathcal{M}$.
+  The matrix $\exodynmat\in\R^{\bbexostatedim\times\bbexostatedim}$ in \eqref{eq:ddall_exo} is such that $\spec(\exodynmat)\subset\C_{0}$; moreover, its eigenvalues are all distinct and possess \emph{commensurate} angular frequencies.\closestatement
+\end{assumption}
+
+As an immediate consequence of \Cref{ass:ddall_plant_exo}, the exosystem \eqref{eq:ddall_exo} is assumed to be Poisson stable (see \Cref{sec:all_design_ssinv}) and its evolution is periodic of period $\bbperiod$ defined by the least common multiple of the individual periods.
+
+Let
+\begin{subequations}
+	\begin{align}
+		W_{\bbouto\bbaux}(s)&=C_1(sI-A)^{-1}B+D_{11}, \label{eq:ddall_W_z0_u}\\
+		W_{\bboutp\bbaux}(s)&=C_2(sI-A)^{-1}B+D_{21}, \label{eq:ddall_W_zp_u}
+	\end{align}
+\end{subequations}
+denote the transfer matrices of \eqref{eq:ddall_sys} from $\bbaux$ to $\bbouto$ and from $\bbaux$ to $\bboutp$, respectively. Recalling \Cref{ass:bbiss,ass:bboveract}, it is necessary to further characterize the over-actuation property in the uncertain case introduced by \eqref{eq:ddall_sys} to ensure that input allocation remains possible.
+\begin{assumption}
+  \label{ass:ddall_redundancy}
+  For any $\mu\in\mathcal{M}$, the system \eqref{eq:ddall_sys_x}, \eqref{eq:ddall_sys_z0} is such that $\bbauxdim>\bboutodim$, $\rank(B) = \bbauxdim$, and $\rank(W_{\bbouto\bbaux}(s)) = \bboutodim$.\closestatement
+\end{assumption}
+Finally, recall the definition of the cost functional $J$ provided in \eqref{eq:bbcost}, as well as the properties of the instantaneous cost function $\ell$. To provide a concise description of the control objective in this scenario, $\eta_0(t,t_0,\bbstate_0,\bbexostate(\cdot),\bbaux(\cdot))$ the output response for output $\bbouto$ at time $t \geqslant t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate(\tau)$ and $\bbaux(\tau)$, $\tau \in [t_0, t]$. The control problem of interest in this context can be formulated as follows.
+
+\begin{problem}
+  \label{prb:ddall_main_per}
+  Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Consider the linear models of the systems $\bbsys$ and $\bbexo$ given in \eqref{eq:ddall_sys} and \eqref{eq:ddall_exo}, respectively, and the steady-state cost functional \eqref{eq:bbcost}. Design a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
+  \begin{equation}
+    \label{eq:ddall_all_interc}
+    \begin{aligned}
+      \allin &= \bbexostate\,,\\
+      \allout &= \bbaux\,,
+    \end{aligned}
+  \end{equation}
+  such that the following requirements are satisfied.
+  \begin{enumerate}[(i)]
+    \item \emph{Fixed-time robust output invisibility}: there exists a finite time $t_0 \geqslant 0$ with the property that, for any $\mu\in\mathcal{M}$, the regulated output $\bbouto$ satisfies
+    \begin{equation}
+      \label{eq:ddall_output_invis}
+      \eta_0(t,t_0,\bbstate_0,\bbexostate(\cdot),0) = \eta_0(t,t_0,\bbstate_0,\bbexostate(\cdot),\bbaux(\cdot))\,,
+    \end{equation} \noindent for any $t \geqslant t_0$ and $(\bbstate_0,\bbexostate_0)\in\R^{\bbstatedim}\times\R^{\bbexostatedim}$.
+    \item \emph{Steady-state periodicity}: for any $\bbexostate_0\in\R^{\bbexostatedim}$, the internal state of the control allocator is bounded for any time and its unique steady-state response is periodic of period $\bbperiod$.
+    \item \emph{Optimality}: the Lagrange cost functional \eqref{eq:bbcost} is minimized with respect to the class of inputs in a \emph{prescribed} finite-dimensional function space.
+  \end{enumerate}
+\end{problem}
