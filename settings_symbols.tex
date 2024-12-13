@@ -32,12 +32,13 @@
 \newcommand{\bboutodim}{{\bboutdim_o}}
 
 % *********** Black-box model exosystem ***********
-\newcommand{\bbexo}{\mathcal{E}}
+\newcommand{\bbexo}{E}
 \newcommand{\bbexostate}{w}
 \newcommand{\bbref}{r}
 \newcommand{\bbexovecf}{\xi}
 \newcommand{\bbexooutmap}{\psi}
 \newcommand{\bbexostateset}{\mathcal{W}}
+\newcommand{\bbexoinitset}{\bbexostateset^\circ}
 \newcommand{\fbimap}{\pi}
 
 % *********** Linear exosystem dynamics ***********
@@ -53,7 +54,7 @@
 \newcommand{\allssout}{\tilde{\allout}}
 
 % *********** Plant ***********
-\newcommand{\plant}{\mathcal{P}}
+\newcommand{\plant}{\Theta}
 \newcommand{\plantstate}{x}
 \newcommand{\plantinput}{u}
 \newcommand{\plantoutput}{y}
@@ -75,7 +76,7 @@
 \newcommand{\plantalllcfn}{N_\Sigma}
 
 % *********** Controller ***********
-\newcommand{\ctrl}{\mathcal{C}}
+\newcommand{\ctrl}{\Gamma}
 \newcommand{\ctrlstate}{\varphi}
 \newcommand{\ctrlouput}{\rho}
 \newcommand{\ctrlssoutput}{\tilde{\rho}}
@@ -108,6 +109,7 @@
 \newcommand{\ROS}{ROS~2\xspace}
 
 % *********** Mathematical operators ***********
+\DeclareMathOperator{\setint}{int}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\spec}{spec}
 \DeclareMathOperator{\rank}{rank}

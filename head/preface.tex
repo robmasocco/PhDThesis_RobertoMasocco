@@ -7,7 +7,7 @@
 {\color{red}This is the summary of three years of work spanning multiple areas. From the problem to the solution. It is inevitable to name some tools and concepts before they are explained later on among chapters. The project described herein is under active development and the contents of this document may not be completely up-to-date or they may already include fixes and update that are going to be deployed in the short term.}
 
 \section*{Notation}
-The set $\N$ is defined as containing all the positive integer numbers, excluding $0$, whereas $\Z$ denotes the set of all positive and negative integer numbers, including $0$. The sets of real and complex numbers are denoted $\R$ and $\C$, respectively.
+Given a set $\mathcal{U}$, $\setint(\mathcal{U})$ denotes its interior. The set $\N$ is defined as containing all the positive integer numbers, excluding $0$, whereas $\Z$ denotes the set of all positive and negative integer numbers, including $0$. The sets of real and complex numbers are denoted $\R$ and $\C$, respectively.
 
 The imaginary unit is denoted as $j$.
 Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively.
@@ -35,3 +35,9 @@ For a block-partitioned matrix $\mathcal{M}$,	$\mathcal{M}_{[k,h]}$ is its $(k,h
 $\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that are square-integrable over the interval $[a,b]$.
 
 For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ denotes the value of $t$ modulo $T$.
+
+Let $t\in\R_{\geqslant 0}$ be the continuous time variable. Consider the continuous-time dynamic system $\Sigma$ defined by the equation
+\begin{equation*}
+  \dot{x}(t) = f(x(t)), \quad t\in\R_{\geqslant 0},
+\end{equation*}
+where $x(t)\in\R^n$ is the state vector and the function $f : \R^n \rightarrow \R^n$ is smooth. Let $x(0) = x_0$, $x_0\in\mathcal{U}$. Then, for any $x_0\in\mathcal{U}$, the solution of the system $\Sigma$ is uniquely defined for $t\in[0,T)$, where $T = T(x_0)$, and it can be expressed by a function $x(t) = \Phi_t^f(x_0)$. The function $\Phi_t^f : \mathcal{U} \rightarrow \R^n$ is termed \emph{flow} of $f$. Moreover, the system $\Sigma$ is said to be \emph{complete} if and only if its solution exists for any $t\in\R_{\geqslant 0}$.

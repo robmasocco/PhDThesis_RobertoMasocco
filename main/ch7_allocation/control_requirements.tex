@@ -1,116 +1,124 @@
 \section{Control requirements}
 \label{sec:all_prbs}
-As the literature review offered in \Cref{sec:sota_allocation} points out, the current landscape of dynamic control allocation problems and proposed results is quite wide. A dynamic control allocator for the TCV shape controller should be designed to integrate within the existing framework, not only in terms of its implementation but also of the the modeling techniques on which it is based.
-
-For this work, the following formulations of a dynamic control allocation problem have been considered. Their evaluation has led to theoretical results that are illustrated in the following and allowed the author to identify the most suitable approach for the TCV case.
+A dynamic control allocator for the TCV shape controller is to be designed in a way that makes it easy to be integrated within the existing framework, not only in terms of its implementation but also of the modeling techniques on which it is based. For this work, the following formulations of a dynamic control allocation problem have been considered. Their evaluation has led to theoretical results that are illustrated in the following and allowed the author to identify the most suitable approach for the TCV case.
 
 \subsection{Preliminary definitions}
 \label{sec:defs}
-It is instrumental to begin this discussion with the introduction of a few preliminary definitions and mathematical models that are used throughout the chapter. Let $t\in\R_{\geq 0}$ be the continuous time variable. Consider a continuous-time, time-invariant dynamic system $\bbsys$ described by the equations
+Each dynamic system defined in the following is assumed to be \emph{complete} unless differently specified. Consider a continuous-time, time-invariant dynamic system $\bbsys$ described by the equations
 \begin{subequations}
   \label{eq:bbsys}
   \begin{align}
     \dot{\bbstate}(t) & = f(\bbstate(t),\bbref(t)) + g(\bbstate(t))\bbaux(t), & t\in\R_{\geqslant 0}, \\
-    \bboutp(t)     & = \bboutmapp(\bbstate(t), \bbaux(t)), & t\in\R_{\geqslant 0}, \\
-    \bbouto(t)     & = \bboutmapo(\bbstate(t)), & t\in\R_{\geqslant 0},
+    \bboutp(t) & = \bboutmapp(\bbstate(t), \bbaux(t)), & t\in\R_{\geqslant 0}, \\
+    \bbouto(t) & = \bboutmapo(\bbstate(t)), & t\in\R_{\geqslant 0},
   \end{align}
 \end{subequations}
-where $\bbstate(t)\in\R^\bbstatedim$ denotes the state of the system, $\bbref(t)\in\R^{\bbrefdim}$ is an exogenous input, $\bbaux(t)\in\R^\bbauxdim$ is an \emph{auxiliary input}, and $\bboutp(t)\in\R^{\bboutpdim}$, $\bbouto(t)\in\R^{\bboutodim}$ are outputs. Let one assume that the vector fields $\bbvecf : R^{\bbstatedim} \times \R^{\bbrefdim} \rightarrow \R^\bbstatedim$ and $\bbinmap_i : \R^{\bbstatedim} \rightarrow \R^{\bbstatedim}$, $i = 1, ..., m$ and the mappings $\bboutmapp : \R^{\bbstatedim} \times \R^{\bbauxdim} \rightarrow \R^{\bboutodim}$ and $\bboutmapo : \R^{\bbstatedim} \rightarrow \R^{\bboutodim}$ are sufficiently smooth. The system \eqref{eq:bbsys} denotes a \emph{two-input two-output} (TITO) model with additional input channels that represents many situations: the ones that are of interest in the context of this work are those where plants with a preexisting control system are embedded in a single model of the form of $\bbsys$. These situations are further detailed in the following together with the peculiarities of each case that has been considered. Regarding the outputs, hereby partitioned in two vectors for convenience, $\bboutp$ is a \emph{performance output} that measures the overall performance of the system $\bbsys$ and $\bbouto$ is a \emph{regulated output}, which follows a desired behavior by the action of some component that is internal to $\bbsys$.
+where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbref(t)\in\R^{\bbrefdim}$ is the \emph{reference} input, $\bbaux(t)\in\R^\bbauxdim$ is the \emph{auxiliary} control input, and $\bboutp(t)\in\R^{\bboutpdim}$, $\bbouto(t)\in\R^{\bboutodim}$ are the output vectors. Let the functions $\bbvecf : R^{\bbstatedim} \times \R^{\bbrefdim} \rightarrow \R^\bbstatedim$, $\bbinmap_i : \R^{\bbstatedim} \rightarrow \R^{\bbstatedim}$, $i = 1, ..., m$, $\bboutmapp : \R^{\bbstatedim} \times \R^{\bbauxdim} \rightarrow \R^{\bboutodim}$, and $\bboutmapo : \R^{\bbstatedim} \rightarrow \R^{\bboutodim}$ be smooth. $\bbsys$ is a \emph{two-input two-output} (TITO) model that is convenient to deal with multiple kinds of real-world plants: the ones that are of interest here are those where $\bbsys$ embeds a dynamic process and a given control system for it. These situations are further detailed in the following together with the peculiarities of each case that has been considered. $\bboutp$ is an output that measures the overall performance of the system (namely, a \emph{performance output}) and the output $\bbouto$ follows a desired behavior (namely, a \emph{regulated output}) usually by the action of some given component that is internal to $\bbsys$.
 
-The exogenous input $\bbref$ is generated by the \emph{exosystem}
-\begin{equation}
+The reference input $\bbref$ is generated by the \emph{exosystem} $\bbexo$ described by the equations
+\begin{subequations}
   \label{eq:bbexosys}
-  \bbexo := \left\{
-  \begin{aligned}
-    \dot{\bbexostate} & = \bbexovecf(\bbexostate)\,,  \\
-    \bbref            & = \bbexooutmap(\bbexostate)\,,
-  \end{aligned}
-  \right.
-\end{equation}
-where $\bbexostate(t)$ is the exosystem state, $\bbexostate(t) \in \bbexostateset \subset \R^{\bbexostatedim}$, $\bbexostateset$ compact invariant set, and the vector field $\bbexovecf : \R^{\bbexostatedim} \rightarrow \R^{\bbexostatedim}$ and the mapping $\bbexooutmap : \R^{\bbexostatedim} \rightarrow \R^{\bbrefdim}$ are smooth. The origin $\bbexostate=0$ is a stable equilibrium of the vector field $\bbexovecf(\bbexostate)$ in the Lyapunov sense. Moreover, any $\bbexostate^\circ\in\mathcal{W}$ is such that the flow $\Phi^{\bbexovecf}_{t}(\bbexostate^\circ)$ is defined for all $t\in\R$ and, for each neighborhood $U^\circ$ of $\bbexostate^\circ$ and for each real number $\tau>0$, there exists a time $t_1>\tau$ such that $\Phi^{\bbexovecf}_{t_1}(\bbexostate^\circ)\in U^\circ$, and a time $t_2<-\tau$ such that $\Phi^{\bbexovecf}_{t_2}(\bbexostate^\circ)\in U^\circ$. In other words, for any $\bbexostate^\circ\in\mathcal{W}$, the trajectory $\bbexostate(t)$ that originates in $\bbexostate^\circ$ passes arbitrarily close to $\bbexostate^\circ$ for arbitrarily large times, in forward and backward time directions. This is the definition of Poisson stability (see \cite{isidori_nonlinear_1995}); it implies that no trajectory of \eqref{eq:bbexosys} can decay to zero as time tends to infinity.
+  \begin{align}
+    \dot{\bbexostate}(t) & = \bbexovecf(\bbexostate(t)), & t\in\R_{\geqslant 0} \\
+    \bbref(t)            & = \bbexooutmap(\bbexostate(t)), & t\in\R_{\geqslant 0}
+  \end{align}
+\end{subequations}
+where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector, $\bbexostate(0)=\bbexostate_0$, and the functions $\bbexovecf : \R^{\bbexostatedim} \rightarrow \R^{\bbexostatedim}$ and $\bbexooutmap : \R^{\bbexostatedim} \rightarrow \R^{\bbrefdim}$ are smooth. The properties of $\bbexo$ are characterized by the following ``blanket assumptions'', which implicitly hold from this point onward.
 
-The interconnection of the system $\bbsys$ in eq. \eqref{eq:bbsys} with the exosystem $\bbexo$ in eq.\eqref{eq:bbexosys} is depicted in \Cref{fig:bbsys}. This model is the starting point for the analysis of the dynamic control allocation problems that follows in the rest of this chapter: each of the formulations that have been considered is a specific case that is modeled by \eqref{eq:bbsys} and \eqref{eq:bbexosys}.
+\begin{assumption}
+  \label{ass:bbexoorig}
+  The origin $w=0$ of $\;\R^\bbexostatedim$ is a stable equilibrium point associated with $\bbexovecf$.
+\end{assumption}
+
+\begin{assumption}
+  \label{ass:bbexopoisson}
+  There exists a compact and invariant set $\bbexostateset\subset\R^{\bbexostatedim}$ such that $w_0\in\bbexoinitset$ with $\bbexoinitset \subseteq \setint(\bbexostateset)$, $\bbexoinitset$ neighborhood of the origin of $\;\R^\bbexostatedim$, and $\bbexostate(t)\in\bbexostateset$ for any $t\in\R_{\geqslant 0}$. Moreover, any $\bbexostate_0\in\bbexoinitset$ is such that the flow $\Phi^{\bbexovecf}_{t}(\bbexostate_0)$ is defined for all $t\in\R$ and, for any neighborhood $\mathcal{U}^\circ$ of $\bbexostate_0$ and for any real number $\tau>0$, there exists a time $t_1>\tau$ such that $\Phi^{\bbexovecf}_{t_1}(\bbexostate_0)\in\mathcal{U}^\circ$, and a time $t_2<-\tau$ such that $\Phi^{\bbexovecf}_{t_2}(\bbexostate_0)\in\mathcal{U}^\circ$.
+\end{assumption}
+
+In other words, \Cref{ass:bbexopoisson} states that given $\bbexostate_0\in\bbexoinitset$, the trajectory $\bbexostate(t)$ that originates in $\bbexostate_0$ passes arbitrarily close to $\bbexostate_0$ for $\left|t\right|\rightarrow +\infty$. This defines the point $\bbexostate_0$ as \emph{Poisson stable} (see \cite{isidori_nonlinear_1995}) and, since this holds for any $\bbexostate_0\in\bbexoinitset$, the system $\bbexo$ is said to be Poisson stable. This property implies that no trajectory of \eqref{eq:bbexosys} can decay to zero as time tends to infinity. The interconnection of the system $\bbsys$ with the exosystem $\bbexo$ is depicted in \Cref{fig:bbsys}.
 \begin{figure}[t!]
   \centering
   \includesvg[width=.7\textwidth]{images/ch7/nlsys.svg}
-  \caption{Block diagram of the system $\bbsys$ given by eq. \eqref{eq:bbsys} interconnected to the exosystem $\bbexo$ defined in eq. \eqref{eq:bbexosys}.}
+  \caption{Block diagram of the system \eqref{eq:bbsys} interconnected to the exosystem \eqref{eq:bbexosys}.}
   \label{fig:bbsys}
 \end{figure}
 
 The model described by the equations \eqref{eq:bbsys}-\eqref{eq:bbexosys} is further characterized by the following assumptions. The first one is instrumental to enable the formulation of the control allocation problems and the design of dynamic allocators.
 \begin{assumption}
   \label{ass:bboveract}
-  The system $\bbsys$ is \emph{over-actuated} with respect to the auxiliary input $\bbaux$ and the regulated output $\bbouto$, \emph{i.e.}, $\bbauxdim>\bboutodim$.\closestatement
+  $\bbauxdim>\bboutodim$.\closestatement
 \end{assumption}
-
-The second assumption characterizes the TITO model $\bbsys$ as a preexisting dynamic system whose auxiliary input channel can be exploited to improve the performance indicator.
+\Cref{ass:bboveract} states that the system $\bbsys$ is \emph{over-actuated} with respect to the auxiliary input $\bbaux$ and the regulated output $\bbouto$. The next assumption characterizes $\bbsys$ as a preexisting dynamic system whose auxiliary input can be exploited to improve the performance indicator.
 \begin{assumption}
   \label{ass:bbiss}
-  The system $\bbsys$ is input-to-state stable (ISS) with respect to the input $(\bbref,\,\bbaux)$. Moreover, the equilibrium $\bbstate=0$ of the system $\dot{\bbstate} = \bbvecf(\bbstate,0)$ is locally asymptotically stable in the first approximation.\closestatement
+  The system $\bbsys$ is input-to-state stable (ISS) with respect to the input $(\bbref,\bbaux)$. Moreover, the equilibrium $\bbstate=0$ of the system $\dot{\bbstate} = \bbvecf(\bbstate,0)$ is exponentially stable.\closestatement
 \end{assumption}
-
-Finally, the third assumption clarifies the role of the exosystem $\bbexo$ in the considered classes of problems.
+Finally, the following assumption clarifies the role of the exosystem $\bbexo$ in the considered setting.
 \begin{assumption}
   \label{ass:bbssresp}
-  The exogenous input $r$, generated by the exosystem given in eq. \eqref{eq:bbexosys}, is periodic of period $\bbperiod$.
-  Moreover, there exists a mapping $\fbimap : \bbexostateset^\circ \rightarrow \R^\bbstatedim$, where $\bbexostateset^\circ\subset\bbexostateset$ is a neighborhood of the origin of $\,\R^{\bbexostatedim}$, which, for all $\bbexostate\in\bbexostateset^{\circ}$, satisfies
+  The exogenous input $r$, generated by the exosystem \eqref{eq:bbexosys}, is periodic of period $\bbperiod$.
+  Moreover, there exists a mapping $\fbimap : \bbexostateset^\circ \rightarrow \R^\bbstatedim$ that, for any $\bbexostate\in\bbexostateset^{\circ}$, satisfies
   \begin{equation}
     \label{eq:bbfbi}
     \frac{\partial\fbimap}{\partial\bbexostate}\bbexovecf(\bbexostate) = \bbvecf(\fbimap(\bbexostate), \bbexooutmap(\bbexostate))\,.
   \end{equation}
   \closestatement
 \end{assumption}
-It is worth to point out that \Cref{ass:bbssresp} provides, in this context, the definition of a \emph{steady-state response} of the system described by eq. \eqref{eq:bbsys} (see \cite[Prop. 8.1.1]{isidori_nonlinear_1995}).
-Moreover, provided that \Cref{ass:bbiss} also holds, such a steady-state response is given by $\bbssstate(t)=\fbimap(\bbexostate(t))$ for any $t \geqslant 0$, which is therefore also periodic of period $\bbperiod$; subsequently, the performance and regulated outputs also admit steady-state responses denoted by $\bbssoutp(\cdot)$ and $\bbssouto(\cdot)$, respectively.
+It is worth to point out that \Cref{ass:bbssresp} provides, for any $\bbexostate_0\in\bbexoinitset$, a \emph{steady-state response} to the system \eqref{eq:bbsys}-\eqref{eq:bbexosys} (see \cite[Prop. 8.1.1]{isidori_nonlinear_1995}), denoted
+\begin{equation}
+  \label{eq:bbssresp}
+  \bbssstate(t) = \bbstate(t,\fbimap(\bbexostate_0),\bbexooutmap(\Phi_t^\bbexovecf(\bbexostate_0))), \quad t\in\R_{\geqslant 0}.
+\end{equation}
+The performance and regulated outputs also admit steady-state responses denoted $\bbssoutp(\cdot)$ and $\bbssouto(\cdot)$, respectively.
 
-Let $t_0\in\R$. The performance criteria with respect to which the behavior of $\bbsys$ may be optimized are expressed by the following \emph{Lagrange functional} of the form
+Let $t_0\in\R_{\geqslant 0}$. The performance criterion with respect to which the behavior of $\bbsys$ may be optimized is expressed by the following \emph{Lagrange functional} of the form
 \begin{equation}
   \label{eq:bbcost}
   J(\bbaux) = \int_{t_0}^{t_0 + \bbperiod} \bbcost(\bbssoutp(\tau))\,d\tau\,,
 \end{equation}
-where the function $\bbcost : \R^{\bboutpdim} \rightarrow \R_{\geqslant 0}$ is continuously differentiable, convex, and radially unbounded.
+where the function $\bbcost : \R^{\bboutpdim} \rightarrow \R_{\geqslant 0}$ is smooth, convex, and radially unbounded.
 
-The two dynamic control allocation problems that are of interest for this work are formalized as follows. Recalling eq. \eqref{eq:bbsys}, the allocation action is implemented by means of the auxiliary input channel $\bbaux$ of the system $\bbsys$. Thus, the nature of the following two problems derives from two different ways in which the effect of the auxiliary input on the regulated output can be evaluated.
+The two dynamic control allocation problems that are of interest for this work are formalized as follows. The allocation action is implemented by means of the auxiliary input $\bbaux$ of the system $\bbsys$ and the nature of the following two problems originates from two different ways in which the effect of the auxiliary input on the regulated output can be evaluated.
 
 \begin{problem}[Dynamic allocation with steady-state output invisibility]
   \label{prb:ssinv}
-  Consider the system $\bbsys$ in eq. \eqref{eq:bbsys} and the exosystem $\bbexo$ in eq. \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
-  Design, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
+  Consider the system \eqref{eq:bbsys} and the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
+  Find, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
 	\begin{align*}
 		\allin  & = \bbref\,, \\
 		\allout & = \bbaux\,,
 	\end{align*}
-  ensures that the following requirements are met.
+  ensures that the following requirements hold.
   \begin{itemize}
-		\item[\emph{(P)}] \emph{Steady-state periodicity:} the steady-state output response of the allocator, namely $\allssout(\cdot)$, is periodic of period $\bbperiod$.
-		\item[\emph{(I)}] \emph{Steady-state output invisibility:} the steady-state regulated output responses of the system given by eq. \eqref{eq:bbsys} both in presence and in absence of the allocation action, namely $\bbssoutoa(\cdot)$ and $\bbssouto(\cdot)$ respectively, are such that
+		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a limited steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$.
+		\item[\emph{(I)}] \emph{Steady-state output invisibility:} the steady-state regulated output responses of the system given by eq.~\eqref{eq:bbsys} both in presence and in absence of the allocation action, namely $\bbssoutoa(\cdot)$ and $\bbssouto(\cdot)$, respectively, are such that
 		  \begin{align}
 		    \label{eq:ssinv}
 		    \bbssoutoa(t) = \bbssouto(t)
 		  \end{align}
 		  for all $t\in\R_{\geqslant 0}\,$.
-		\item[\emph{(O)}] \emph{Steady-state optimality:} the cost functional $J$ in eq. \eqref{eq:bbcost} is minimized.
+		\item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum.
     \end{itemize}
 \end{problem}
 
 \begin{problem}[Dynamic allocation with full output invisibility]
   \label{prb:fullinv}
-  Consider the system $\bbsys$ in eq. \eqref{eq:bbsys} and the exosystem $\bbexo$ in eq. \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
-  Design, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
+  Consider the system \eqref{eq:bbsys} and the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
+  Find, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
 	\begin{align*}
 		\allin  & = \bbref\,, \\
 		\allout & = \bbaux\,,
 	\end{align*}
-  ensures that the following requirements are met.
+  ensures that the following requirements hold.
   \begin{itemize}
-		\item[\emph{(P)}] \emph{Steady-state periodicity:} the steady-state output response of the allocator, namely $\allssout(\cdot)$, is periodic of period $\bbperiod$.
-		\item[\emph{(I)}] \emph{Full output invisibility:} the regulated output responses of the system given by eq. \eqref{eq:bbsys} both in presence and in absence of the allocation action, namely $\bboutoa(\cdot)$ and $\bbouto(\cdot)$ respectively, are such that
+		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a limited steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$.
+		\item[\emph{(I)}] \emph{Full output invisibility:} the regulated output responses of the system given by eq.~\eqref{eq:bbsys} both in presence and in absence of the allocation action, namely $\bboutoa(\cdot)$ and $\bbouto(\cdot)$, respectively, are such that
 		  \begin{align}
 		    \label{eq:fullinv}
 		    \bboutoa(t) = \bbouto(t)
 		  \end{align}
 		  for all $t\in\R_{\geqslant 0}\,$.
-		\item[\emph{(O)}] \emph{Steady-state optimality:} the cost functional $J$ in eq. \eqref{eq:bbcost} is minimized.
+      \item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum.
     \end{itemize}
 \end{problem}
 
@@ -118,6 +126,6 @@ It is finally worth to point out that, in both problems, the optimization proces
 \begin{figure}[t!]
   \centering
   \includesvg[width=.7\textwidth]{images/ch7/allnlsys.svg}
-  \caption{Block diagram of the system $\bbsys$ given by eq. \eqref{eq:bbsys} interconnected to the exosystem $\bbexo$ defined in eq. \eqref{eq:bbexosys} and to the input allocation device, enclosed in the $\mathcal{A}\ell\ell$ block.}
+  \caption{Block diagram of the system $\bbsys$ given by eq.~\eqref{eq:bbsys} interconnected to the exosystem $\bbexo$ defined in eq.~\eqref{eq:bbexosys} and to the input allocation device, enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:allbbsys}
 \end{figure}
