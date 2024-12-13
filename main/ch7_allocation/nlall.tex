@@ -1,39 +1,39 @@
-To generalize the approach validated by \Cref{thm:lqrall_solution}, one has to go back to consider the original, nonlinear model. Thus, recall the dynamical system $\bbsys$ defined as in eq.~\eqref{eq:bbsys}, subject to the exogenous input produced by the exosystem described by eq.~\eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model $\bbsys$ subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $t_0=0$ in \eqref{eq:bbcost}, yielding
+To generalize the approach validated by \Cref{thm:lqrall_solution}, it is essential to recall the original, nonlinear model. Thus, consider the dynamical system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model $\bbsys$ subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $t_0=0$ in \eqref{eq:bbcost}, yielding
 \begin{equation}
   \label{eq:nlall_sscost}
-  J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau\,.
+  J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau.
 \end{equation}
-In this scenario, as in the many others reported in the literature (see \Cref{sec:sota_allocation}), the most complex requirement set by \Cref{prb:ssinv} is the output invisibility item (I); in the linear case of \Cref{prb:lqrall_optcont}, it was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving $\bbsys$ and $\bbexo$ in eq.~\eqref{eq:bbsys}-\eqref{eq:bbexosys} takes a different path: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by the use of \emph{soft constraints} for output invisibility \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
+In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most complex requirement set by \Cref{prb:ssinv} is the output invisibility item (I); in the linear case of \Cref{prb:lqrall_optcont} it was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}-\eqref{eq:bbexosys} takes a different path: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by the use of \emph{soft constraints} for output invisibility \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
 
 To substantiate this intuition a few preliminary definitions are in order. Let $\bbstate_n(t)$, $\bbstate_a(t)\in\R^\bbstatedim$ denote the state evolution of \eqref{eq:bbsys} in the absence or in the presence of the allocator, respectively, that is
 \begin{subequations}
   \label{eq:nlall_xnxa}
   \begin{align}
-    \dot{\bbstate}_n & = \bbvecf(\bbstate_n, \bbref)\,,\label{eq:nlall_xn} \\
-    \dot{\bbstate}_a & = \bbvecf(\bbstate_a, \bbref) + \bbinmap(\bbstate_a)\bbaux\,,\label{eq:nlall_xa}
+    \dot{\bbstate}_n(t) & = \bbvecf(\bbstate_n(t), \bbref(t)), & t\in\R_{\geqslant 0},\label{eq:nlall_xn} \\
+    \dot{\bbstate}_a(t) & = \bbvecf(\bbstate_a(t), \bbref(t)) + \bbinmap(\bbstate_a(t))\bbaux(t), & t\in\R_{\geqslant 0},\label{eq:nlall_xa}
   \end{align}
 \end{subequations}
 and let $\bbssstate_{n}(\cdot),\,\bbssstate_{a}(\cdot)$ denote the corresponding steady-state responses, provided the latter exists. Define the \emph{output invisibility function} $h_i(\bbstate_n, \bbstate_a) : \R^\bbstatedim\times\R^\bbstatedim \rightarrow \R$ such that
 \begin{equation}
   \label{eq:nlall_hi}
-  h_i(\bbstate_n, \bbstate_a) = \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n) - \bboutmapo(\bbstate_a) \right\Vert_2^2\,.
+  h_i(\bbstate_n(t), \bbstate_a(t)) = \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n(t)) - \bboutmapo(\bbstate_a(t)) \right\Vert_2^2, \quad t\in\R_{\geqslant 0}.
 \end{equation}
 A constrained optimal control problem that approximates \Cref{prb:ssinv} involving soft constraints is formulated as follows.
 
 \begin{problem}
   \label{prb:nlall_optcont}
-  Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Fix $\bbexostate_0\in\bbexostateset^{\circ}$, $\bbexostate(0) = \bbexostate_0$. Let $h_i(\bbstate_n,\bbstate_a)$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
+  Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Fix $\bbexostate_0\in\bbexostateset^{\circ}$, $\bbexostate(0) = \bbexostate_0$. Let $h_i(\bbstate_n(t),\bbstate_a(t))$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
   \begin{subequations}
     \label{eq:nlall_Js}
     \begin{align}
-      J_p(v) & = \frac{1}{2} \int_0^\bbperiod \left\Vert \bboutmapp(\bbssstate_{a}(t), v(t)) \right\Vert_2^2\,dt\,,\label{eq:nlall_Jp} \\
-      J_i(v) & = \int_0^\bbperiod h_i(\bbssstate_{n}(t),\bbssstate_{a}(t))\,dt\,.\label{eq:nlall_Ji}
+      J_p(v) & = \frac{1}{2} \int_0^\bbperiod \left\Vert \bboutmapp(\bbssstate_{a}(t), v(t)) \right\Vert_2^2\,dt,\label{eq:nlall_Jp} \\
+      J_i(v) & = \int_0^\bbperiod h_i(\bbssstate_{n}(t),\bbssstate_{a}(t))\,dt.\label{eq:nlall_Ji}
     \end{align}
   \end{subequations}
   Determine, if it exists, a function $v^\star(\cdot)\in\mathcal{L}_2([0, \bbperiod])$, periodic of period $\bbperiod$, such that the cost functional
   \begin{equation}
     \label{eq:nlall_J}
-    J(v) = J_p(v) + \alpha J_i(v)\,,
+    J(v) = J_p(v) + \alpha J_i(v),
   \end{equation}
   with $\alpha\in\R_{>0}$, is minimized, satisfying the differential constraints \eqref{eq:nlall_xn}-\eqref{eq:nlall_xa} with $\bbaux=v$.
 \end{problem}
@@ -51,27 +51,36 @@ A constrained optimal control problem that approximates \Cref{prb:ssinv} involvi
 Let $\lambda_n(t),\lambda_a(t)\in\R^{\bbstatedim}$ be the costate variables, associated to the nominal (\emph{i.e.}, non-allocated) and allocated state variables, respectively. In the following, time dependencies are omitted to ease the notation. Recalling equations \eqref{eq:nlall_xnxa} to \eqref{eq:nlall_J}, define the Hamiltonian function
 \begin{equation}
   \label{eq:nlall_H}
-    H(\bbstate_n,\bbstate_a,\lambda_n,\lambda_a,v) = \frac{1}{2}\left\Vert \bboutmapp(\bbstate_a,v) \right\Vert_2^2 + \alpha h_i(\bbstate_n,\bbstate_a) +\lambda_n'\bbvecf(\bbstate_n,\bbref) + \lambda_a'(\bbvecf(\bbstate_a,\bbref) + \bbinmap(\bbstate_a)v)\,.
+  \begin{split}
+    &H(\bbstate_n(t),\bbstate_a(t),\lambda_n(t),\lambda_a(t),v(t)) \\
+    &\hspace{-1.5pt}=\frac{1}{2}\left\Vert \bboutmapp(\bbstate_a(t),v(t)) \right\Vert_2^2 + \alpha h_i(\bbstate_n(t),\bbstate_a(t)) +\lambda_n(t)'\bbvecf(\bbstate_n(t),\bbref(t)) \\
+    &\hspace{-1.5pt}+ \lambda_a(t)'(\bbvecf(\bbstate_a(t),\bbref(t)) + \bbinmap(\bbstate_a(t))v(t)), \quad t\in\R_{\geqslant 0}.
+  \end{split}
 \end{equation}
 To simplify the notation, define
 \begin{equation}
   \label{eq:nlall_dHdv}
-    H_v(\bbstate_a,\lambda_a,v) = \frac{\partial H(\bbstate_n,\bbstate_a,\lambda_n,\lambda_a,v)}{\partial v} = \bboutmapp(\bbstate_a,v)'\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial v} + \lambda_a'\bbinmap(\bbstate_a)\,,
+  \begin{split}
+    &H_v(\bbstate_a(t),\lambda_a(t),v(t)) = \frac{\partial H(\bbstate_n(t),\bbstate_a(t),\lambda_n(t),\lambda_a(t),v(t))}{\partial v} \\
+    &\hspace{-1.5pt}= \bboutmapp(\bbstate_a(t),v(t))'\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial v} + \lambda_a(t)'\bbinmap(\bbstate_a(t)), \quad t\in\R_{\geqslant 0},
+  \end{split}
 \end{equation}
 and note that the costate dynamics are given by
 \begin{subequations}
   \label{eq:nlall_lambdadot}
   \begin{align}
-    \dot{\lambda}_n &= -\alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n,\bbref)}{\partial \bbstate_n}'\lambda_n\,,\label{eq:nlal_lambdandot}\\
-    \dot{\lambda}_a &= -\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial \bbstate_a}'\bboutmapp(\bbstate_a,v) - \alpha\frac{\partial h_i(\bbstate_n,\bbstate_a)}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a,\bbref)}{\partial \bbstate_a}'\lambda_a - \sum_{\iota=1}^{\bbauxdim}\left( v_\iota\frac{\partial \bbinmap_\iota(\bbstate_a)}{\partial \bbstate_a}' \right)\lambda_a \,,\label{eq:nlall_lambdaadot}
+    \dot{\lambda}_n(t) &= -\alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n(t),\bbref(t))}{\partial \bbstate_n}'\lambda_n(t), & t\in\R_{\geqslant 0}\label{eq:nlal_lambdandot}\\
+    \dot{\lambda}_a(t) &= -\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial \bbstate_a}'\bboutmapp(\bbstate_a(t),v(t)) &\nonumber\\
+    &- \alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a(t),\bbref(t))}{\partial \bbstate_a}'\lambda_a(t) &\nonumber\\
+    &- \sum_{\iota=1}^{\bbauxdim}\left( v_\iota(t)\frac{\partial \bbinmap_\iota(\bbstate_a(t))}{\partial \bbstate_a}' \right)\lambda_a(t), & t\in\R_{\geqslant 0}\label{eq:nlall_lambdaadot}
   \end{align}
 \end{subequations}
-where $v_\iota$ and $\bbinmap_\iota$ denote the $\iota$-th component and column of $v$ and $\bbinmap$, respectively.
+where $v_\iota(t)$ and $\bbinmap_\iota(t)$ denote the $\iota$-th component and column of $v(t)$ and $\bbinmap(t)$, respectively.
 Given $u(t)\in\R^\bbauxdim$, denote again with $\hat{u} : \R \rightarrow \R^\bbauxdim$ the periodic extension of $u(t)$, \emph{i.e.}, $\hat{u}(t) = u(\Mod(t, \bbperiod))$.
 Let $\beta,\gamma\in\R_{>0}$, $\hat{v}(t)\in\R^\bbauxdim$, and $\bbstate_n(t)\in\R^\bbstatedim$ be the solution of \eqref{eq:nlall_xn}. Pick a final time $t_f=a\bbperiod$ with $a\in\N$ large enough to include a reasonable number of periods, an arbitrary $v_0(t)\in\R^\bbauxdim$, let $(\lambda_n(t_f),\lambda_a(t_f))=(0,0)$, and define
 \begin{equation}
-    \label{eq:nlall_deltadH}
-    \delta(H_v(\bbstate_a,\lambda_a,v)) = \left( \int_{t_f-\bbperiod}^{t_f} \frac{\partial H(t)}{\partial v} \frac{\partial H(t)}{\partial v}'\,dt \right)^{1/2}\,.
+  \label{eq:nlall_deltadH}
+  \delta(H_v(\bbstate_a(t),\lambda_a(t),v(t))) = \left( \int_{t_f-\bbperiod}^{t_f} \frac{\partial H(t)}{\partial v} \frac{\partial H(t)}{\partial v}'\,dt \right)^{1/2}.
 \end{equation}
 The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties are characterized by the following statement.
 
@@ -87,12 +96,12 @@ The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties 
   \For{$k=1,\dotsc$}{
     $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
     $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
-    \eIf{$\delta(H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})) < \beta$}
+    \eIf{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
     {
       \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
     }
     {
-      $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})$\;
+      $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
       $u_p^{(k)}(\tau) \gets u^{(k)}(t_f - \bbperiod + \tau)$, with $\tau\in[0,\bbperiod]$\;
       $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ /* Periodic extension. */\;
     }
@@ -103,12 +112,12 @@ The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties 
 
 \begin{theorem}
   \label{thm:nlall_main}
-  Consider the system \eqref{eq:bbsys}, fix $\alpha>0$, and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Then, given $v_0 : \R \rightarrow \R^{\bbauxdim}$, and $t_f=a\bbperiod$, there exists a sequence $\{\gamma^{(k)}\}\subset\R_{>0}$ such that the sequence of successive updates $\{\Tilde{v}^{(k)}\}$ produced by \Cref{alg:nlall_sweep} converges to an extremal solution of \Cref{prb:nlall_optcont}. Furthermore, if \Cref{prb:nlall_optcont} admits an optimal solution $v^{\star}$ which is the unique extremal, then
+  Consider the system \eqref{eq:bbsys}, fix $\alpha>0$, and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Then, given $v_0 : \R \rightarrow \R^{\bbauxdim}$, and $t_f=a\bbperiod$, there exists a sequence $\{\gamma^{(k)}\}\subset\R_{>0}$ such that the sequence of successive updates $\{\Tilde{v}^{(k)}(t)\}$, $t\in\R_{\geqslant 0}$, produced by \Cref{alg:nlall_sweep} converges to an extremal solution of \Cref{prb:nlall_optcont}. Furthermore, if \Cref{prb:nlall_optcont} admits an optimal solution $v^{\star}$ which is the unique extremal, then
   \begin{equation}
       \label{eq:nlall_limnu}
-      \lim_{k\rightarrow +\infty} \left\Vert \Tilde{v}^{(k)}(t) - v^{\star}(t)\right\Vert = 0,
+      \lim_{k\rightarrow +\infty} \left\Vert \Tilde{v}^{(k)}(t) - v^{\star}(t)\right\Vert = 0, \quad t\in\R_{\geqslant 0}.
   \end{equation}
-  for all $t \in [t_0,t_f]$.\closestatement
+  \closestatement
 \end{theorem}
 \begin{proof}
   The existence of the sequence $\{\gamma^{(k)}\}$, as well as its convergence properties, are guaranteed by the Steepest Descent Algorithm (see, \emph{e.g.}, \cite[Sec. 6.2]{kirk_optimal_1970}) adapted in \Cref{alg:nlall_sweep} to the steady-state optimal control problem formalized in \Cref{prb:nlall_optcont}.
@@ -126,7 +135,7 @@ The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties 
 
 The choice of the descent step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}. Unlike the finite-dimensional setting, the descent direction provided by the gradient method in the this context is infinite-dimensional. Nonetheless, the choice of the proper descent step constitutes a one-dimensional task in both settings. This makes the use of heuristic methods still viable in the infinite-dimensional setting.
 
-The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a temporary overlap of notation, the variables $s$ and $r$ store at each iteration, respectively, the values of $H_v$ and $H_v \odot H_v$ of the current and of the previous iterations. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}(\tau)$, as well as the operation $(\cdot)^{-1}$ on $((\hat{r}(\tau))^{1/2}+\delta)$, reported on line 17 of \Cref{alg:nlall_adam}, are both performed element-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the step size. In particular, an appropriate choice of these parameters allows discarding all the information related to less recent iterations, thus updating the step size by relying only on the most recent information. It is worth mentioning that this scheme adjusts the step size dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
+The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a temporary abuse of notation, the variables $s(\cdot)$ and $r(\cdot)$ store at each iteration, respectively, the values of $H_v(\cdot)$ and $H_v(\cdot) \odot H_v(\cdot)$ of the current and of the previous iterations for a given value of their argument. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}(\cdot)$, as well as the operation $(\cdot)^{-1}$ on $((\hat{r}(\cdot))^{1/2}+\delta)$, reported on line 17 of \Cref{alg:nlall_adam}, are both performed element-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the step size. In particular, an appropriate choice of these parameters allows discarding all the information related to less recent iterations, thus updating the step size by relying only on the most recent information. It is worth mentioning that this scheme adjusts the step size dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
 
 \begin{center}
 \begin{minipage}[t]{.9\textwidth}
@@ -142,15 +151,15 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a te
   \For{$k=1,\dotsc$}{
     $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
     $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
-    \eIf{$\delta(H_v(\bbstate_a^{(k)},\lambda_a^{(k)},\tilde{v}^{(k-1)})) < \beta$}
+    \eIf{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
     {
       \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
     }
     {
       let $\tau \in [0, \bbperiod]$, $\Bar{\tau} = t_f - \bbperiod + \tau$\;
-      $H_v \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$\;
-      $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v$\;
-      $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v\odot H_v$\;
+      $H_v(\Bar{\tau}) \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$\;
+      $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v(\Bar{\tau})$\;
+      $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v(\Bar{\tau}) \odot H_v(\Bar{\tau})$\;
       $\hat{s}(\Bar{\tau}) \gets s(\Bar{\tau})/(1-\rho_1^k)$\;
       $\hat{r}(\Bar{\tau}) \gets r(\Bar{\tau})/(1-\rho_2^k)$\;
       $\Delta u^{(k)}(\Bar{\tau})\gets-\gamma\,\hat{s}(\Bar{\tau})\odot((\hat{r}(\Bar{\tau}))^{1/2}+\delta)^{-1}$\;
@@ -164,33 +173,29 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a te
 \end{center}
 
 The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in eq.~\eqref{eq:bbexosys}:
-\begin{equation}
+\begin{subequations}
   \label{eq:nlall_simexo}
-  \left\{
-    \begin{aligned}
-      \dot{\bbexostate} &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate\,,\\[1.5pt]
-      \bbref &= \begin{bmatrix} \bbexostate_1 + \bbexostate_3 \\ \bbexostate_2 \end{bmatrix}\,,
-    \end{aligned}
-  \right.
-\end{equation}
+  \begin{align}
+    \dot{\bbexostate}(t) &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate(t), & t\in\R_{\geqslant 0},\\
+    \bbref(t) &= \begin{bmatrix} \bbexostate_1(t) + \bbexostate_3(t) \\ \bbexostate_2(t) \end{bmatrix}, & t\in\R_{\geqslant 0},
+  \end{align}
+\end{subequations}
 with $\omega=2\pi f$, $f=0.2$, and $\bbexostate_0 = \begin{pmatrix} 0 & \omega & 2 \end{pmatrix}'$. Then, consider the following continuous-time system of the form \eqref{eq:bbsys}
-\begin{equation}
+\begin{subequations}
   \label{eq:nlall_simplant}
-  \left\{
-    \begin{aligned}
-      \dot{\bbstate} &= \begin{bmatrix} 0 \\ \bbstate_1+\bbstate_2 \\ \bbstate_1-\bbstate_2 \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2} & 1 \\ e^{\bbstate_2} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate,r)+\bbaux)\,,\\
-      \bboutp &= h_c(\bbstate,\bbref) + \bbaux\,,\\
-      \bbouto &= (1+\bbstate_3)^3\,,
-    \end{aligned}
-  \right.
-\end{equation}
-where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate,\bbref)$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(x) = \begin{pmatrix} e^{\bbstate_2} & e^{\bbstate_2} & 0 \end{pmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
+  \begin{align}
+    \dot{\bbstate}(t) &= \begin{bmatrix} 0 \\ \bbstate_1(t)+\bbstate_2(t) \\ \bbstate_1(t)-\bbstate_2(t) \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2(t)} & 1 \\ e^{\bbstate_2(t)} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate(t),r(t))+\bbaux(t)), & t\in\R_{\geqslant 0},\\
+    \bboutp(t) &= h_c(\bbstate(t),\bbref(t)) + \bbaux(t), & t\in\R_{\geqslant 0},\\
+    \bbouto(t) &= (1+\bbstate_3(t))^3, & t\in\R_{\geqslant 0},
+  \end{align}
+\end{subequations}
+where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a given feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate(t),\bbref(t))$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi(t)) = \begin{pmatrix} e^{\bbstate_2(t)} & e^{\bbstate_2(t)} & 0 \end{pmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
 
-\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 \equiv 0$, $\bbstate(0)$ initialized on the manifold described by $\bbstate=\pi(\bbexostate)$ consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different weights for the invisibility term after the algorithm terminated all the iterations: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a low output error.
+\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 \equiv 0$, $\bbstate(0)$ initialized on the manifold described by $\bbstate(t)=\pi(\bbexostate(t))$, $t\in\R_{\geqslant 0}$ consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different weights for the invisibility term after the algorithm terminated all the iterations: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a low output error.
 
 A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in around half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
 
-Regarding the performance output $\bboutp$, \Cref{fig:nlall_hcn} shows the nominal system input given by the feedback linearization process and \Cref{fig:nlall_ua} depicts the auxiliary input determined by \Cref{alg:nlall_adam}. Finally, \Cref{fig:nlall_hca} illustrates the performance output subject to the allocation action. It is worth pointing out that, even if the feedback-linearizing law uses only one input, the auxiliary one is distributed among both. Thus, the allocated system input is remodulated among both inputs and, in accordance with the definition of the performance output in this example, $\bboutp$ exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
+\Cref{fig:nlall_hcn} shows the nominal system input given by the feedback linearization process and \Cref{fig:nlall_ua} depicts the auxiliary input determined by \Cref{alg:nlall_adam}. Finally, \Cref{fig:nlall_hca} illustrates the performance output subject to the allocation action. It is worth pointing out that, even if the feedback-linearizing law uses only one input, the auxiliary one is distributed among both. Thus, the allocated system input is remodulated among both inputs and, in accordance with the definition of the performance output in this example, $\bboutp$ exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
 
 \begin{figure}[t!]
   \centering
