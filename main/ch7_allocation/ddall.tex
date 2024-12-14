@@ -64,3 +64,85 @@ is the output response for output $\bbouto$ at time $t \geqslant t_0$ of the pla
     \item \emph{Optimality}: the Lagrange cost functional \eqref{eq:bbcost} is minimized with respect to the class of inputs in a \emph{prescribed} finite-dimensional function space.
   \end{enumerate}
 \end{problem}
+
+The construction of a solution to \Cref{prb:ddall_main_per} for any $\mu\in\mathcal{M}$ begins by identifying the data whose knowledge is necessary for the design of the allocator. This knowledge is obtained in the uncertain case by means of algorithms that are described in the following and are based on input-output measurements. Let the spectrum of the matrix $\exodynmat$ in \eqref{eq:ddall_exo} be
+\begin{equation}
+  \label{eq:ddall_exo_spec}
+  \spec(\exodynmat) = \{0, j \omega_1, -j \omega_1, ..., j \omega_{\bar{n}_e}, - j \omega_{\bar{n}_e} \}, \quad \bar{n}_e = \frac{\bbexostatedim-1}{2}.
+\end{equation}
+Define the \emph{degree of redundancy} of \eqref{eq:ddall_sys} with respect to the output $\bbouto$ as
+\begin{equation}
+  \label{eq:ddall_redundancy_deg}
+  m_a = \bbauxdim - \bboutodim.
+\end{equation}
+The design of the allocator requires the following information.
+\begin{description}
+  \item[K1] The \emph{steady-state map} $\bar{M}_{\bboutp, \bbexostate}$ from $\bbexostate$ to $\bboutp$, \emph{i.e.}, a matrix such that, denoting by $\bbssoutp^\bbexostate(\cdot)$ the part of the steady-state response in $\bboutp$ due to $\bbexostate$,
+    \begin{equation}
+      \label{eq:ddall_K1mem}
+      \bbssoutp^\bbexostate(t) = \bar{M}_{\bboutp, \bbexostate}\bbexostate(t), \quad t\in\R_{\geqslant 0}.
+    \end{equation}
+  \item[K2] The \emph{moments} of the transfer matrix $W_{\bboutp\bbaux}(s)$ of \eqref{eq:ddall_sys} at $s\in\{0, j \omega_1,, ..., j \omega_{\bar{n}_e}\}\subset\spec(S)$, namely
+    \begin{equation}
+      \label{eq:ddall_K2mom}
+      W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_1), \ldots, W_{\bboutp\bbaux}(j \omega_{\bar{n}_e}).
+    \end{equation}
+  \item[K3] A \emph{polynomial annihilator} for the transfer matrix $W_{\bbouto\bbaux}(s)$ of \eqref{eq:ddall_sys}, namely $W_a(s)\in\mathbb{C}^{\bbauxdim\times m_a}$, with poles with negative real part, such that
+    \begin{equation}
+      \label{eq:ddall_W_a}
+      W_{\bbouto\bbaux}(s)W_a(s)=0, \quad s\in\C\setminus(\poleset(W_{\bbouto\bbaux}(s))\cup\poleset(W_a(s))).
+    \end{equation}
+\end{description}
+
+If the data \textbf{K1}, \textbf{K2}, and \textbf{K3} are available, the proposed dynamic allocator can be constructed as follows. Let $(A_a, B_a, C_a)$ be a minimal realization of $W_a(s)$ in \eqref{eq:ddall_W_a}. Define
+\begin{subequations}
+	\begin{align}
+		\Omega & = \diag \left(0, \begin{bmatrix}0 & \omega_{1} \\ - \omega_1 & 0\end{bmatrix},\ldots,\begin{bmatrix}0 & \omega_{\bar{n}_e} \\ - \omega_{\bar{n}_e} & 0\end{bmatrix}\right), \label{eq:ddall_Omega} \\
+		\Lambda & = \bbmat{c:cc:c:cc}{c}{1 & 1 & 0 & \cdots & 1 & 0}, \label{eq:ddall_Lambda}
+	\end{align}
+\end{subequations}
+yielding the matrices $(A_{IM}, C_{IM})$:
+\begin{subequations}
+  \begin{align}
+    \label{eq:ddall_Aim}
+    A_{IM} & = \Omega \otimes I_{m_a}, \\
+    C_{IM} & = \Lambda \otimes I_{m_a}.
+  \end{align}
+\end{subequations}
+Furthermore, using the data \textbf{K2}, define
+\begin{equation}
+  \label{eq:ddall_Woutpallin}
+  W_{\bboutp\allin}(j\omega)=W_{\bboutp\bbaux}(j\omega)W_{a}(j\omega), \quad \omega\in\{0, \omega_1, ..., \omega_{\bar{n}_e}\},
+\end{equation}
+and build the matrix $\bar{N}_{\mu}$ as
+\begin{equation}
+  \label{eq:ddall_Nbar_mu}
+  \begin{split}
+  &\bar{N}_{\mu} =\\
+  &\hspace{-1.5pt}\bbmat{c|cc|c|cc}{c}{
+    W_{\bboutp\allin}(0)\,
+    & \,\re(W_{\bboutp\allin}(j\omega_1))\;
+    & \im(W_{\bboutp\allin}(j\omega_1))\,
+    & \,\cdots\,
+    & \,\re(W_{\bboutp\allin}(j\omega_{\bar{n}_e}))\;
+    & \im(W_{\bboutp\allin}(j\omega_{\bar{n}_e}))
+  }.
+  \end{split}
+\end{equation}
+Define the functions $\xi(t)$ and $L(\bbexostate(t),x_{IM}(t))$ as
+\begin{subequations}
+  \label{eq:ddall_G_xi}
+	\begin{align}
+		\xi(t) & = \bar{M}_{\bboutp, \bbexostate}e^{\exodynmat t}\bbexostate(t) + \bar{N}_{\mu}e^{A_{IM}t}x_{IM}(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_xi} \\
+		L(\bbexostate(t),x_{IM}(t)) & = \left( \int_{0}^{\bbperiod} \nabla \ell(\xi(\sigma))'\bar{N}_{\mu}e^{A_{IM}\sigma} d\sigma \right)', & t\in\R_{\geqslant 0}. \label{eq:ddall_delta_def}
+	\end{align}
+\end{subequations}
+The proposed dynamic allocator is given by
+\begin{subequations}
+  \label{eq:ddall_control_all}
+	\begin{align}
+		\dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) - \gamma L(\bbexostate(t),x_{IM}(t)), & t\in\R_{\geqslant 0}, \label{eq:ddall_control_all_xim} \\
+		\dot{x}_a(t)    & = A_a x_a(t) + B_a C_{IM} x_{IM}(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_control_all_xa}                  \\
+		\allout(t)      & = C_a x_a(t), & t\in\R_{\geqslant 0}. \label{eq:ddall_control_all_ya}
+	\end{align}
+\end{subequations}
