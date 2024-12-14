@@ -2,16 +2,16 @@ This approach has been tested initially on a linear feedback model of the form o
 \begin{subequations}
 	\label{eq:linplant}
 	\begin{align}
-		\dot{\plantstate}(t) & = \plantdynmat\plantstate(t) + \plantctrmat\plantinput(t), & t\in\R_{\geqslant 0}, \\
-		\plantoutput(t)      & = \plantoutmat\plantstate(t), & t\in\R_{\geqslant 0},
+		\dot{\plantstate}(t) & = \plantdynmat\plantstate(t) + \plantctrmat\plantinput(t), & t\in\R_{\geq 0}, \\
+		\plantoutput(t)      & = \plantoutmat\plantstate(t), & t\in\R_{\geq 0},
 	\end{align}
 \end{subequations}
 where $\plantstate(t)\in\R^\plantstatedim$ is the plant state vector, $\plantinput(t)\in\R^\plantinputdim$ is the control input, $\plantoutput(t)\in\R^\plantoutputdim$ is the plant output vector, and $\plantdynmat\in\R^{\plantstatedim \times \plantstatedim}$, $\plantctrmat\in\R^{\plantstatedim \times \plantinputdim}$, and $\plantoutmat\in\R^{\plantoutputdim \times \plantstatedim}$ are constant matrices. In the considered setting, the system \eqref{eq:linplant} is subject to the action of a continuous-time, linear time-invariant feedback controller $\ctrl$ given by
 \begin{subequations}
 	\label{eq:lincontroller}
 	\begin{align}
-		\dot{\ctrlstate}(t) & = \ctrldynmat\ctrlstate(t) + \ctrlctrmat\plantoutput(t) + \ctrlrefmat\bbref(t), & t\in\R_{\geqslant 0}, \\
-		\ctrlouput(t)       & = \ctrloutmat\ctrlstate(t), & t\in\R_{\geqslant 0},
+		\dot{\ctrlstate}(t) & = \ctrldynmat\ctrlstate(t) + \ctrlctrmat\plantoutput(t) + \ctrlrefmat\bbref(t), & t\in\R_{\geq 0}, \\
+		\ctrlouput(t)       & = \ctrloutmat\ctrlstate(t), & t\in\R_{\geq 0},
 	\end{align}
 \end{subequations}
 where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state vector and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output vector, and $\ctrldynmat\in\R^{\ctrlstatedim\times\ctrlstatedim}$, $\ctrlctrmat\in\R^{\ctrlstatedim\times\bboutodim}$, $\ctrlrefmat\in\R^{\ctrlstatedim\times\bbrefdim}$, and $\ctrloutmat\in\R^{\ctrloutputdim\times\ctrlstatedim}$ are constant matrices. The interconnection of the plant $\plant$ and the control system $\ctrl\;$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, also yielding $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$, \emph{i.e.}, $\bbouto = \plantoutput$. The following assumption characterizes the properties of the feedback interconnection.
@@ -26,8 +26,8 @@ The reference input in this setting is defined as the state of the exosystem $\b
 \begin{subequations}
 	\label{eq:linexosystem}
 	\begin{align}
-		\dot{\bbexostate}(t) & = \exodynmat\bbexostate(t), & t\in\R_{\geqslant 0}, \\
-		\bbref(t)            & = \bbexostate(t), & t\in\R_{\geqslant 0},
+		\dot{\bbexostate}(t) & = \exodynmat\bbexostate(t), & t\in\R_{\geq 0}, \\
+		\bbref(t)            & = \bbexostate(t), & t\in\R_{\geq 0},
 	\end{align}
 \end{subequations}
 where $\exodynmat\in\R^{\bbexostatedim \times \bbexostatedim},\, \exodynmat = \diag(\exodynmat_0,\dotsc,\exodynmat_h)$ consists of the blocks defined as
@@ -93,7 +93,7 @@ Requirements (P), (I), and (O) of \Cref{prb:ssinv} reveal the connection between
 Let $\ctrlssoutput(\cdot)$ denote the steady-state controller output. It is possible to show that (see \cite{astolfi_model_2010,scarciotti_data-driven_2017} for a proof)
 \begin{equation}
   \label{eq:lqrall_ssctrl}
-	\ctrlssoutput(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geqslant 0}.
+	\ctrlssoutput(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geq 0}.
 \end{equation}
 The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is formulated as follows.
 
@@ -113,7 +113,7 @@ The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is 
 	      \lim_{t_0 \to -\infty} \int_{t_0}^{t} \bboutmat e^{{\bbdynmat}(t - \tau)} \bbctrmat \hat{v}(\tau)\,d\tau = 0, \quad t\in\R_{\geq 0},
 	    \end{equation}
 	\end{itemize}
-	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$, $t\in\R_{\geqslant 0}$.
+	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$, $t\in\R_{\geq 0}$.
 \end{problem}
 
 It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}.
@@ -126,14 +126,14 @@ It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes
 It is possible to derive a closed-form solution to \Cref{prb:lqrall_optcont}. However, some preliminary technical results are required. For clarity, introduce the notation
 \begin{equation}
   \label{eq:lqrall_zw}
-  \zeta(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geqslant 0}.
+  \zeta(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geq 0}.
 \end{equation}
 By standard results about Fourier series expansion of functions in $\mathcal{L}_2([0,\bbperiod])$, it is possible to write
 \begin{subequations}
 	\label{eq:lqrall_fseries}
 	\begin{align}
-		\zeta(t)     & = \zeta_0 + \sum_{k=1}^{+\infty} (a_k \sin(k \omega t) + b_k \cos(k \omega t)), & t\in\R_{\geqslant 0},\label{eq:lqrall_zetaf}               \\
-		v^{\star}(t) & = v^{\star}_0 + \sum_{k=1}^{+\infty} (\alpha_k \sin(k \omega t) + \beta_k \cos(k \omega t)), & t\in\R_{\geqslant 0},\label{eq:lqrall_vstarf}
+		\zeta(t)     & = \zeta_0 + \sum_{k=1}^{+\infty} (a_k \sin(k \omega t) + b_k \cos(k \omega t)), & t\in\R_{\geq 0},\label{eq:lqrall_zetaf}               \\
+		v^{\star}(t) & = v^{\star}_0 + \sum_{k=1}^{+\infty} (\alpha_k \sin(k \omega t) + \beta_k \cos(k \omega t)), & t\in\R_{\geq 0},\label{eq:lqrall_vstarf}
 	\end{align}
 \end{subequations}
 where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, by the properties of \eqref{eq:bbexosys} and \eqref{eq:linexosystem}, only a finite number of coefficients $a_k$, $b_k$ are non-zero in \eqref{eq:lqrall_zetaf}; the same property holds for \eqref{eq:lqrall_vstarf} as shown in the following. The first Lemma, considering a single frequency component of \eqref{eq:lqrall_vstarf}, characterizes the relation imposed by the constraint \eqref{eq:lqrall_invint} on its coefficients.
@@ -143,7 +143,7 @@ where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, b
 	Let $\bar{\omega} = 2\pi\bar{k}/\bbperiod$, with $\bar{k}\in\N\cup\{0\}$, and
 	\begin{equation}
 		\label{eq:lqrall_singlefdec}
-		v(t) = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), \quad t\in\R_{\geqslant 0},
+		v(t) = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), \quad t\in\R_{\geq 0},
 	\end{equation}
 	where $\alpha,\beta\in\R^\bbauxdim$, and let $\vartheta:= [\alpha' \; \beta']'$, and define the matrix
 	\begin{equation}
@@ -186,9 +186,9 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 		\label{eq:lqrall_singles}
 		\begin{align}
 			\label{eq:lqrall_singlezeta}
-			\zeta(t) & = a \sin(\bar{\omega}t) + b \cos(\bar{\omega}t), & t\in\R_{\geqslant 0}, \\
+			\zeta(t) & = a \sin(\bar{\omega}t) + b \cos(\bar{\omega}t), & t\in\R_{\geq 0}, \\
 			\label{eq:lqrall_singlefdecbis}
-			v(t)     & = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), & t\in\R_{\geqslant 0},
+			v(t)     & = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), & t\in\R_{\geq 0},
 		\end{align}
 	\end{subequations}
 	where $a,b,\alpha,\beta\in\R^\bbauxdim$, $\theta:= [a' \; b']'$, $\vartheta:= [\alpha' \; \beta']'$.
@@ -245,7 +245,7 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 	\label{rmk:lqrall_mbar}
 	Consider \eqref{eq:lqrall_singlezeta} and recall \eqref{eq:lqrall_zw}, namely the fact that $\zeta(t) = \bar{M}\bbexostate(t)$ with $\bar{M}$ given by \eqref{eq:lqrall_memontinv_mbar}. The two expressions are reconciled noting that if
 	\begin{equation}
-		\bbexostate(t) = a_\bbexostate \sin(\bar{\omega}t) + b_\bbexostate \cos(\bar{\omega}t), \quad t\in\R_{\geqslant 0},
+		\bbexostate(t) = a_\bbexostate \sin(\bar{\omega}t) + b_\bbexostate \cos(\bar{\omega}t), \quad t\in\R_{\geq 0},
 	\end{equation}
 	with $a_\bbexostate,b_\bbexostate\in\R^\bbexostatedim$, then $\theta = [a' \; b']' = \bar{M}[a_\bbexostate' \; b_\bbexostate']'$ holds.\closeremark
 \end{remark}
@@ -277,7 +277,7 @@ The following result exploits the previous Lemmas and Corollary to describe the 
       &\hspace{-1.5pt}= \frac{1}{2}(\gamma_0'\gamma_0 + \delta(t)'\delta(t) + \epsilon(t)'\epsilon(t)) + \gamma_0'\delta(t) + \delta(t)'\epsilon(t) + \gamma_0'\epsilon(t),
     \end{aligned}
 	\end{equation}
-	with $t\in\R_{\geqslant 0}$, and the vector $\gamma_0$ and the functions $\delta(\cdot)$ and $\epsilon(\cdot)$ defined as
+	with $t\in\R_{\geq 0}$, and the vector $\gamma_0$ and the functions $\delta(\cdot)$ and $\epsilon(\cdot)$ defined as
 	\begin{equation}
 		\begin{aligned}
 			\gamma_0  & = \zeta_0 + v^{\star}_0, \\
@@ -303,7 +303,7 @@ The following result is thus obtained collecting the intermediate ones provided 
 	Consider the feedback control system described by \eqref{eq:linplant}-\eqref{eq:linexosystem} and suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_closedloop,ass:lqrall_kernels} hold. Then, there exists a unique solution $v^{\star}$ to \Cref{prb:lqrall_optcont}, of the form
 	\begin{equation}
 		\label{eq:lqrall_optsol}
-		v^{\star}(t) = v_0^\star+ \sum_{i=1}^h \alpha^{\star}_i\sin(\omega_i t)+\beta^{\star}_i\cos(\omega_i t), \quad t\in\R_{\geqslant 0},
+		v^{\star}(t) = v_0^\star+ \sum_{i=1}^h \alpha^{\star}_i\sin(\omega_i t)+\beta^{\star}_i\cos(\omega_i t), \quad t\in\R_{\geq 0},
 	\end{equation}
 	with
 	\begin{align}

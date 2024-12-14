@@ -9,14 +9,14 @@ To substantiate this intuition a few preliminary definitions are in order. Let $
 \begin{subequations}
   \label{eq:nlall_xnxa}
   \begin{align}
-    \dot{\bbstate}_n(t) & = \bbvecf(\bbstate_n(t), \bbref(t)), & t\in\R_{\geqslant 0},\label{eq:nlall_xn} \\
-    \dot{\bbstate}_a(t) & = \bbvecf(\bbstate_a(t), \bbref(t)) + \bbinmap(\bbstate_a(t))\bbaux(t), & t\in\R_{\geqslant 0},\label{eq:nlall_xa}
+    \dot{\bbstate}_n(t) & = \bbvecf(\bbstate_n(t), \bbref(t)), & t\in\R_{\geq 0},\label{eq:nlall_xn} \\
+    \dot{\bbstate}_a(t) & = \bbvecf(\bbstate_a(t), \bbref(t)) + \bbinmap(\bbstate_a(t))\bbaux(t), & t\in\R_{\geq 0},\label{eq:nlall_xa}
   \end{align}
 \end{subequations}
 and let $\bbssstate_{n}(\cdot),\,\bbssstate_{a}(\cdot)$ denote the corresponding steady-state responses, provided the latter exists. Define the \emph{output invisibility function} $h_i(\bbstate_n, \bbstate_a) : \R^\bbstatedim\times\R^\bbstatedim \rightarrow \R$ such that
 \begin{equation}
   \label{eq:nlall_hi}
-  h_i(\bbstate_n(t), \bbstate_a(t)) = \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n(t)) - \bboutmapo(\bbstate_a(t)) \right\Vert_2^2, \quad t\in\R_{\geqslant 0}.
+  h_i(\bbstate_n(t), \bbstate_a(t)) = \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n(t)) - \bboutmapo(\bbstate_a(t)) \right\Vert_2^2, \quad t\in\R_{\geq 0}.
 \end{equation}
 A constrained optimal control problem that approximates \Cref{prb:ssinv} involving soft constraints is formulated as follows.
 
@@ -54,7 +54,7 @@ Let $\lambda_n(t),\lambda_a(t)\in\R^{\bbstatedim}$ be the costate variables, ass
   \begin{split}
     &H(\bbstate_n(t),\bbstate_a(t),\lambda_n(t),\lambda_a(t),v(t)) \\
     &\hspace{-1.5pt}=\frac{1}{2}\left\Vert \bboutmapp(\bbstate_a(t),v(t)) \right\Vert_2^2 + \alpha h_i(\bbstate_n(t),\bbstate_a(t)) +\lambda_n(t)'\bbvecf(\bbstate_n(t),\bbref(t)) \\
-    &\hspace{-1.5pt}+ \lambda_a(t)'(\bbvecf(\bbstate_a(t),\bbref(t)) + \bbinmap(\bbstate_a(t))v(t)), \quad t\in\R_{\geqslant 0}.
+    &\hspace{-1.5pt}+ \lambda_a(t)'(\bbvecf(\bbstate_a(t),\bbref(t)) + \bbinmap(\bbstate_a(t))v(t)), \quad t\in\R_{\geq 0}.
   \end{split}
 \end{equation}
 To simplify the notation, define
@@ -62,17 +62,19 @@ To simplify the notation, define
   \label{eq:nlall_dHdv}
   \begin{split}
     &H_v(\bbstate_a(t),\lambda_a(t),v(t)) = \frac{\partial H(\bbstate_n(t),\bbstate_a(t),\lambda_n(t),\lambda_a(t),v(t))}{\partial v} \\
-    &\hspace{-1.5pt}= \bboutmapp(\bbstate_a(t),v(t))'\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial v} + \lambda_a(t)'\bbinmap(\bbstate_a(t)), \quad t\in\R_{\geqslant 0},
+    &\hspace{-1.5pt}= \bboutmapp(\bbstate_a(t),v(t))'\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial v} + \lambda_a(t)'\bbinmap(\bbstate_a(t)), \quad t\in\R_{\geq 0},
   \end{split}
 \end{equation}
 and note that the costate dynamics are given by
 \begin{subequations}
   \label{eq:nlall_lambdadot}
   \begin{align}
-    \dot{\lambda}_n(t) &= -\alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n(t),\bbref(t))}{\partial \bbstate_n}'\lambda_n(t), & t\in\R_{\geqslant 0},\label{eq:nlal_lambdandot}\\
-    \dot{\lambda}_a(t) &= -\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial \bbstate_a}'\bboutmapp(\bbstate_a(t),v(t)) &\nonumber\\
-    &- \alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a(t),\bbref(t))}{\partial \bbstate_a}'\lambda_a(t) &\nonumber\\
-    &- \sum_{\iota=1}^{\bbauxdim}\left( v_\iota(t)\frac{\partial \bbinmap_\iota(\bbstate_a(t))}{\partial \bbstate_a}' \right)\lambda_a(t), & t\in\R_{\geqslant 0},\label{eq:nlall_lambdaadot}
+    \dot{\lambda}_n(t) &= -\alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n(t),\bbref(t))}{\partial \bbstate_n}'\lambda_n(t), & t\in\R_{\geq 0},\label{eq:nlal_lambdandot}\\
+    \begin{split}
+      \dot{\lambda}_a(t) &= -\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial \bbstate_a}'\bboutmapp(\bbstate_a(t),v(t))\\
+      &- \alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a(t),\bbref(t))}{\partial \bbstate_a}'\lambda_a(t)\\
+      &- \sum_{\iota=1}^{\bbauxdim}\left( v_\iota(t)\frac{\partial \bbinmap_\iota(\bbstate_a(t))}{\partial \bbstate_a}' \right)\lambda_a(t),
+    \end{split}& t\in\R_{\geq 0},\label{eq:nlall_lambdaadot}
   \end{align}
 \end{subequations}
 where $v_\iota(t)$ and $\bbinmap_\iota(t)$ denote the $\iota$-th component and column of $v(t)$ and $\bbinmap(t)$, respectively.
@@ -112,10 +114,10 @@ The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties 
 
 \begin{theorem}
   \label{thm:nlall_main}
-  Consider the system \eqref{eq:bbsys}, fix $\alpha>0$, and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Then, given $v_0 : \R \rightarrow \R^{\bbauxdim}$, and $t_f=a\bbperiod$, there exists a sequence $\{\gamma^{(k)}\}\subset\R_{>0}$ such that the sequence of successive updates $\{\Tilde{v}^{(k)}(t)\}$, $t\in\R_{\geqslant 0}$, produced by \Cref{alg:nlall_sweep} converges to an extremal solution of \Cref{prb:nlall_optcont}. Furthermore, if \Cref{prb:nlall_optcont} admits an optimal solution $v^{\star}$ which is the unique extremal, then
+  Consider the system \eqref{eq:bbsys}, fix $\alpha>0$, and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Then, given $v_0 : \R \rightarrow \R^{\bbauxdim}$, and $t_f=a\bbperiod$, there exists a sequence $\{\gamma^{(k)}\}\subset\R_{>0}$ such that the sequence of successive updates $\{\Tilde{v}^{(k)}(t)\}$, $t\in\R_{\geq 0}$, produced by \Cref{alg:nlall_sweep} converges to an extremal solution of \Cref{prb:nlall_optcont}. Furthermore, if \Cref{prb:nlall_optcont} admits an optimal solution $v^{\star}$ which is the unique extremal, then
   \begin{equation}
       \label{eq:nlall_limnu}
-      \lim_{k\rightarrow +\infty} \left\Vert \Tilde{v}^{(k)}(t) - v^{\star}(t)\right\Vert = 0, \quad t\in\R_{\geqslant 0}.
+      \lim_{k\rightarrow +\infty} \left\Vert \Tilde{v}^{(k)}(t) - v^{\star}(t)\right\Vert = 0, \quad t\in\R_{\geq 0}.
   \end{equation}
   \closestatement
 \end{theorem}
@@ -176,22 +178,22 @@ The proposed approach has been validated by means of a numerical example. Consid
 \begin{subequations}
   \label{eq:nlall_simexo}
   \begin{align}
-    \dot{\bbexostate}(t) &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate(t), & t\in\R_{\geqslant 0},\\
-    \bbref(t) &= \begin{bmatrix} \bbexostate_1(t) + \bbexostate_3(t) \\ \bbexostate_2(t) \end{bmatrix}, & t\in\R_{\geqslant 0},
+    \dot{\bbexostate}(t) &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate(t), & t\in\R_{\geq 0},\\
+    \bbref(t) &= \begin{bmatrix} \bbexostate_1(t) + \bbexostate_3(t) \\ \bbexostate_2(t) \end{bmatrix}, & t\in\R_{\geq 0},
   \end{align}
 \end{subequations}
 with $\omega=2\pi f$, $f=0.2$, and $\bbexostate_0 = \begin{pmatrix} 0 & \omega & 2 \end{pmatrix}'$. Then, consider the following continuous-time system of the form \eqref{eq:bbsys}
 \begin{subequations}
   \label{eq:nlall_simplant}
   \begin{align}
-    \dot{\bbstate}(t) &= \begin{bmatrix} 0 \\ \bbstate_1(t)+\bbstate_2(t) \\ \bbstate_1(t)-\bbstate_2(t) \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2(t)} & 1 \\ e^{\bbstate_2(t)} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate(t),r(t))+\bbaux(t)), & t\in\R_{\geqslant 0},\\
-    \bboutp(t) &= h_c(\bbstate(t),\bbref(t)) + \bbaux(t), & t\in\R_{\geqslant 0},\\
-    \bbouto(t) &= (1+\bbstate_3(t))^3, & t\in\R_{\geqslant 0},
+    \dot{\bbstate}(t) &= \begin{bmatrix} 0 \\ \bbstate_1(t)+\bbstate_2(t) \\ \bbstate_1(t)-\bbstate_2(t) \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2(t)} & 1 \\ e^{\bbstate_2(t)} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate(t),r(t))+\bbaux(t)), & t\in\R_{\geq 0},\\
+    \bboutp(t) &= h_c(\bbstate(t),\bbref(t)) + \bbaux(t), & t\in\R_{\geq 0},\\
+    \bbouto(t) &= (1+\bbstate_3(t))^3, & t\in\R_{\geq 0},
   \end{align}
 \end{subequations}
 where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a given feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate(t),\bbref(t))$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi(t)) = \begin{pmatrix} e^{\bbstate_2(t)} & e^{\bbstate_2(t)} & 0 \end{pmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
 
-\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 \equiv 0$, $\bbstate(0)$ initialized on the manifold described by $\bbstate(t)=\pi(\bbexostate(t))$, $t\in\R_{\geqslant 0}$ consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different weights for the invisibility term after the algorithm terminated all the iterations: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a low output error.
+\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 \equiv 0$, $\bbstate(0)$ initialized on the manifold described by $\bbstate(t)=\pi(\bbexostate(t))$, $t\in\R_{\geq 0}$ consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different weights for the invisibility term after the algorithm terminated all the iterations: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a low output error.
 
 A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in around half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
 

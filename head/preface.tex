@@ -15,6 +15,7 @@ Define the following sets:
 \begin{itemize}
   \item $\Z_{\geq0}=\{k \in \Z:k\geq0\}$;
   \item $\R_{\geq0}=\{a \in \R:a\geq0\}$;
+  \item $\R_{>0}=\{a \in \R:a>0\}$;
   \item $\C_0=\{z \in \C:\Re(z)=0\}$;
   \item $\C_{<0}=\{z \in \C:\Re(z)<0\}$;
   \item $\C_{\geq0}=\{z \in \C:\Re(z)\geq0\}$.
@@ -37,10 +38,10 @@ $\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that ar
 
 For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ denotes the value of $t$ modulo $T$.
 
-Let $t\in\R_{\geqslant 0}$ be the continuous time variable. Consider the continuous-time dynamic system $\Sigma$ defined by the equation
+Let $t\in\R_{\geq 0}$ be the continuous time variable. Consider the continuous-time dynamic system $\Sigma$ defined by the equation
 \begin{equation*}
-  \dot{x}(t) = f(x(t)), \quad t\in\R_{\geqslant 0},
+  \dot{x}(t) = f(x(t)), \quad t\in\R_{\geq 0},
 \end{equation*}
-where $x(t)\in\R^n$ is the state vector and the function $f : \R^n \rightarrow \R^n$ is smooth. Let $x(0) = x_0$, $x_0\in\mathcal{U}$. Then, for any $x_0\in\mathcal{U}$, the solution of the system $\Sigma$ is uniquely defined for $t\in[0,T)$, where $T = T(x_0)$, and it can be expressed by a function $x(t) = \Phi_t^f(x_0)$. The function $\Phi_t^f : \mathcal{U} \rightarrow \R^n$ is termed \emph{flow} of $f$. Moreover, the system $\Sigma$ is said to be \emph{complete} if and only if its solution exists for any $t\in\R_{\geqslant 0}$.
+where $x(t)\in\R^n$ is the state vector and the function $f : \R^n \rightarrow \R^n$ is smooth. Let $x(0) = x_0$, $x_0\in\mathcal{U}$. Then, for any $x_0\in\mathcal{U}$, the solution of the system $\Sigma$ is uniquely defined for $t\in[0,T)$, where $T = T(x_0)$, and it can be expressed by a function $x(t) = \Phi_t^f(x_0)$. The function $\Phi_t^f : \mathcal{U} \rightarrow \R^n$ is termed \emph{flow} of $f$. Moreover, the system $\Sigma$ is said to be \emph{complete} if and only if its solution exists for any $t\in\R_{\geq 0}$.
 
 For $s\in\C$, let $W(s)$ be the transfer function of a continuous-time, linear time-invariant system; $\poleset(W(s))$ denotes the set of poles of $W(s)$.

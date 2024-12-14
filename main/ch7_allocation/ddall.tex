@@ -2,15 +2,15 @@ Consider now a continuous-time, linear time-invariant model given by
 \begin{subequations}
   \label{eq:ddall_sys}
   \begin{align}
-    \dot{\bbstate}(t) &= A(\mu)\bbstate(t) + B(\mu)\bbaux(t) + P(\mu)\bbexostate(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_sys_x}\\
-    \bbouto(t) & = C_1(\mu)\bbstate(t) + D_{11}(\mu)\bbaux(t) + D_{12}(\mu)\bbexostate(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_sys_z0}\\
-    \bboutp(t) & = C_2(\mu)\bbstate(t) + D_{21}(\mu)\bbaux(t) + D_{22}(\mu)\bbexostate(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_sys_z}
+    \dot{\bbstate}(t) &= A(\mu)\bbstate(t) + B(\mu)\bbaux(t) + P(\mu)\bbexostate(t), & t\in\R_{\geq 0}, \label{eq:ddall_sys_x}\\
+    \bbouto(t) & = C_1(\mu)\bbstate(t) + D_{11}(\mu)\bbaux(t) + D_{12}(\mu)\bbexostate(t), & t\in\R_{\geq 0}, \label{eq:ddall_sys_z0}\\
+    \bboutp(t) & = C_2(\mu)\bbstate(t) + D_{21}(\mu)\bbaux(t) + D_{22}(\mu)\bbexostate(t), & t\in\R_{\geq 0}, \label{eq:ddall_sys_z}
   \end{align}
 \end{subequations}
 where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
 \begin{align}
   \label{eq:ddall_exo}
-  \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), \quad t\in\R_{\geqslant 0},
+  \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), \quad t\in\R_{\geq 0},
 \end{align}
 with initial condition $\bbexostate(0) = \bbexostate_0$. The interconnection is depicted in \Cref{fig:bbsys}.
 
@@ -41,7 +41,7 @@ Finally, recall the definition of the cost functional \eqref{eq:bbcost} as well 
   \label{ddall:eta0}
   \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad \tau\in[t_0, t],
 \end{equation}
-is the output response for output $\bbouto$ at time $t \geqslant t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate(\cdot)$ and $\bbaux(\cdot)$. The control problem of interest in this context is formulated as follows.
+is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate(\cdot)$ and $\bbaux(\cdot)$. The control problem of interest in this context is formulated as follows.
 
 \begin{problem}
   \label{prb:ddall_main_per}
@@ -55,10 +55,10 @@ is the output response for output $\bbouto$ at time $t \geqslant t_0$ of the pla
   \end{subequations}
   such that the following requirements are satisfied.
   \begin{enumerate}[(i)]
-    \item \emph{Fixed-time robust output invisibility}: there exists a finite time $t_0 \geqslant 0$ with the property that, for any $\mu\in\mathcal{M}$, the regulated output $\bbouto$ satisfies
+    \item \emph{Fixed-time robust output invisibility}: there exists a finite time $t_0 \geq 0$ with the property that, for any $\mu\in\mathcal{M}$, the regulated output $\bbouto$ satisfies
     \begin{equation}
       \label{eq:ddall_output_invis}
-      \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),0) = \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad t \geqslant t_0,\,\tau\in[t_0, t],\,(\bbstate_0,\bbexostate_0)\in\R^{\bbstatedim}\times\bbexoinitset.
+      \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),0) = \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad t \geq t_0,\,\tau\in[t_0, t],\,(\bbstate_0,\bbexostate_0)\in\R^{\bbstatedim}\times\bbexoinitset.
     \end{equation}
     \item \emph{Steady-state periodicity}: for any $\bbexostate_0\in\bbexoinitset$, the internal state of the control allocator is bounded for any time and its unique steady-state response is periodic of period $\bbperiod$.
     \item \emph{Optimality}: the Lagrange cost functional \eqref{eq:bbcost} is minimized with respect to the class of inputs in a \emph{prescribed} finite-dimensional function space.
@@ -80,7 +80,7 @@ The design of the allocator requires the following information.
   \item[K1] The \emph{steady-state map} $\bar{M}_{\bboutp, \bbexostate}$ from $\bbexostate$ to $\bboutp$, \emph{i.e.}, a matrix such that, denoting by $\bbssoutp^\bbexostate(\cdot)$ the part of the steady-state response in $\bboutp$ due to $\bbexostate$,
     \begin{equation}
       \label{eq:ddall_K1mem}
-      \bbssoutp^\bbexostate(t) = \bar{M}_{\bboutp, \bbexostate}\bbexostate(t), \quad t\in\R_{\geqslant 0}.
+      \bbssoutp^\bbexostate(t) = \bar{M}_{\bboutp, \bbexostate}\bbexostate(t), \quad t\in\R_{\geq 0}.
     \end{equation}
   \item[K2] The \emph{moments} of the transfer matrix $W_{\bboutp\bbaux}(s)$ of \eqref{eq:ddall_sys} at $s\in\{0, j \omega_1,, ..., j \omega_{\bar{n}_e}\}\subset\spec(S)$, namely
     \begin{equation}
@@ -103,9 +103,9 @@ If the data \textbf{K1}, \textbf{K2}, and \textbf{K3} are available, the propose
 \end{subequations}
 yielding the matrices $(A_{IM}, C_{IM})$:
 \begin{subequations}
+  \label{eq:ddall_Aim}
   \begin{align}
-    \label{eq:ddall_Aim}
-    A_{IM} & = \Omega \otimes I_{m_a}, \\
+    A_{IM} & = \Omega \otimes I_{m_a}, \label{eq:ddall_Aim_Aim} \\
     C_{IM} & = \Lambda \otimes I_{m_a}.
   \end{align}
 \end{subequations}
@@ -133,16 +133,158 @@ Define the functions $\xi(t)$ and $L(\bbexostate(t),x_{IM}(t))$ as
 \begin{subequations}
   \label{eq:ddall_G_xi}
 	\begin{align}
-		\xi(t) & = \bar{M}_{\bboutp, \bbexostate}e^{\exodynmat t}\bbexostate(t) + \bar{N}_{\mu}e^{A_{IM}t}x_{IM}(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_xi} \\
-		L(\bbexostate(t),x_{IM}(t)) & = \left( \int_{0}^{\bbperiod} \nabla \ell(\xi(\sigma))'\bar{N}_{\mu}e^{A_{IM}\sigma} d\sigma \right)', & t\in\R_{\geqslant 0}. \label{eq:ddall_delta_def}
+		\xi(t) & = \bar{M}_{\bboutp, \bbexostate}e^{\exodynmat t}\bbexostate(t) + \bar{N}_{\mu}e^{A_{IM}t}x_{IM}(t), & t\in\R_{\geq 0}, \label{eq:ddall_xi} \\
+		L(\bbexostate(t),x_{IM}(t)) & = \left( \int_{0}^{\bbperiod} \nabla \ell(\xi(\sigma))'\bar{N}_{\mu}e^{A_{IM}\sigma} d\sigma \right)', & t\in\R_{\geq 0}. \label{eq:ddall_delta_def}
 	\end{align}
 \end{subequations}
 The proposed dynamic allocator is given by
 \begin{subequations}
   \label{eq:ddall_control_all}
 	\begin{align}
-		\dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) - \gamma L(\bbexostate(t),x_{IM}(t)), & t\in\R_{\geqslant 0}, \label{eq:ddall_control_all_xim} \\
-		\dot{x}_a(t)    & = A_a x_a(t) + B_a C_{IM} x_{IM}(t), & t\in\R_{\geqslant 0}, \label{eq:ddall_control_all_xa}                  \\
-		\allout(t)      & = C_a x_a(t), & t\in\R_{\geqslant 0}. \label{eq:ddall_control_all_ya}
+		\dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) - \gamma L(\bbexostate(t),x_{IM}(t)), & t\in\R_{\geq 0}, \label{eq:ddall_control_all_xim} \\
+		\dot{x}_a(t)    & = A_a x_a(t) + B_a C_{IM} x_{IM}(t), & t\in\R_{\geq 0}, \label{eq:ddall_control_all_xa}                  \\
+		\allout(t)      & = C_a x_a(t), & t\in\R_{\geq 0}. \label{eq:ddall_control_all_ya}
 	\end{align}
 \end{subequations}
+
+\begin{remark}
+  \label{rem:ddall_Aim}
+	The definition of $A_{IM}$ given in \eqref{eq:ddall_Aim_Aim}, together with its eigenvalues selected by \eqref{eq:ddall_Omega}, define the \emph{prescribed} function space mentioned in item (iii) of \Cref{prb:ddall_main_per}: it consists of the functions of time generated as combinations of the modes of \eqref{eq:ddall_exo}, \emph{i.e.}, any function	$v(t)$ such that there exist constants $c_0$, $c_i$, $\phi_i$, $i = 1, \dotsc, \bar{n}_e$, with the property that $v(t) = c_0+\sum_{i = 1}^{\bar{n}_e}c_i \sin(\omega_i t + \phi_i)$.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:ddall_galpett}
+  In \cite[Problem 1]{galeani_dynamic_2014}, a formulation similar to \Cref{prb:ddall_main_per} is provided, although concerning the only case of $\mu=0$. The results shown therein lead to the development of a dynamic control allocator that is implemented as a hybrid dynamical system, which has also been compared against the solution of the optimal control approach presented in \Cref{sec:all_design_ssinv}. With respect to that work, the solution proposed in \eqref{eq:ddall_control_all} has two main advantages. First, it is a continuous-time system with no hybrid dynamics, which also simplifies its implementation. Secondly, the solution presented in \cite{galeani_dynamic_2014} is based on a gradient descent approach, as is the one hereby proposed (see \eqref{eq:ddall_control_all_xim}), and both these solutions depend on a gradient descent step paramter $\gamma\in\R_{>0}$. What differentiates the proposed approach from the state of the art is that, while in \cite{galeani_dynamic_2014} the step parameter $\gamma$ has to be tuned carefully to ensure convergence due to the hybrid dynamics, here it can be set \emph{arbitrarily large}, thus leading to an arbitrarily fast allocation action.\closeremark
+\end{remark}
+
+The equations \eqref{eq:ddall_control_all} allow the designer to directly implement the proposed control allocator. The properties of this solution are clarified in the following. In the case of $\mu=0$, the gathering of the data \textbf{K1}, \textbf{K2}, and \textbf{K3} is straightforward.
+
+\begin{remark}[\textbf{K1}, \textbf{K2}, \textbf{K3} for $\mu=0$]
+  \label{rem:ddall_nominalK123}
+  If $\mu=0$, \eqref{eq:ddall_sys} is fully known by \Cref{ass:ddall_plant_exo} and the data \textbf{K1}, \textbf{K2}, and \textbf{K3} is computed as follows.
+  \begin{description}
+    \item[K1]
+      \begin{subequations}
+        \label{eq:ddall_Mbar_complete}
+        \begin{align}
+          \Pi_{\Sigma}\exodynmat &= A\Pi_{\Sigma} + P,\label{eq:ddall_Mbar_completea} \\
+          \bar{M}_{\bboutp,\bbexostate} &= C_2\Pi_{\Sigma} + D_{22}.\label{eq:ddall_Mbar}
+        \end{align}
+      \end{subequations}
+    \item[K2] $\{W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j\omega_1), \dotsc, W_{\bboutp\bbaux}(j\omega_{\bar{n}_e})\}$ are given by
+      \begin{equation}
+        W_{\bboutp\bbaux}(s), \quad s\in\{0,j\omega_1,\ldots,j\omega_{\bar{n}_e}\}.
+      \end{equation}
+    \item[K3] Find $N_a(s)$ whose columns are a minimal polynomial basis for the null space of $W_{\bbouto\bbaux}(s)$. Choose a Hurwitz monic polynomial $d_a(s)$ of degree larger than each element of $N_a(s)$. Define
+    \begin{equation}
+      \label{eq:ddall_Wa}
+      W_a(s) = d_a^{-1}(s)N_a(s),
+    \end{equation}
+    and choose $(A_a,B_a,C_a,0)$ as any minimal realization of $W_a(s)$.\closeremark
+  \end{description}
+\end{remark}
+
+The following statement characterizes the properties of \eqref{eq:ddall_control_all} in the case of $\mu=0$.
+
+\begin{lemma}
+  \label{lem:ddall_nominal}
+  Consider the system \eqref{eq:ddall_sys} with $\mu=0$. Then, the dynamic control allocator \eqref{eq:ddall_control_all} interconnected to \eqref{eq:ddall_sys} as in \eqref{eq:ddall_all_interc} solves \Cref{prb:ddall_main_per} for any $\gamma\in\R_{\geq 0}$ with $t_0=0$.\closestatement
+\end{lemma}
+\begin{proof}
+  \label{pf:ddall_nominal}
+  Item (i) of \Cref{prb:ddall_main_per} with $\mu=0$ follows immediately by knowledge of \textbf{K3} computed as in \Cref{rem:ddall_nominalK123}; this guarantees full output invisibility of the allocator unit as requested. Therefore, the optimality requirement remains to be addressed. To this end, it must be shown that the behavior of the proposed allocator \eqref{eq:ddall_control_all} leads to the minimization of the cost functional \eqref{eq:bbcost}. This is achieved by showing that \eqref{eq:ddall_control_all_xim}, \eqref{eq:ddall_delta_def} define a gradient descent algorithm for the cost functional \eqref{eq:bbcost}. Define the \emph{moving-horizon cost} over a period as
+  \begin{equation}
+    \label{eq:ddall_cost_moving}
+    J_{t} = \int_{t}^{t+\bbperiod}\ell(\bbssoutp(\sigma))\,d\sigma, \quad t\in\R_{\geq 0},
+  \end{equation}
+  and consider \eqref{eq:ddall_control_all_xim} with an input $u_{IM}(t)$ to be designed, \emph{i.e.},
+  \begin{align}
+    \label{eq:ddall_control_all_xim_mod}
+    \dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) + u_{IM}(t), \quad t\in\R_{\geq 0}.
+  \end{align}
+  To evaluate the effect of a change in the cost $J$ due to a change in $x_{IM}$, consider the following selections of $u_{IM}$.
+  \begin{subequations}
+    \label{eq:ddall_u_IM}
+  	\begin{align}
+  		u^\delta_{IM}(\sigma) &=
+  		\begin{cases}
+  			\delta, & \text{ if } \sigma \in [t,t+\Delta],\,\Delta>0,\,t\in\R_{\geq 0}, \\
+  			0,      & \text{ otherwise. }
+  		\end{cases}\label{eq:ddall_u_IM_delta} \\
+  		u^\circ_{IM}(\sigma) &= 0, \quad \forall \sigma\geq t,\,t\in\R_{\geq 0}.\label{eq:ddall_u_IM_circ}
+  	\end{align}
+  \end{subequations}
+  Denote the respective evolutions of $\bbssoutp$, $x_{IM}$, and $J_t$ by the superscripts $\delta$ or $\circ$, \emph{e.g.}, $\bbssoutp^\delta$ and $\bbssoutp^\circ$. Integrating \eqref{eq:ddall_control_all_xim_mod}, \eqref{eq:ddall_u_IM} from the
+  common initial condition $x_{IM}^{\circ}(t)$ yields
+  \begin{subequations}
+    \begin{align}
+      x_{IM}^{\circ}(t+\Delta) & = e^{A_{IM}\Delta}x_{IM}^{\circ}(t),\\
+      \begin{split}
+        x_{IM}^\delta(t+\Delta)  & = e^{A_{IM}\Delta}x_{IM}^{\circ}(t) + \int_{0}^{\Delta} e^{A_{IM}\tau}u_{IM}(t+\Delta-\tau)\,d\tau \\
+        &= x_{IM}^{\circ}(t+\Delta) + \int_{0}^{\Delta}e^{A_{IM}\tau}\,d\tau\delta = x_{IM}^{\circ}(t+\Delta)+\Delta\bar{B}\delta.
+      \end{split}
+    \end{align}
+  \end{subequations}
+  The matrix $\bar{B}$ is such that
+  \begin{align}
+    \label{eq:ddall_norm_Bbar}
+    \|\bar{B}\| & \leq1, \qquad \lim_{\Delta\rightarrow0^{+}}\bar{B}=I,
+  \end{align}
+  which follow from the fact that $\|e^{A_{IM}\tau}\|=1$ (since $(e^{A_{IM}\tau})'e^{A_{IM}\tau}=I$) and from integration of the series expansion of $e^{A_{IM}\tau}$, respectively. Since $u_{IM}^\circ$ and $u_{IM}^\delta$ are zero after $t+\Delta$, it holds that
+  \begin{equation}
+    x_{IM}^{\delta}(\tau)-x_{IM}^{\circ}(\tau) = e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta, \quad \tau\geq t+\Delta,
+  \end{equation}
+  and the corresponding steady-state responses of $\bboutp$ are
+  \begin{subequations}
+    \begin{align}
+      \bbssoutp^{\circ}(\tau)  & = \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\circ}(\tau),\\
+      \bbssoutp^{\delta}(\tau) & = \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\delta}(\tau),\\
+        \hat{\tilde{\eta}}_p(\tau)  & = \bbssoutp^{\delta}(\tau)-\bbssoutp^{\circ}(\tau) = \bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta.\label{eq:ddall_ztilde}
+    \end{align}
+  \end{subequations}
+  If $\Delta$ is sufficiently small, the difference between the two cost integrand functions along the two solutions satisfy
+  \begin{align}
+    \begin{split}
+	    \ell(\bbssoutp^{\delta}(\tau)) - \ell(\bbssoutp^{\circ}(\tau)) & = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)} \hat{\tilde{\eta}}_p(\tau) + o(\|\hat{\tilde{\eta}}_p(\tau)\|)\\
+	    & = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta + o(\|\Delta\|),
+    \end{split}
+  \end{align}
+  where the equality $o(\|\hat{\tilde{\eta}}_p(\tau)\|)=o(\|\Delta\|)$ follows from \eqref{eq:ddall_ztilde}, \eqref{eq:ddall_norm_Bbar}, implying in turn that
+  \begin{equation}
+    \label{eq:ddall_mario}
+	  \|\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta\|\leq
+	  \|\bar{N}_\mu\| \|\Delta\| \|\delta\|,
+  \end{equation}
+  provided that $||\delta||$ is bounded by a quantity independent of $\Delta$, which is shown in the following.
+  Periodicity of $\bbssoutp^{\circ}$ yields
+  \begin{equation}
+    J^\circ_{t} = J^\circ_{t+\Delta}, \quad t\in\R_{\geq 0},
+  \end{equation}
+  hence, for small $\Delta$:
+  \begin{align}
+    \begin{split}
+	    J^\delta_{t+\Delta} - J^\circ_{t} & = J^\delta_{t+\Delta} - J^\circ_{t+\Delta} \\
+                                        & =	\int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\ell(\bbssoutp^{\delta}(\tau))-\ell(\bbssoutp^{\circ}(\tau))\right)\,d\tau\\
+	                                      & = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)+o(\|\Delta\|)\right)\,d\tau\\
+                                        & = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau+o(\|\Delta\|).
+    \end{split}
+  \end{align}
+  Hence, recalling that $\displaystyle \lim_{\Delta \rightarrow0^{+}}\frac{1}{\Delta}o(\|\Delta\|)=0$ by definition of $o(\cdot)$, and \eqref{eq:ddall_ztilde}, it follows that
+  \begin{align}
+    \begin{split}
+	    \dot{J}_t & = \lim_{\Delta \rightarrow 0^{+}} \dfrac{J^\delta_{t+\Delta}-J^\circ_{t}}{\Delta}\\
+	              & = \lim_{\Delta \rightarrow 0^{+}} \frac{1}{\Delta} \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau\\
+	              & = \int_{t}^{t+\bbperiod} \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-t)}\,d\tau\delta\\
+	              & \triangleq F(t) \delta, \quad t\in\R_{\geq 0}.
+    \end{split}
+  \end{align}
+  Selecting $\delta = -\gamma F(t)$ for any $\gamma\in\R_{\geq 0}$ yields
+  \begin{equation}
+    \label{eq:ddall_Jdot_gamma}
+    \dot{J}_t = -\gamma\|F(t)\|^2.
+  \end{equation}
+  Note that $F(t)$ only depends on the nominal $\bbssoutp^{\circ}$ trajectory and is independent of $\Delta$, as required after \eqref{eq:ddall_mario}.
+	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that	$F(t)' = L(\bbexostate(t), x_{IM}(t))$ with the latter defined in \eqref{eq:ddall_G_xi}.
+	The latter equation	\eqref{eq:ddall_Jdot_gamma}, in turn, together with boundedness of $\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for any time as in \eqref{eq:ddall_K1mem}, implies that $x_{IM}$ in \eqref{eq:ddall_control_all_xim} is bounded and that, at steady-state, it is described by the differential equation $\dot{\tilde{x}}_{IM}(t) = A_{IM}\tilde{x}_{IM}(t)$, the solution of which is, by construction, periodic of period $\bbperiod$.
+  Finally, the annihilator is asymptotically stable since the matrix $A_a$ in \eqref{eq:ddall_control_all_xa} is Hurwitz; hence, the condition on $\dot{J}_{t}$ implies	that items (ii) and (iii) of \Cref{prb:ddall_main_per} hold, concluding the proof.
+\end{proof}
