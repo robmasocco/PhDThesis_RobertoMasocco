@@ -71,7 +71,7 @@ where $\plantlcfd(s)$, $\plantalllcfd(s)$, $\plantlcfn(s)$ and $\plantalllcfn(s)
 	\closestatement
 \end{assumption}
 
-Such factorizations are not unique in general but it can be shown that \Cref{ass:lqrall_kernels} holds for one of them if and only if it holds for each one of them. The performance output in this case is defined as the plant input, \emph{i.e.}, $\bboutp = \plantinput$. The effort demanded to the actuators is thus evaluated by the instantaneous cost function $\ell(\bbssoutp(t)) = \left\Vert \plantssinput(t) \right\Vert^2_2$. Setting $t_0=0$ in eq.~\eqref{eq:bbcost} yields the following formulation of the cost functional \eqref{eq:bbcost}, completing the definition of \Cref{prb:ssinv} in this case:
+Such factorizations are not unique in general but it can be shown that \Cref{ass:lqrall_kernels} holds for one of them if and only if it holds for each one of them. The performance output in this case is defined as the plant input, \emph{i.e.}, $\bboutp = \plantinput$. The effort demanded to the actuators is thus evaluated by the instantaneous cost function $\ell(\bbssoutp(t)) = \left\Vert \plantssinput(t) \right\Vert^2_2$. Setting $\tau_0=0$ in eq.~\eqref{eq:bbcost} yields the following formulation of the cost functional $\bbcost$:
 \begin{equation}
   \label{eq:lqrall_sscost}
   J(\plantssinput) = \frac{1}{2} \int_{0}^{T} \left\Vert \plantssinput(\tau) \right\Vert^2_2\,d\tau.
@@ -348,22 +348,19 @@ The results illustrated so far have been corroborated by means of some numerical
 The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with identity weights, restricting it to only the first two inputs of the plant \eqref{eq:lqrall_linplant}. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, while its initial condition has been chosen equal to $w_0 = [2 \ 0 \ 4 \ 0 \ 6 \ 0]'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time equal to $t_f = 7~s$.
 
 The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases, showing that both solutions converge to the same steady-state cost, which is equal to $J(v^{\star})=155.836$. The behaviors of the differences between the outputs of the non-allocated and allocated closed loops for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}, where the convergence to zero of the considered signals proves the satisfaction of the steady-state output invisibility requirement. The outputs of the state-of-the-art hybrid allocator are shown in \Cref{fig:lqrall_ya} against the components of $v^{\star}(t)$, showing that both signals become coincident after a transient phase.
-
-\begin{figure}[t!]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/ch7/lqrall/sscosts}
 	\caption{Cost in the presence of input allocation by means of a hybrid allocator (red), and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
 	\label{fig:lqrall_sscosts}
 \end{figure}
-
-\begin{figure}[t!]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/ch7/lqrall/ydiffs}
 	\caption{Differences between the outputs of the non-allocated and allocated closed loops, in the presence of a hybrid allocator (red) and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
 	\label{fig:lqrall_ydiffs}
 \end{figure}
-
-\begin{figure}[t!]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/ch7/lqrall/ya}
 	\caption{Outputs of a hybrid allocator (red) versus the components of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}

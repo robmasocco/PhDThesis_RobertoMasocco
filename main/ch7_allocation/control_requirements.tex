@@ -71,10 +71,10 @@ It is worth to point out that \Cref{ass:bbssresp} provides, for any $\bbexostate
 \end{equation}
 The performance and regulated outputs also admit steady-state responses denoted $\bbssoutp(\cdot)$ and $\bbssouto(\cdot)$, respectively.
 
-Let $t_0\in\R_{\geqslant 0}$. The performance criterion with respect to which the behavior of $\bbsys$ may be optimized is expressed by the following \emph{Lagrange functional} of the form
+Let $\tau_0\in\R_{\geqslant 0}$. The performance criterion with respect to which the behavior of $\bbsys$ may be optimized is expressed by the following \emph{Lagrange functional} of the form
 \begin{equation}
   \label{eq:bbcost}
-  J(\bbaux) = \int_{t_0}^{t_0 + \bbperiod} \bbcost(\bbssoutp(\tau))\,d\tau,
+  J(\bbaux) = \int_{\tau_0}^{\tau_0 + \bbperiod} \bbcost(\bbssoutp(\tau))\,d\tau,
 \end{equation}
 where the function $\bbcost : \R^{\bboutpdim} \rightarrow \R_{\geqslant 0}$ is smooth, convex, and radially unbounded.
 
