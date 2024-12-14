@@ -84,10 +84,12 @@ The two dynamic control allocation problems that are of interest for this work a
   \label{prb:ssinv}
   Consider the system \eqref{eq:bbsys} and the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
   Find, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
-	\begin{align}
-		\allin  & = \bbref, \\
-		\allout & = \bbaux,
-	\end{align}
+	\begin{subequations}
+	  \begin{align}
+	  	\allin  & = \bbref, \\
+	  	\allout & = \bbaux,
+	  \end{align}
+  \end{subequations}
   ensures that the following requirements hold.
   \begin{itemize}
 		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a limited steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$.
@@ -105,10 +107,12 @@ The two dynamic control allocation problems that are of interest for this work a
   \label{prb:fullinv}
   Consider the system \eqref{eq:bbsys} and the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold.
   Find, if possible, an input allocation device (namely, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected to $\bbsys$ and $\bbexo$ according to
-	\begin{align}
-		\allin  & = \bbref, \\
-		\allout & = \bbaux,
-	\end{align}
+  \begin{subequations}
+	  \begin{align}
+	  	\allin  & = \bbref, \\
+	  	\allout & = \bbaux,
+	  \end{align}
+  \end{subequations}
   ensures that the following requirements hold.
   \begin{itemize}
 		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a limited steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$.
