@@ -156,8 +156,13 @@
 \usepackage{amsfonts}
 \usepackage{mathtools}
 
-\usepackage[noline,ruled,linesnumbered]{algorithm2e}
-\SetKwComment{Comment}{/* }{ */}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+\floatstyle{ruled}
+\restylefloat{algorithm}
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Output:}}
 
 % Fix the problem with delimiter size caused by fourier and amsmath packages.
 \makeatletter

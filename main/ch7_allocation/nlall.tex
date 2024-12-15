@@ -85,32 +85,28 @@ Let $\beta,\gamma\in\R_{>0}$, $\hat{v}(t)\in\R^\bbauxdim$, and $\bbstate_n(t)\in
   \delta(H_v(\bbstate_a(t),\lambda_a(t),v(t))) = \left( \int_{t_f-\bbperiod}^{t_f} H_v(\bbstate_a(t),\lambda_a(t),v(t)) H_v(\bbstate_a(t),\lambda_a(t),v(t))'\,dt \right)^{1/2}.
 \end{equation}
 The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties are characterized by the following statement.
-
-\begin{center}
-\begin{minipage}[t]{.9\textwidth}
-\begin{algorithm}[H]
-	\caption{Steady-state steepest descent algorithm \cite{masocco_dynamic_2024}.}
-	\label{alg:nlall_sweep}
-	\KwData{$\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t)$}
-	\KwResult{$\tilde{v}(t)$}
-  let $t\in[0,t_f]$\;
-  $\tilde{v}^{(0)}(t) \gets v_0(t)$\;
-  \For{$k=1,\dotsc$}{
-    $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
-    $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
-    \eIf{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
-    {
-      \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
-    }
-    {
-      $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
-      $u_p^{(k)}(\tau) \gets u^{(k)}(t_f - \bbperiod + \tau)$, with $\tau\in[0,\bbperiod]$\;
-      $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ /* Periodic extension. */\;
-    }
-  }
+\begin{algorithm}[ht]
+  \caption{Steady-state steepest descent algorithm \cite{masocco_dynamic_2024}.}
+  \label{alg:nlall_sweep}
+  \begin{algorithmic}[1]
+    \Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t)$
+    \Ensure $\tilde{v}(t)$
+    \State let $t\in[0,t_f]$
+    \State $\tilde{v}^{(0)}(t) \gets v_0(t)$
+    \For{$k=1,\dotsc$}
+      \State $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$
+      \State $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
+      \Statex \hspace{3.72cm}$(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
+      \If{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
+        \Return $\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$
+      \Else
+        \State $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
+        \State $u_p^{(k)}(\tau) \gets u^{(k)}(t_f - \bbperiod + \tau)$, with $\tau\in[0,\bbperiod]$
+        \State $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ \Comment{Periodic extension.}
+      \EndIf
+    \EndFor
+  \end{algorithmic}
 \end{algorithm}
-\end{minipage}
-\end{center}
 
 \begin{theorem}
   \label{thm:nlall_main}
@@ -137,42 +133,38 @@ The proposed method is summarized in \Cref{alg:nlall_sweep}, and its properties 
 
 The choice of the descent step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}. Unlike the finite-dimensional setting, the descent direction provided by the gradient method in the this context is infinite-dimensional. Nonetheless, the choice of the proper descent step constitutes a one-dimensional task in both settings. This makes the use of heuristic methods still viable in the infinite-dimensional setting.
 
-The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a temporary abuse of notation, the variables $s(\cdot)$ and $r(\cdot)$ store at each iteration, respectively, the values of $H_v(\cdot)$ and $H_v(\cdot) \odot H_v(\cdot)$ of the current and of the previous iterations for a given value of their argument. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}(\cdot)$, as well as the operation $(\cdot)^{-1}$ on $((\hat{r}(\cdot))^{1/2}+\delta)$, reported on line 17 of \Cref{alg:nlall_adam}, are both performed element-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the step size. In particular, an appropriate choice of these parameters allows discarding all the information related to less recent iterations, thus updating the step size by relying only on the most recent information. It is worth mentioning that this scheme adjusts the step size dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
-
-\begin{center}
-\begin{minipage}[t]{.9\textwidth}
-\begin{algorithm}[H]
+The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With a temporary abuse of notation, the variables $s(\cdot)$ and $r(\cdot)$ store at each iteration, respectively, the values of $H_v(\cdot)$ and $H_v(\cdot) \odot H_v(\cdot)$ of the current and of the previous iterations for a given value of their argument. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}(\cdot)$, as well as the operation $(\cdot)^{-1}$ on $((\hat{r}(\cdot))^{1/2}+\delta)$, reported on line 16 of \Cref{alg:nlall_adam}, are both performed element-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the step size. In particular, an appropriate choice of these parameters allows discarding all the information related to less recent iterations, thus updating the step size by relying only on the most recent information. It is worth mentioning that this scheme adjusts the step size dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
+\begin{algorithm}[ht]
 	\caption{Steady-state ADAM algorithm \cite{masocco_dynamic_2024}.}
 	\label{alg:nlall_adam}
-	\KwData{$\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t),\,\rho_1,\,\rho_2,\,\delta$}
-	\KwResult{$\tilde{v}(t)$}
-  let $t\in[0,t_f]$\;
-  $\tilde{v}^{(0)}(t) \gets v_0(t)$\;
-  $s^{(0)}(t)\gets0$\;
-  $r^{(0)}(t)\gets0$\;
-  \For{$k=1,\dotsc$}{
-    $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$\;
-    $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with $(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$\;
-    \eIf{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
-    {
-      \Return{$\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$}
-    }
-    {
-      let $\tau \in [0, \bbperiod]$, $\Bar{\tau} = t_f - \bbperiod + \tau$\;
-      $H_v(\Bar{\tau}) \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$\;
-      $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v(\Bar{\tau})$\;
-      $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v(\Bar{\tau}) \odot H_v(\Bar{\tau})$\;
-      $\hat{s}(\Bar{\tau}) \gets s(\Bar{\tau})/(1-\rho_1^k)$\;
-      $\hat{r}(\Bar{\tau}) \gets r(\Bar{\tau})/(1-\rho_2^k)$\;
-      $\Delta u^{(k)}(\Bar{\tau})\gets-\gamma\,\hat{s}(\Bar{\tau})\odot((\hat{r}(\Bar{\tau}))^{1/2}+\delta)^{-1}$\;
-      $u^{(k)}(\Bar{\tau}) \gets \tilde{v}^{(k-1)}(\Bar{\tau}) + \Delta u^{(k)}(\Bar{\tau}) $\;
-      $u_p^{(k)}(\tau) \gets u^{(k)}(\Bar{\tau})$\;
-      $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ /* Periodic extension. */\;
-    }
-  }
+	\begin{algorithmic}[1]
+		\Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t),\,\rho_1,\,\rho_2,\,\delta$
+		\Ensure $\tilde{v}(t)$
+		\State let $t\in[0,t_f]$
+		\State $\tilde{v}^{(0)}(t) \gets v_0(t)$
+		\State $s^{(0)}(t)\gets0$
+		\State $r^{(0)}(t)\gets0$
+		\For{$k=1,\dotsc$}
+			\State $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$
+			\State $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
+      \Statex \hspace{3.72cm}$(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
+			\If{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
+				\Return $\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$
+			\Else
+				\State let $\tau \in [0, \bbperiod]$, $\Bar{\tau} = t_f - \bbperiod + \tau$
+				\State $H_v(\Bar{\tau}) \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$
+				\State $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v(\Bar{\tau})$
+				\State $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v(\Bar{\tau}) \odot H_v(\Bar{\tau})$
+				\State $\hat{s}(\Bar{\tau}) \gets s(\Bar{\tau})/(1-\rho_1^k)$
+				\State $\hat{r}(\Bar{\tau}) \gets r(\Bar{\tau})/(1-\rho_2^k)$
+				\State $\Delta u^{(k)}(\Bar{\tau})\gets-\gamma\,\hat{s}(\Bar{\tau})\odot((\hat{r}(\Bar{\tau}))^{1/2}+\delta)^{-1}$
+				\State $u^{(k)}(\Bar{\tau}) \gets \tilde{v}^{(k-1)}(\Bar{\tau}) + \Delta u^{(k)}(\Bar{\tau}) $
+				\State $u_p^{(k)}(\tau) \gets u^{(k)}(\Bar{\tau})$
+				\State $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ \Comment{Periodic extension.}
+			\EndIf
+		\EndFor
+	\end{algorithmic}
 \end{algorithm}
-\end{minipage}
-\end{center}
 
 The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in eq.~\eqref{eq:bbexosys}:
 \begin{subequations}
