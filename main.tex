@@ -13,13 +13,13 @@
 % Enable selective compilation of chapters to speed up development.
 % For this to work, the full document has to be compiled at least once.
 % DO NOT FORGET TO COMMENT THESE LINES BEFORE PUSHING!
-% \includeonly{main/ch1_introduction/ch1}
-% \includeonly{main/ch2_problem/ch2}
-% \includeonly{main/ch3_tools/ch3}
-% \includeonly{main/ch4_dua/ch4}
-% \includeonly{main/ch5_robots/ch5}
-% \includeonly{main/ch6_tcvscd/ch6}
-% \includeonly{head/preface,main/ch7_allocation/ch7}
+% \includeonly{main/ch1_introduction/ch1,tail/biblio}
+% \includeonly{main/ch2_problem/ch2,tail/biblio}
+% \includeonly{main/ch3_tools/ch3,tail/biblio}
+% \includeonly{main/ch4_dua/ch4,tail/biblio}
+% \includeonly{main/ch5_robots/ch5,tail/biblio}
+% \includeonly{main/ch6_tcvscd/ch6,tail/biblio}
+% \includeonly{head/preface,main/ch7_allocation/ch7,tail/app/moments,tail/biblio}
 
 \begin{document}
 
@@ -72,6 +72,7 @@
 \renewcommand{\chaptername}{Appendix}
 \include{tail/app/workflow}
 \include{tail/app/units}
+\include{tail/app/moments}
 
 \backmatter
 \include{tail/biblio}
