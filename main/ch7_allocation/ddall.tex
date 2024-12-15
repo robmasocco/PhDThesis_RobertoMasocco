@@ -387,4 +387,153 @@ The following result reveals that the structure of the control allocator \eqref{
   The observability property in the last sentence of \Cref{prop:ddall_delay_quadratic} is always satisfied if the columns of the numerator of the annihilator $W_a(s)$, namely $N_{a}(s)$, are chosen as a minimal basis,	as it can be inferred from \cite[Thm. 6.5.10]{kailath_linear_1980}.\closeremark
 \end{remark}
 
-Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}.
+Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}. Starting from \textbf{K1}, the first item to be estimated is the steady-state map $\bar{M}_{\bboutp,\bbexostate}$. Usually, this implies disconnecting the exosystem \eqref{eq:ddall_sys} from the system \eqref{eq:ddall_sys}; in the current context this procedure is not permitted, since one of the main goals of the allocation approach is to not alter or reconfigure in any way the preexisting control system. Thus, a data-driven algorithm for the online estimation of $\bar{M}_{\bboutp,\bbexostate}$ is proposed. Since it is based on sampled measurements of $\bbssoutp(t)$ and $\bbexostate(t)$, the first step consists in defining the characteristics of the sampling procedure. Let $\tau_s\in\R_{>0}$ be the sampling time, characterized by the following statements.
+\begin{definition}[Non-pathological sampling time]
+  \label{def:ddall_nonpatho}
+  The sampling time $\tau_s>0$ is \emph{non-pathological} if, for any $\lambda_1,\lambda_2\in\spec(\exodynmat)\cup\spec(A)$, there is no $h\in\Z$ such that
+  \begin{equation}
+    \tau_s(\lambda_1-\lambda_2)=h2\pi j.
+  \end{equation}
+  \closestatement
+\end{definition}
+\begin{assumption}
+  \label{ass:ddall_nonpatho}
+  $\tau_s$ is non-pathological.\closestatement
+\end{assumption}
+Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonpatho} implies that all distinct eigenvalues of $\exodynmat$ and $A$ are mapped to distinct eigenvalues of $\exodynmat_d$ and $A_d$; moreover all structural properties (\emph{e.g.}, observability and reachability) of \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} are preserved in their sampled data equivalents. More details about this topic are found in \cite[Sec. 3.2]{chen_optimal_1995}.
+\begin{algorithm}[ht]
+  \caption{Data-driven pseudo-steady-state output map estimation.}
+  \label{alg:ddall_algo1}
+  \begin{algorithmic}[1]
+    \Require Samples $\bbexostate_k$, $k=0,\dotsc,K-1$, and $\eta_{p,k}$, $k=0,\dotsc,K+n-1$, for $K\geq n+1+\bboutpdim n_e$.
+    \Ensure $\bar{M}_{\bboutp,\bbexostate}$.
+
+    \State Define $T(\bboutp,\bbexostate)$ as:
+    \Statex
+    \begin{align}
+      \label{eq:ddall_Toeplitz}
+      T(\bboutp,\bbexostate) = \bbm{
+      \bboutp(n\tau_s)       & \ldots & \bboutp(0)           & -\bbexostate(0)'\otimes I_{\bboutpdim} \\
+      \bboutp((n+1)\tau_s)   & \ldots & \bboutp(\tau_s)      & -\bbexostate(\tau_s)'\otimes I_{\bboutpdim} \\
+      \vdots                 & \ldots & \vdots               & \vdots \\
+      \bboutp((n+K-1)\tau_s) & \ldots & \bboutp((K-1)\tau_s) & -\bbexostate((K-1)\tau_s)'\otimes I_{\bboutpdim}
+      }.
+    \end{align}
+
+    \State Find the smallest $\nu\in\N$, $1\leq \nu\leq n$, for which there exists $v\in\R^{n+1+\bboutpdim n_e}$ satisfying:
+    \Statex
+    \begin{align}
+      \label{eq:ddall_aM_hat}
+      T(\bboutp,\bbexostate)v=0,
+    \end{align}
+    \Statex with $v$ such that
+    \Statex
+    \begin{align}
+      \label{eq:ddall_structure_v}
+      v'=\bbm{0_{1\times (n-\nu)} & 1 &\hat{a}_{\nu-1} & \hat{a}_{\nu-2} & \cdots & \hat{a}_{0} & \hat{M}'}.
+    \end{align}
+
+    \State Define $\tilde{M}\in\R^{\bboutpdim\times n_e}$ such that $\ve{\tilde{M}}=\hat{M}$.
+
+    \State Let $\hat{a}_\nu=1$ and compute $\bar{M}_{\bboutp,\bbexostate}$ as:
+    \Statex
+    \begin{align}
+      \label{eq:ddall_Minv}
+      \bar{M}_{\bboutp,\bbexostate}=\tilde{M}\left(\sum_{h=0}^{\nu}\hat{a}_h S_d^h \right)^{-1}.
+    \end{align}
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{remark}
+  \Cref{alg:ddall_algo1} holds onto \Cref{ass:ddall_plant_exo,ass:ddall_nonpatho}. Moreover, here it is defined for data sampled at times $k=0,1,\dotsc,K-1$ but it can be applied (with obvious changes) to any sequence of $K$ data samples, \emph{i.e.}, for $k=\bar{k},\dotsc,\bar{k}+K-1$ for an arbitrary $\bar{k}\in\Z$.\closeremark
+\end{remark}
+
+\begin{proposition}
+  \label{prop:ddall_est_mom}
+	Let \Cref{ass:ddall_plant_exo,ass:ddall_nonpatho} hold. Fix $\bbexostate_0\in\bbexoinitset$. Then, the following statements hold.
+	\begin{enumerate}
+		\item[i.] \Cref{alg:ddall_algo1} can be applied, yielding a matrix $\bar{M}_{\bboutp,\bbexostate}$.
+		\item[ii.] $\bar{M}_{\bboutp,\bbexostate}$ satisfies $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for all $t\in\R_{\geq 0}$.
+		\item[iii.] If $\bbexostate_0$ excites all natural modes of \eqref{eq:ddall_exo},	then $\bar{M}_{\bboutp,\bbexostate}$ is equal to the unique solution of \eqref{eq:ddall_Mbar}.\closestatement
+	\end{enumerate}
+\end{proposition}
+Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix $\bar{M}_{\bboutp,\bbexostate}$ computed by \Cref{alg:ddall_algo1} always ensures a correct prediction of the steady-state evolution \emph{for the trajectory used in the computation}, even if such matrix does not coincide with the unique solution of \eqref{eq:ddall_Mbar}. Further conditions, concerning the quantity of information that the data provides, are required to ensure the conincidence of the two matrices; this is specified in statement (ii) of \Cref{prop:ddall_est_mom}. Since the algorithm is intended to be used for data-driven, online estimation, the trajectory used in the computation (arising from the fixed $\bbexostate_0$) is exactly the one of interest for correctly controlling the plant, hence statement (ii) is the one actually useful in practice. The issue at hand is the same as the one in classic adaptive regulation, where the control objective is achieved even without fully identifying the parameters of the plant. Statement (iii) is given to complete the analysis and provide a full understanding of the issues at play.
+\begin{proof}
+  To prove item (i) of \Cref{prop:ddall_est_mom}, notice that all steps in \Cref{alg:ddall_algo1} can be performed, provided that \eqref{eq:ddall_aM_hat} is solvable and the matrix inverse in \eqref{eq:ddall_Minv} exists; both facts are shown in the following.
+  In the following, given a signal $x(t)$, $x^{\circ}(t)$ denotes its transient response, provided the latter exists.
+  For all $k\in\N$, the following holds:
+  \begin{equation}
+    \label{eq:ddall_mista}
+    \bboutp(k\tau_s) = \bboutp^{\circ}(k\tau_s) + \bbssoutp(k\tau_s) = C_2\bbstate^{\circ}(k\tau_s) + \bar{M}_{\bboutp,\bbexostate}\bbexostate(k\tau_s).
+  \end{equation}
+  Recall \cite[App. A.8]{kailath_linear_1980} that a matrix satisfies the equation defined by its \emph{minimal polynomial} (\emph{i.e.}, the smallest degree polynomial which enjoys this property), and that the minimal polynomial has the same roots, with lower or equal multiplicity, of the \emph{characteristic polynomial}.
+  Define $\hat{a}_\nu=1$ and let the minimal (monic) polynomial of $A_d$ be:
+  \begin{equation}
+    \rho_{A_d}(z) = \sum_{h=0}^{\nu}\hat{a}_h z^h, \quad z\in\C.
+  \end{equation}
+  Since $\rho_{A_d}(A_d)=0$ by definition and
+  \begin{subequations}
+    \begin{align}
+      \bbexostate((k+h)\tau_s) &= \exodynmat_d^h \bbexostate(k\tau_s), & k\in\Z_{\geq 0}, \\
+      \bbstate^{\circ}((k+h)\tau_s) &= A_d^h \bbstate^{\circ}(k\tau_s), & k\in\Z_{\geq 0},
+    \end{align}
+  \end{subequations}
+  it is possible to define a linear combination of the measurements \eqref{eq:ddall_mista} that is independent of $\bbstate^{\circ}_0=\bbstate^{\circ}(0)$ as
+  \begin{equation}
+    \label{eq:ddall_menomista}
+    \begin{split}
+      \sum_{h=0}^{\nu} \hat{a}_h \bboutp((k+h)\tau_s) &= \sum_{h=0}^{\nu} \hat{a}_h C_2 \bbstate^{\circ}((k+h)\tau_s) + \sum_{h=0}^{\nu} \hat{a}_h \bar{M}_{\bboutp,\bbexostate}\bbexostate((k+h)\tau_s) \\
+                                                      &= C_2 \rho_{A_d}(A_d) \bbstate^{\circ}(k\tau_s) + \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s) \\
+                                                      &= \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s).
+    \end{split}
+  \end{equation}
+  Defining
+  \begin{subequations}
+    \begin{align}
+      H(k\tau_s) &= \bbm{\bboutp((k+\nu)\tau_s) & \bboutp((k+\nu-1)\tau_s) & \cdots & \bboutp((k+1)\tau_s) & \bboutp(k\tau_s)}, \\
+      \hat{a}    &= \bbm{\hat{a}_{\nu} & \hat{a}_{\nu-1} & \cdots & \hat{a}_1 & \hat{a}_0}, \\
+      \tilde{M}  &= \bar{M}_{\bboutp,\bbexostate}\rho_{A_d}(\exodynmat_d),
+    \end{align}
+  \end{subequations}
+  yields
+  \begin{align}
+    \label{eq:ddall_menomista2}
+    H(k\tau_s)\hat{a}=\tilde{M}\bbstate(k\tau_s).
+  \end{align}
+  In turn, \eqref{eq:ddall_menomista2} can be vectorized \cite[Sec. 2.5]{zhou_robust_1996} introducing $\hat{M}=\ve{\tilde{M}}$, yielding:
+  \begin{align}
+    \label{eq:ddall_menomista3}
+    H(k\tau_s)\hat{a}=(\bbexostate(k\tau_s)'\otimes I_{\bboutpdim})\hat{M},
+  \end{align}
+  and collecting \eqref{eq:ddall_menomista3} for $k=0,1,\ldots,K-1$ yields \eqref{eq:ddall_aM_hat}.
+
+  Since the degree of the minimal polynomial of a matrix never exceeds the degree of its characteristic polynomial, the above reasoning proves that a vector $v\in\R^{n+1+\bboutpdim n_e}$ as required at line 2 of \Cref{alg:ddall_algo1} can be found.
+
+  As for the invertibility of the matrix at line 4, note that this matrix is exactly $\rho_{A_d}(\exodynmat_d)$. Since $\exodynmat$ is diagonalizable, there exists an invertible matrix $T_I$ such that $S=T_I\Lambda_\exodynmat T_I^{-1}$, with $\Lambda_\exodynmat$ diagonal. Since $\tau_s$ is non-pathological, $\exodynmat_d$ is diagonalizable by using the same $T_I$ as $\exodynmat$, yielding $\exodynmat_d=T_I\Lambda_{\exodynmat_d} T_I^{-1}$ with $\Lambda_{\exodynmat_d}$ diagonal. By rewriting
+  \begin{equation}
+    \rho_{A_d}(\exodynmat_d) = \rho_{A_d}(T_I\Lambda_{\exodynmat_d}	T_I^{-1})=T_I\rho_{A_d}(\Lambda_{\exodynmat_d})T_I^{-1},
+  \end{equation}
+  and considering that $\rho_{A_d}(\Lambda_{\exodynmat_d})$ is diagonal, it is clear that $\rho_{A_d}(\exodynmat_d)$ is not invertible if and only if one of the elements on its diagonal is zero; but this would imply that $\exodynmat_d$ and $A_d$ have at least one eigenvalue in common, which is impossible since by hypothesis $\tau_s$ is non-pathological and $\spec(\exodynmat)\cap\spec(A)=\emptyset$ due to \Cref{ass:ddall_plant_exo}.
+
+  To prove item (ii), note that $\bbssoutp$ is a $\bboutpdim-$dimensional vector function whose scalar components are linear combinations of the $\bbexostatedim$ linearly independent functions generated by the exosystem; hence, for any fixed $\bbexostate_0\in\bbexoinitset$, the ensuing $\bbssoutp$ is uniquely associated to a set of $\bboutpdim \bbexostatedim$ scalars. Consequently, if \Cref{alg:ddall_algo1} is able to determine a matrix $\bar{M}$ (possibly different from the \emph{true} $\bar{M}_{\bboutp,\bbexostate}$ solving \eqref{eq:ddall_Mbar}) which ensures that $\bar{M}\bbexostate$ interpolates $\bbssoutp$ at $\bboutpdim \bbexostatedim$ (or more) points in time, then for the fixed $\bbexostate_0$ the same $\bar{M}$ interpolates $\bbssoutp$ at any time, since it matched all the $\bboutpdim \bbexostatedim$ degrees of freedom in $\bboutpdim$. Since \Cref{alg:ddall_algo1} is based on satisfying \eqref{eq:ddall_menomista2} at $K\geq \bbstatedim+1+\bboutpdim \bbexostatedim>\bboutpdim \bbexostatedim$ sample points, the claim in item (ii) is proved once it is clear that \eqref{eq:ddall_menomista2} expresses a matching condition for the relation $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ at time $t=k\tau_s$. To cancel out the transient terms in \eqref{eq:ddall_mista}, a linear combination of responses has been performed in \eqref{eq:ddall_menomista}, hence \eqref{eq:ddall_menomista2} describes the steady-state response due to the initial state $\bar{\bbexostate}_0=\rho_{A_d}(\bbexostate_d)\bbexostate_0$ (see \eqref{eq:ddall_menomista}). Note that $\bar{\bbexostate}_0$ excites in $\exodynmat_d$ all and only the natural modes excited by $\bbexostate_0$ in $\exodynmat_d$, which implies that the coefficients of such modes are exactly estimated.
+
+  To prove item (iii), denote by $T_\bbexostate$ the block depending on $\bbexostate$ in \eqref{eq:ddall_Toeplitz}. Note that $T_\bbexostate$ is full column rank if and only if
+  \begin{align}
+    \label{eq:ddall_exciting0}
+	  \rank\bbm{\bbexostate(0) & \bbexostate(\tau_s) & \cdots & \bbexostate((K-1)\tau_s)} = \bbexostatedim.
+  \end{align}
+  Since $K>\bbexostatedim$ and each element $\bbexostate(\tau_s)$ can be expressed as $\bbexostate(\tau_s)=\exodynmat_d^{k} \bbexostate_0$, Cayley-Hamilton's theorem implies that \eqref{eq:ddall_exciting0} is equivalent to:
+  \begin{align}
+    \label{eq:ddall_exciting1}
+	  \rank\bbm{\bbexostate_0 & \exodynmat_d \bbexostate_0 & \cdots & \exodynmat_d^{\bbexostatedim-1} \bbexostate_0}=\bbexostatedim.
+  \end{align}
+  The condition in \eqref{eq:ddall_exciting1} has the form of a reachability matrix test for the pair $(\exodynmat_d,\bbexostate_0)$, which is equivalent to $\bbexostate_0$ exciting all natural modes of $\exodynmat_d$ if $\exodynmat_d$ has all distinct eigenvalues. By \Cref{ass:ddall_nonpatho}, $\exodynmat_d$ has all distinct eigenvalues since, by \Cref{ass:ddall_plant_exo}, $\exodynmat$ has all distinct eigenvalues; this implies, in turn, that $\exodynmat$ and $\exodynmat_d$ have the same eigenvectors, so that $\bbexostate_0$ excites all natural modes of $\exodynmat_d$ if and only if it excites all natural modes of $\exodynmat$. Hence, $T_\bbexostate$ is full column rank by the condition in item (iii).
+
+  Let  $T_{\bboutp}$ denote the block depending on $\bboutp$ in \eqref{eq:ddall_Toeplitz}, and by $T_{\bboutp}^h$ the submatrix containing its rightmost $h$ columns. Since the columns of $T_\bbexostate$ are a linearly independent set, the algorithm starts to consider matrices $[T_{\bboutp}^h \;\; T_\bbexostate]$ increasing $h$ until for $h=\nu$, it happens that $[T_{\bboutp}^{\nu-1} \;\; T_\bbexostate]$ is still full column rank, whereas $[T_{\bboutp}^{\nu} \;\; T_\bbexostate]$ has a non-trivial kernel, which has necessarily dimension one since $[T_{\bboutp}^{\nu} \;\; T_\bbexostate]$ has exactly one column more than $[T_{\bboutp}^{\nu-1} \;\; T_\bbexostate]$. Thus, there is a unique solution $v$ to \eqref{eq:ddall_aM_hat} with the structure in \eqref{eq:ddall_structure_v} and minimal value of $\nu$. Since a solution \eqref{eq:ddall_Minv} is found in item (i) on the basis of \eqref{eq:ddall_structure_v} and since the latter is shown to be uniquely defined, under the stated hypotheses the unique solution found by \Cref{alg:ddall_algo1} must result in the same $\bar{M}$ arising from \eqref{eq:ddall_Mbar}.
+\end{proof}
+
+\begin{remark}
+  Although \Cref{alg:ddall_algo1} is provided in this context with the specific purpose of estimating $\bar{M}_{\bboutp,\bbexostate}$ to compute the dynamic allocator \eqref{eq:ddall_control_all}, it is a general-purpose algorithm for the estimation of the pseudo-steady-state output map of a linear system such as, \emph{e.g.}, system \eqref{eq:moments_my_sys}-\eqref{eq:moments_my_sys_exosys} in \Cref{app:moments}. Thus, its interest falls within the broader context of online data-driven moment estimation for linear systems, as do the statements of \Cref{prop:ddall_est_mom} and its proof requiring only an adapted notation.\closeremark
+\end{remark}
+
+% theorem: the allocator works; proof: assumptions and lemma

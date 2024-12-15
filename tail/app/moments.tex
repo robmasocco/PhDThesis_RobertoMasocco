@@ -1,0 +1,141 @@
+\chapter{Moments of a linear system}
+\label{app:moments}
+\doublespacing
+\vspace{-2.5cm}
+
+The contents of this Appendix are based on \cite{astolfi_model_2010,scarciotti_data-driven_2017} and references therein. The interested reader is referenced to those works for a detailed discussion of the following topics. Consider the system
+\begin{subequations}
+  \label{eq:moments_my_sys}
+	\begin{align}
+		\dot{x}(t) & = Ax(t)+Bu(t), & t\in\R_{\geq 0}, \\
+		y(t)       & = Cx(t)+Du(t), & t\in\R_{\geq 0},
+	\end{align}
+\end{subequations}
+where $x(t)\in\R^n$ is the state vector, $u(t)\in\R^m$ is the input vector, and $y(t)\in\R^q$ is the output vector. $A\in\R^{n\times n}$, $B\in\R^{n\times m}$, $C\in\R^{q\times n}$, $D\in\R^{q\times m}$ are constant matrices.
+The transfer matrix of \eqref{eq:moments_my_sys} is
+\begin{equation}
+  \label{eq:moments_my_sys_W}
+	W(s) = C(sI-A)^{-1}B+D, \quad s\in\C.
+\end{equation}
+
+\begin{definition}[Moment]
+  \label{def:moment}
+	Let $s^{\star}\in\C$ be such that
+	$s^{\star}\not\in\spec(A)$ for the system \eqref{eq:moments_my_sys}.
+	The \emph{moment of \eqref{eq:moments_my_sys} at $s^{\star}$}
+	is $W(s^{\star})$.\closestatement
+\end{definition}
+
+The \emph{moment of $W(s)$ (or $(A,B,C,D)$) at $s^{\star}$}
+has the following dynamic meaning:
+under the assumption that $s^{\star}\not\in\spec(A)$,
+if \eqref{eq:moments_my_sys} is subject to the
+input $U_0 e^{s^{\star}t}$ with $U_0 \in\C^m$,
+then its output will contain, among others, one term of the form
+$Y_0 e^{s^{\star}t}$ with $Y_0=W(s^{\star})U_0 $.
+
+Moments can be computed
+by using only real matrix computations,
+via the solution of the linear equations
+\begin{subequations}\label{eq:moments_M}
+	\begin{align}
+		\Pi S & = A\Pi + BL, \label{eq:moments_Ma}  \\
+		M     & = C \Pi + DL. \label{eq:moments_Mb}
+	\end{align}
+\end{subequations}
+in the unknowns $\Pi$, $M$, provided that
+\begin{subequations}\label{eq:moments_my_SL}
+	\begin{align}
+		S & =\bbm{\alpha I_m & \omega I_m                                                                                    \\ -\omega I_m  &\alpha I_m}\!\!,
+		  & \!\!\!L          & =\bbm{I_m   & 0_{m\times m}}\!\!, & \!\!\!\text{if
+		}s^{\star}\not\in\R,\label{eq:moments_my_SLa}                                                                       \\
+		S & =\alpha I_m ,    & \!\!\!\!\!L & =I_m,               & \!\!\!\text{if }s^{\star}\in\R,\label{eq:moments_my_SLb}
+	\end{align}
+\end{subequations}
+where $\alpha=\re(s^{\star})$, $\omega=\im(s^{\star})$.
+Under such conditions, it holds that $M$ satisfies
+\begin{subequations}\label{eq:moments_my_M_W}
+	\begin{align}
+		M & =\bbm{\re(W(s^{\star}))                               & \im(W(s^{\star}))},
+		  & \!\!\!\text{if }s^{\star}\not\in\R,\label{eq:moments_my_M_Wa}                                                              \\
+		M & =W(s^{\star}),                                        & \!\!\!\text{if }s^{\star}\in\R,\label{eq:moments_my_M_Wb}
+	\end{align}
+\end{subequations}
+\emph{i.e.}, knowing $M$ is equivalent to knowing $W(s^{\star})$.
+Since $s^{\star}\not\in\spec(A)$ implies
+$\spec(S)\cap\spec(A)=\emptyset$,
+by standard results \cite[Lemma 2.7]{zhou_robust_1996}
+the Sylvester equation \eqref{eq:moments_Ma}
+is solvable and has a unique solution.
+
+\begin{remark}\label{rem:M_extension}
+	While the relation between \eqref{eq:moments_M} and \eqref{eq:moments_my_M_W}
+	was discussed focusing for simplicity on the computation
+	of one moment of $W(s)$ at a single
+	$s^\star\in\C$,
+	similar relations hold as well for the simultaneous computation
+	of the moments at several complex values,
+	choosing $S\in\R^{n_e\times n_e}$ as a block diagonal matrix
+	$S=\diag(S_1,S_2,\ldots)$
+	and $L\in\R^{m\times n_e}$ as a block row matrix
+	$L=\row(L_1,L_2,\ldots)$,
+	each having one block for each different $s^\star_1$,
+	$s^\star_2$,\ldots,
+	and each pair of blocks $(S_i,L_i)$
+	having the structure of the pair $(S,L)$ in \eqref{eq:moments_my_SL}.\closeremark
+\end{remark}
+
+More in general, considering the dynamics
+\begin{subequations}\label{eq:moments_my_sys_exosys}
+	\begin{align}
+		\dot{w}(t) & = Sw(t), & t\in\R_{\geq 0},\label{eq:moments_my_sys_exosysa}    \\
+		\dot{x}(t) & = Ax(t)+Pw(t), & t\in\R_{\geq 0},\label{eq:moments_my_sys_exosysb} \\
+		y(t)       & =Cx(t)+Qw(t), & t\in\R_{\geq 0},\label{eq:moments_my_sys_exosysc}
+	\end{align}
+\end{subequations}
+with $S\in\R^{n_e \times n_e}$ and
+under the assumption that $\spec(S)\cap\spec(A)=\emptyset$,
+the matrices $\Pi$, $M$ solving
+\begin{subequations}\label{eq:moments_M_mod}
+	\begin{align}
+		\Pi S & = A\Pi + P, \label{eq:moments_M_moda}  \\
+		M     & = C \Pi + Q, \label{eq:moments_M_modb}
+	\end{align}
+\end{subequations}
+have the following dynamic interpretation.
+If the initial condition for \eqref{eq:moments_my_sys_exosys} satisfies
+$x_0=\Pi w_0$, then
+\begin{equation}
+	x(t)=\Pi w(t), \quad y(t)=M w(t), \quad \forall t\geq0,
+\end{equation}
+motivating the names of \emph{pseudo-steady-state maps}
+(respectively, in the state and in the output) for $\Pi$ and $M$.
+
+Under the stronger assumption that
+\begin{equation}\label{eq:moments_exist_ss}
+	\spec(A)\subset\C_{<0}, \; \; \spec(S)\subset\C_{\geq0},
+\end{equation}
+which ensure the existence of a steady-state response for
+\eqref{eq:moments_my_sys_exosysb}, \eqref{eq:moments_my_sys_exosysc}
+under the input generated by \eqref{eq:moments_my_sys_exosysa},
+matrices $\Pi$ and $M$ will be called \emph{steady-state maps}
+(respectively, in the state and in the output).
+Under \eqref{eq:moments_exist_ss}, the steady-state response of
+\eqref{eq:moments_my_sys_exosys} satisfies the relations
+\begin{subequations}
+  \label{eq:moments_moment_ss}
+	\begin{align}
+		\tilde{x}(t) & = \Pi w(t), & t\in\R_{\geq 0}, \label{eq:moments_moment_ssa} \\
+		\tilde{y}(t) & = Mw(t), & t\in\R_{\geq 0}, \label{eq:moments_moment_ssb}
+	\end{align}
+\end{subequations}
+and, for generic initial states $x_0 \neq \Pi w_0$, of \eqref{eq:moments_my_sys_exosys},
+the corresponding transient response is given by
+\begin{subequations}
+  \label{eq:moments_moment_transient}
+	\begin{align}
+		\hat{x}_0 & = x_0-\Pi w_0, & \label{eq:moments_moment_transientc}\\
+		x^{\circ}(t)   & = e^{At} \hat{x}_0, & t\in\R_{\geq 0}, \label{eq:moments_moment_transienta}  \\
+		y^{\circ}(t)   & = Ce^{At} \hat{x}_0, & t\in\R_{\geq 0}. \label{eq:moments_moment_transientb}
+	\end{align}
+\end{subequations}
