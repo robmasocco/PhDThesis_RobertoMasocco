@@ -96,6 +96,7 @@ The design of the allocator requires the following information.
 
 If the data \textbf{K1}, \textbf{K2}, and \textbf{K3} are available, the proposed dynamic allocator can be constructed as follows. Let $(A_a, B_a, C_a)$ be a minimal realization of $W_a(s)$ in \eqref{eq:ddall_W_a}. Define
 \begin{subequations}
+  \label{eq:ddall_Omega_Lambda}
 	\begin{align}
 		\Omega & = \diag \left(0, \begin{bmatrix}0 & \omega_{1} \\ - \omega_1 & 0\end{bmatrix},\ldots,\begin{bmatrix}0 & \omega_{\bar{n}_e} \\ - \omega_{\bar{n}_e} & 0\end{bmatrix}\right), \label{eq:ddall_Omega} \\
 		\Lambda & = \bbmat{c:cc:c:cc}{c}{1 & 1 & 0 & \cdots & 1 & 0}, \label{eq:ddall_Lambda}
@@ -148,6 +149,11 @@ The proposed dynamic allocator is given by
 \end{subequations}
 
 \begin{remark}
+  \label{rem:ddall_structure}
+  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator, whose dynamics are appropriately defined in \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state of the polynomial annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
+\end{remark}
+
+\begin{remark}
   \label{rem:ddall_Aim}
 	The definition of $A_{IM}$ given in \eqref{eq:ddall_Aim_Aim}, together with its eigenvalues selected by \eqref{eq:ddall_Omega}, define the \emph{prescribed} function space mentioned in item (iii) of \Cref{prb:ddall_main_per}: it consists of the functions of time generated as combinations of the modes of \eqref{eq:ddall_exo}, \emph{i.e.}, any function	$v(t)$ such that there exist constants $c_0$, $c_i$, $\phi_i$, $i = 1, \dotsc, \bar{n}_e$, with the property that $v(t) = c_0+\sum_{i = 1}^{\bar{n}_e}c_i \sin(\omega_i t + \phi_i)$.\closeremark
 \end{remark}
@@ -163,7 +169,7 @@ The equations \eqref{eq:ddall_control_all} allow the designer to directly implem
   \label{rem:ddall_nominalK123}
   If $\mu=0$, \eqref{eq:ddall_sys} is fully known by \Cref{ass:ddall_plant_exo} and the data \textbf{K1}, \textbf{K2}, and \textbf{K3} is computed as follows.
   \begin{description}
-    \item[K1]
+    \item[K1] Solve the following:
       \begin{subequations}
         \label{eq:ddall_Mbar_complete}
         \begin{align}
@@ -281,10 +287,98 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
   Selecting $\delta = -\gamma F(t)$ for any $\gamma\in\R_{\geq 0}$ yields
   \begin{equation}
     \label{eq:ddall_Jdot_gamma}
-    \dot{J}_t = -\gamma\|F(t)\|^2.
+    \dot{J}_t = -\gamma\|F(t)\|^2, \quad t\in\R_{\geq 0}.
   \end{equation}
   Note that $F(t)$ only depends on the nominal $\bbssoutp^{\circ}$ trajectory and is independent of $\Delta$, as required after \eqref{eq:ddall_mario}.
 	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that	$F(t)' = L(\bbexostate(t), x_{IM}(t))$ with the latter defined in \eqref{eq:ddall_G_xi}.
 	The latter equation	\eqref{eq:ddall_Jdot_gamma}, in turn, together with boundedness of $\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for any time as in \eqref{eq:ddall_K1mem}, implies that $x_{IM}$ in \eqref{eq:ddall_control_all_xim} is bounded and that, at steady-state, it is described by the differential equation $\dot{\tilde{x}}_{IM}(t) = A_{IM}\tilde{x}_{IM}(t)$, the solution of which is, by construction, periodic of period $\bbperiod$.
   Finally, the annihilator is asymptotically stable since the matrix $A_a$ in \eqref{eq:ddall_control_all_xa} is Hurwitz; hence, the condition on $\dot{J}_{t}$ implies	that items (ii) and (iii) of \Cref{prb:ddall_main_per} hold, concluding the proof.
 \end{proof}
+
+\begin{remark}
+  \label{rem:ddall_nablaG_comp}
+  In practice, the dynamic control allocation scheme \eqref{eq:ddall_control_all} can be implemented by approximating the integral in \eqref{eq:ddall_delta_def} with a finite sum. Given a sufficiently small sampling time $\tau_s\in\R_{>0}$, $\tau_s = \frac{\bbperiod}{K}$, $K\in\N$, define $\bar{\exodynmat} = e^{\exodynmat\tau_s}$ and $\bar{A}_{IM} = e^{A_{IM}\tau_s}$. Then, the gradient of the cost functional can be approximated as
+  \begin{subequations}
+    \label{eq:ddall_approx_G}
+    \begin{align}
+      \xi_k & = \bar{M}_{\bboutp,\bbexostate}\bar{\exodynmat}^k \bbexostate(k\tau_s) + \bar{N}_{\mu}\bar{A}_{IM}^k x_{IM}(k\tau_s),\label{eq:ddall_approx_G_xi}\\
+      L(\bbexostate(t), x_{IM}(t))' & \approx \sum_{k = 1}^{K}\, \nabla \ell(\xi_k)' \cdot \bar{N}_{\mu}\bar{A}_{IM}^k, \quad t\in\R_{\geq 0}, \label{eq:ddall_approx_G_G}
+    \end{align}
+  \end{subequations}
+  which is a nonlinear function of the measurements of $x_{IM}(t)$ and $\bbexostate(t)$. The core difficulties in the implementation of \eqref{eq:ddall_control_all} arise in the nonlinear terms of \eqref{eq:ddall_approx_G} and fall within the wide spectrum of problems concerning function approximation with digital devices. In this specific case, assuming that the quantities $\bbexostate(t)$ and $x_{IM}(t)$ remain constant during sampling intervals, a digital device with a sampling time equal to $\tau_s$ in \eqref{eq:ddall_approx_G} can be used to implement the control allocator \eqref{eq:ddall_control_all}.\closeremark
+\end{remark}
+
+The following result reveals that the structure of the control allocator \eqref{eq:ddall_control_all} is simplified significantly when the cost funcional \eqref{eq:bbcost} is quadratic: the correction term \eqref{eq:ddall_delta_def}-\eqref{eq:ddall_xi} becomes a \emph{static linear feedback} from the state vector in \eqref{eq:ddall_control_all_xim} and a \emph{feedforward} from the state of the exosystem \eqref{eq:ddall_exo}.
+
+\begin{proposition}
+  \label{prop:ddall_delay_quadratic}
+  Consider the control allocator \eqref{eq:ddall_control_all} and suppose that $\ell(\bbssoutp(t)) = \frac{1}{2}\|\bbssoutp(t)\|^{2}_R$, with $R = R' \succ 0$. Then, $L(\bbexostate(t),x_{IM}(t))$ in \eqref{eq:ddall_xi}-\eqref{eq:ddall_delta_def} becomes
+	\begin{equation}
+    \label{eq:ddall_delta_quadratic}
+		L(\bbexostate(t),x_{IM}(t)) = H_1 x_{IM}(t) +	H_2 \bbexostate(t), \quad t\in\R_{\geq 0},
+  \end{equation}
+  with
+	\begin{subequations}
+    \label{eq:ddall_H}
+		\begin{align}
+      H_1 = & \int_0^{\bbperiod} e^{A_{IM}' \sigma} \bar{N}_{\mu}' R \bar{N}_{\mu}e^{A_{IM} \sigma}\,d\sigma, \\
+      H_2 = & \int_0^{\bbperiod} e^{A_{IM}' \sigma} \bar{N}_{\mu}' R \bar{M}_{\bboutp,\bbexostate}e^{\exodynmat\sigma}\,d\sigma.
+    \end{align}
+	\end{subequations}
+  Hence, for any $\gamma\in\R_{> 0}$, \eqref{eq:ddall_control_all_xim} becomes
+  \begin{equation}
+    \label{eq:ddall_ss_opt_quadratic}
+    \dot{x}_{IM}(t) =	(A_{IM}-\gamma H_1) x_{IM}(t) - \gamma H_2 \bbexostate(t), \quad t\in\R_{\geq 0}.
+  \end{equation}
+	Moreover, if the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$ is observable, then the matrix $(A_{IM}-\gamma H_1)$ is Hurwitz for any $\gamma\in\R_{> 0}$.\closestatement
+\end{proposition}
+\begin{proof}
+  In this case, the gradient of the cost function $\ell$ in \eqref{eq:bbcost} is linear:
+  \begin{equation}
+    \nabla\ell(\bbssoutp(t)) = R\bbssoutp(t), \quad t\in\R_{\geq 0}.
+  \end{equation}
+  Applying standard properties of integrals, \eqref{eq:ddall_delta_def} reduces to
+  \begin{equation}
+    \begin{split}
+      L(\bbexostate(t),x_{IM}(t)) & = \int_{0}^{\bbperiod}  e^{A_{IM}'\sigma}\bar{N}_{\mu}'R\bar{N}_{\mu}e^{A_{IM}\sigma}\,d\sigma x_{IM} + \int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}R\bar{M}_{\bboutp,\bbexostate}e^{S\sigma}\,d\sigma \bbexostate(t)\\
+                                  & = H_1 x_{IM}(t) + H_2 \bbexostate(t), \quad t\in\R_{\geq 0}.
+    \end{split}
+  \end{equation}
+  The last claim of \Cref{prop:ddall_delay_quadratic} follows from two facts: first, $H_1$ is the observability Gramian matrix of the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$, and secondly, the matrix $A_{IM}$ is Hurwitz by construction.
+\end{proof}
+
+\begin{remark}
+  \label{rem:ddall_implementation_quadratic}
+  In practice, the matrices $H_1$ and $H_2$ in \eqref{eq:ddall_H} can be computed offline.
+  Define
+  \begin{subequations}
+    \begin{align}
+      A^1_{12} &= \bar{N}_{\mu}' R \bar{N}_{\mu}, \\
+      A^1_{22} &= A_{IM}, \\
+      A^2_{12} &= \bar{N}_{\mu}' R \bar{M}_{\bboutp,\bbexostate}, \\
+      A^2_{22} &= \exodynmat,
+    \end{align}
+  \end{subequations}
+  and compute the matrix exponentials
+  \begin{equation}
+    H_i = \left[\begin{array}{cc} I & 0 \end{array}\right] \exp	\left(\bbm{-A_{IM}' & A_{12}^{i} \\ 0 & A_{22}^{i}}\bbperiod\right)	\left[\begin{array}{c} 0 \\ I \end{array}\right], \quad i\in\{1,2\}.
+  \end{equation}
+  Furthermore, denoting by $x^\star_{IM}(t)$ the optimal steady-state evolution of $x_{IM}(t)$, the fact that the gradient $L(\bbexostate(t),x^\star_{IM}(t))$ is equal to zero for any $t\in\R_{\geq 0}$ yields
+  \begin{equation}
+    \label{eq:ddall_xim_opt_quadratic}
+    x^\star_{IM}(t) = -H^{-1}_1H_2\bbexostate(t), \quad t\in\R_{\geq 0}.
+  \end{equation}
+  The first consequence of \eqref{eq:ddall_xim_opt_quadratic} is that the correct initialization for the steady-state generator is $x_{IM}(0) = -H^{-1}_1H_2\bbexostate(0)$. Secondly, one may \emph{bypass} the steady-state generator entirely by redefining the control allocator \eqref{eq:ddall_control_all} as
+  \begin{subequations}
+    \label{eq:ddall_control_all_quadratic}
+    \begin{align}
+      \dot{x}_a(t) & = A_ax_a(t) - B_aC_{IM}H_1^{-1}H_2 \bbexostate(t), & t\in\R_{\geq 0},\\
+		  y_a(t)       & = C_a x_a(t), & t\in\R_{\geq 0}.
+    \end{align}
+  \end{subequations}
+  \closeremark
+\end{remark}
+
+\begin{remark}
+  The observability property in the last sentence of \Cref{prop:ddall_delay_quadratic} is always satisfied if the columns of the numerator of the annihilator $W_a(s)$, namely $N_{a}(s)$, are chosen as a minimal basis,	as it can be inferred from \cite[Thm. 6.5.10]{kailath_linear_1980}.\closeremark
+\end{remark}

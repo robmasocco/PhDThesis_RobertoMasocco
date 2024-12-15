@@ -33,12 +33,14 @@ Given the square matrices $\{A_1,\dotsc,A_n\}$, the operator $\diag(A_1,\dotsc,A
 The symbol $I_n$ denotes the identity matrix of order $n$, the subscript is omitted when clear from the context.
 For a block-partitioned matrix $\mathcal{M}$,	$\mathcal{M}_{[k,h]}$ is its $(k,h)-$th block, $\mathcal{M}_{[:,h]}$ is its $h-$th block column, and $\mathcal{M}_{[:,1:h]}$ is the sub-matrix formed by its first $h$ block columns.
 
-Given a function $f(x)$, $f : \R^n \rightarrow \R$, $\nabla f$ denotes its gradient as a column vector, whereas $\frac{\partial f}{\partial x}$ denotes its gradient as a row vector.
+Given a function $f(x)$, $f : \R^n \rightarrow \R$, $\nabla f$ denotes its gradient as a column vector, whereas $\frac{\partial f}{\partial x}$ denotes its jacobian.
 $\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that are square-integrable over the interval $[a,b]$.
 
 For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ denotes the value of $t$ modulo $T$.
 
-Let $t\in\R_{\geq 0}$ be the continuous time variable. Consider the continuous-time dynamic system $\Sigma$ defined by the equation
+Let $k\in\Z_{\geq 0}$ be the discrete time variable.
+Let $t\in\R_{\geq 0}$ be the continuous time variable.
+Consider the continuous-time dynamic system $\Sigma$ defined by the equation
 \begin{equation*}
   \dot{x}(t) = f(x(t)), \quad t\in\R_{\geq 0},
 \end{equation*}
