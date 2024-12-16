@@ -285,7 +285,7 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
 	    \dot{J}_t & = \lim_{\Delta \rightarrow 0^{+}} \dfrac{J^\delta_{t+\Delta}-J^\circ_{t}}{\Delta}\\
 	              & = \lim_{\Delta \rightarrow 0^{+}} \frac{1}{\Delta} \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau\\
 	              & = \int_{t}^{t+\bbperiod} \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-t)}\,d\tau\delta\\
-	              & \triangleq F(t) \delta, \quad t\in\R_{\geq 0}.
+	              & = F(t) \delta, \quad t\in\R_{\geq 0}.
     \end{split}
   \end{align}
   Selecting $\delta = -\gamma F(t)$ for any $\gamma\in\R_{\geq 0}$ yields
@@ -583,6 +583,7 @@ Finally, the key step to determine \textbf{K3} is to find a polynomial annihilat
 
 Define
 \begin{subequations}
+  \label{eq:ddall_ncnr}
   \begin{align}
     n_c &= \bbstatedim\bboutodim + 1, \\
     n_r &= \min\{v\in\N : 2v\bboutodim \geq \bbauxdim n_c\}.
@@ -599,6 +600,143 @@ For a set of frequencies $\{\bar{\omega}_1, ..., \bar{\omega}_{n_r}\}$, define t
 \end{equation}
 where $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_k)) = \bboutodim$ provided that $s=j\bar{\omega}_k$ is not a pole or a zero of the transfer matrix $W_{\bbouto\bbaux}(s)$.
 
-The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$. The following algorithm is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also discussed.
+The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$ with dimension $\rho=\bbauxdim-\bboutodim$. The following algorithm is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also discussed.
+\begin{algorithm}[ht]
+  \caption{Computation of a minimal coefficients basis.}
+  \label{alg:ddall_mincoeffbasis}
+  \begin{algorithmic}[1]
+    \Require A block partitioned matrix $H=\bbm{H_{[:,1]} & H_{[:,2]} & \ldots}$.
+    \Ensure A minimal coefficient basis $N$ for $H$.
+
+    \State $\bar{\Sigma} \gets H_{[:,1]}$
+    \State $k_1 \gets \dim(\ker(\bar{\Sigma}))$
+    \State $\bar{p} \gets \emptyset$
+    \State $h \gets 1$
+    \If{$k_1=0$}
+        \State $X_2 \gets 0_{1\times(2\bbauxdim)}$
+        \State $h \gets 2$
+        \State \textbf{goto} 15
+    \ElsIf{$0<k_1<\rho$}
+        \State $X_1 \gets 0_{1\times\bbauxdim}$
+        \State \textbf{goto} 21
+    \ElsIf{$k_1=\rho$}
+        \State \textbf{goto} 29
+    \EndIf
+
+    \State $\bar{\Sigma}\gets\bbm{H_{[:,1:h]}' \\ X_h'}$
+    \State $k_h \gets \dim(\ker(\bar{\Sigma}))$
+    \If{$k_h=\rho$}
+        \State \textbf{goto} 4
+    \Else
+        \State \textbf{goto} 3
+    \EndIf
+
+    \State $\bar{Q}$, $\bar{R}$ $\gets$ QR decomposition of $\bar{\Sigma}'$.
+    \Statex \Comment{$\bar{\Sigma}'=\bar{Q}\bar{R}$ with $\bar{Q}$ orthogonal and $\bar{R}$ upper-triangular.}
+    \State $\bar{L}$ $\gets$ The last $(p-\rank(\bar{R}))$ rows of $\bar{Q}'$.
+    \State $\bar{p}\gets\bar{p}\cup\bar{p}_h$, where $\bar{p}_h$ is the set of pivot indices in a reduced row echelon form of $\bar{L}$.
+    \State $\bar{X}\gets$ The rows of $I_\bbauxdim$ with indices in $\bar{p}$.
+    \State $X_{h+1} \gets \diag(X_h, \bar{X})$
+    \State $h \gets h+1$
+    \State \textbf{goto} 15
+
+    \State $N\in\R^{\bbauxdim h\times\rho}\gets$ Any basis matrix of $\ker(\bar{\Sigma})$.
+  \end{algorithmic}
+\end{algorithm}
+A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minimal \emph{coefficient} basis matrix $N\in\R^{\bbauxdim h\times\rho}$ as
+\begin{equation}
+  \bbm{I_\bbauxdim & s I_\bbauxdim & \cdots & s^{h-1}I_\bbauxdim}N.
+\end{equation}
+
+\begin{proposition}
+  \label{prop:ddall_annih_computation}
+  Recall \eqref{eq:ddall_ncnr}. Consider the transfer matrix $W_{\bbouto\bbaux}(s)\in\C^{\bboutodim\times\bbauxdim}$ and an arbitrary collection of frequencies $\{\bar{\omega}_1,\dotsc,\bar{\omega}_\bbstatedim\}$ such that $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_i))=\bboutodim$, $i=1,\dotsc,\bbstatedim$. Let the matrix $H\in\R^{\bboutodim n_r \times \bbauxdim n_c}$ be defined as in \eqref{eq:ddall_H_hk}. Let $N\in\R^{\bbauxdim h\times(\bbauxdim - \bboutodim)}$ be a \emph{minimal coefficient basis} matrix computed by \Cref{alg:ddall_mincoeffbasis} and partitioned as
+  \begin{equation}
+    N = \bbm{N_0 \\ N_1 \\ \vdots \\ N_{h-1}}, \quad N_i\in\R^{\bbauxdim\times(\bbauxdim - \bboutodim)}, \; i=0,\dotsc,h-1.
+  \end{equation}
+  Then, the matrix function
+  \begin{equation}
+    \label{eq:ddall_Na}
+    N_a(s) = N_0 + sN_1 + \ldots + s^{h-1}N_{h-1}
+  \end{equation}
+  is a polynomial annihilator of $W_{\bbouto\bbaux}(s)$ whose columns are a minimal polynomial basis for the null space of $W_{\bbouto\bbaux}(s)$.\closestatement
+\end{proposition}
+\begin{proof}
+  Since each element in the polynomial matrix $\det(sI-A)W_{\bbouto\bbaux}(s)$ has degree not larger than $\bbstatedim$ and $\rank(\det(sI-A)W_{\bbouto\bbaux}(s))=\bbouto$ by \Cref{ass:ddall_plant_exo}, it follows from \cite[Prop. 1]{zuniga_anaya_improved_2009} that a polynomial annihilator $N_a(s)$ with entries having maximum degree not larger than $\bbstatedim\bboutodim$ exists. Then, the equation $W_{\bbouto\bbaux}(s)N_a(s) = 0$ has a solution of the form
+  \begin{equation}
+    N_a(s) = N_0 + sN_1 + \dotsc + s^{\bar{n}}N_{\bar{n}}, \quad \bar{n} < n_c.
+  \end{equation}
+	Let
+  \begin{equation}
+    N_{\bar{n}} = \bbm{N_0 \\ N_1 \\ \vdots \\ N_{\bar{n}}}
+  \end{equation}
+  so that
+  \begin{equation}
+    N_a(s) = \bbm{I_\bbauxdim & sI_\bbauxdim & \cdots & s^{\bar{n}}I_\bbauxdim}N_{\bar{n}}.
+  \end{equation}
+  Thus, the annihilator equation to be solved becomes
+  \begin{equation}
+    \label{eq:ddall_solveme}
+    W_{\bbouto\bbaux}(s)N_a(s) = W_{\bbouto\bbaux}(s)\bbm{I_\bbauxdim & sI_\bbauxdim & \dotsc & s^{\bar{n}}I_\bbauxdim}N_{\bar{n}} = 0.
+  \end{equation}
+  By evaluating \eqref{eq:ddall_solveme} at the frequencies $\{\bar{\omega}_1,\dotsc,\bar{\omega}_\bbstatedim\}$ and imposing that both real and imaginary parts of the left hand side of \eqref{eq:ddall_solveme} are equal to zero, it follows that $N_{\bar{n}}$ lies in the null space of the matrix $H_{[:,1:\bar{n}]}$ whose blocks are defined in \eqref{eq:ddall_H_hk}. Finally, bu arguments similar to those in \cite{zuniga_anaya_improved_2009}, \Cref{alg:ddall_mincoeffbasis} computes the minimal $\bar{n}=h$ and a suitable $N_{\bar{n}}=N$, yielding the desired result.
+\end{proof}
+
+\begin{remark}
+  \label{rem:ddall_freqschoice}
+  The requirement of selecting frequencies $\{\bar{\omega}_i\}_{i=1}^\bbstatedim$ with a full-rank property, namely	such that $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_i)) = \bboutodim$, $i = 1,\dotsc,\bbstatedim$,	originates from the necessity to rule out pathological cases that may	arise in control systems such as those modeled by \eqref{eq:ddall_sys}. More precisely, suppose that \eqref{eq:ddall_sys} embeds a feedback control loop (recall the linear case of \Cref{sec:all_design_ssinv}), which has been designed by incorporating an internal model of the exosystem, as it is customary in output regulation problems. In that case, choosing frequencies	that belong to the internal model yields null rows in $H$, making the polynomial annihilator's computation unfeasible. It is worth observing that, in the uncertain setting, a random selection of such frequencies \emph{generally} ensures the required full-rank property.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:ddall_toeplitz}
+  \Cref{alg:ddall_mincoeffbasis} can be applied to find a minimal coefficient basis	for a polynomial annihilator of the polynomial matrix	$A(s)=s^{\bar{n}}A_{\bar{n}}+\cdots+sA_1+A_0$ where $A_i\in\R^{\bboutodim\times\bbauxdim}$ and $\rank(A(s))=\bboutodim$. In such a case, instead of forming matrix $H$ with blocks described by	\eqref{eq:ddall_H_hk}, it is possible to use a block Toeplitz matrix $T$ whose $(k,h)-$th block is $T_{[k,h]}=A_{k-h}$ if $0\leq k-h \leq \bar{n}$, and	$T_{[k,h]}=0$ otherwise. This applies to, \emph{e.g.}, the case of $\mu=0$, in which the polynomial matrix $N_{\bbouto\bbaux}(s)=\det(sI-A)W_{\bbouto\bbaux}(s)$ is known.\closeremark
+\end{remark}
+
+Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evident that \Cref{prop:ddall_annih_computation} is stated with the ideal premise of a perfect knowledge of the transfer matrix $W_{\bbouto\bbaux}(s)$ evaluated at the frequencies $\{\bar{\omega}_1,\dotsc,\bar{\omega}_n\}$; such a knowledge is not available for a generic $\mu\neq 0$. Therefore, to extend the previous results to the case of a generic $\mu\in\mathcal{M}$, it is necessary to perform a data-driven estimation of the moments $W_{\bbouto\bbaux}(j\bar{\omega}_i)$, $i=1,\dotsc,\bbstatedim$. The proposed procedure is illustrated in \Cref{alg:ddall_computeH}.
+\begin{algorithm}[ht]
+  \caption{Computation of $H$ in \eqref{eq:ddall_H_hk}.}
+  \label{alg:ddall_computeH}
+  \begin{algorithmic}[1]
+    \Ensure $H$.
+
+    \State Define the \emph{virtual dynamics}
+    \Statex
+      \begin{subequations}
+        \label{eq:ddall_OmegaLambdaEv_bar}
+        \begin{align}
+          \dot{\zeta}(t) &= \bar{\Omega}\zeta(t), & t\in\R_{\geq 0},\label{eq:ddall_virtual_exo2} \\
+          \psi(t) &= \bar{\Lambda}\zeta(t), & t\in\R_{\geq 0},\label{eq:ddall_virtual_exo2_out} \\
+          \bar{\Omega} &= \diag\left(\bbm{0 & \bar{\omega}_{1} \\ -\bar{\omega}_1 & 0}, \dotsc, \bbm{0 & \bar{\omega}_n \\ -\bar{\omega}_n & 0}\right), \label{eq:ddall_Omega_bar} \\
+          \bar{\Lambda} &= \bbmat{cc:c:cc}{c}{1 & 0 & \cdots & 1 & 0}.\label{eq:Lambda_bar}
+        \end{align}
+      \end{subequations}
+
+    \State $\bbaux(t) \gets 0$, $t\in\R_{\geq 0}$
+    \State Collect samples $\{\bbexostate(k\tau_s), \bbouto(k\tau_s)\}$, $k = 0,\dotsc,\bbstatedim+K-1$, $K > \bbstatedim+\bbexostatedim+1$.
+
+    \State Apply \Cref{alg:ddall_algo1} to $\{\bbexostate(k\tau_s), \bbouto(k\tau_s)\}$ to obtain $\bar{M}_{\bbouto,\bbexostate}$.
+    \State $\bbouto^{\delta}(t) \gets \bbouto(t) - \bar{M}_{\bbouto,\bbexostate}\bbexostate(t)$
+
+    \For{$i=1,\dotsc,\bbauxdim$}
+        \State $\bbaux(t) \gets e_i\psi(t)$, $t\in\R_{\geq 0}$
+        \Statex \Comment{Connect \eqref{eq:ddall_OmegaLambdaEv_bar} to the $i$-th input channel.}
+        \State Collect samples $\{\zeta(k\tau_s), \bbouto^{\delta}(k\tau_s)\}$, $k=0,\dotsc,\bbstatedim+K-1$, $K>\bbstatedim+\bbexostatedim+1$.
+        \State Apply \Cref{alg:ddall_algo1} and obtain $\bar{M}_{\bbouto,\zeta}^i$ partitioned as
+        \Statex
+          \begin{equation}
+            \label{eq:ddall_Mbar_zeta}
+            \bar{M}^{i}_{\bbouto,\zeta} = \bbm{
+              \re\left(W^{i}_{\bbouto\bbaux}(j\bar{\omega}_1)\right)' \\
+              \im\left(W^{i}_{\bbouto\bbaux}(j\bar{\omega}_1)\right)' \\
+              \vdots                                                  \\
+              \re\left(W^{i}_{\bbouto\bbaux}(j\bar{\omega}_n)\right)' \\
+              \im\left(W^{i}_{\bbouto\bbaux}(j\bar{\omega}_n)\right)'
+            }'.
+          \end{equation}
+    \EndFor
+
+    \State Rearrange the columns of $\{\bar{M}^{i}_{\bbouto,\zeta}\}_{i=1}^\bbauxdim$ to obtain $H$ as in \eqref{eq:ddall_H_hk}.
+  \end{algorithmic}
+\end{algorithm}
 
 % theorem: the allocator works; proof: assumptions and lemma 1 + lemma tuo
