@@ -45,7 +45,7 @@ is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
 
 \begin{problem}
   \label{prb:ddall_main_per}
-  Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Consider the systems \eqref{eq:ddall_sys} and \eqref{eq:ddall_exo}, respectively, and the steady-state cost functional \eqref{eq:bbcost}. Find, if possible, a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
+  Consider the systems \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} and the steady-state cost functional \eqref{eq:bbcost}. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Find, if possible, a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
   \begin{subequations}
     \label{eq:ddall_all_interc}
     \begin{align}
@@ -521,12 +521,12 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   To prove item (iii), denote by $T_\bbexostate$ the block depending on $\bbexostate$ in \eqref{eq:ddall_Toeplitz}. Note that $T_\bbexostate$ is full column rank if and only if
   \begin{align}
     \label{eq:ddall_exciting0}
-	  \rank\bbm{\bbexostate(0) & \bbexostate(\tau_s) & \cdots & \bbexostate((K-1)\tau_s)} = \bbexostatedim.
+	  \rank\left(\bbm{\bbexostate(0) & \bbexostate(\tau_s) & \cdots & \bbexostate((K-1)\tau_s)}\right) = \bbexostatedim.
   \end{align}
   Since $K>\bbexostatedim$ and each element $\bbexostate(\tau_s)$ can be expressed as $\bbexostate(\tau_s)=\exodynmat_d^{k} \bbexostate_0$, Cayley-Hamilton's theorem implies that \eqref{eq:ddall_exciting0} is equivalent to:
   \begin{align}
     \label{eq:ddall_exciting1}
-	  \rank\bbm{\bbexostate_0 & \exodynmat_d \bbexostate_0 & \cdots & \exodynmat_d^{\bbexostatedim-1} \bbexostate_0}=\bbexostatedim.
+	  \rank\left(\bbm{\bbexostate_0 & \exodynmat_d \bbexostate_0 & \cdots & \exodynmat_d^{\bbexostatedim-1} \bbexostate_0}\right)=\bbexostatedim.
   \end{align}
   The condition in \eqref{eq:ddall_exciting1} has the form of a reachability matrix test for the pair $(\exodynmat_d,\bbexostate_0)$, which is equivalent to $\bbexostate_0$ exciting all natural modes of $\exodynmat_d$ if $\exodynmat_d$ has all distinct eigenvalues. By \Cref{ass:ddall_nonpatho}, $\exodynmat_d$ has all distinct eigenvalues since, by \Cref{ass:ddall_plant_exo}, $\exodynmat$ has all distinct eigenvalues; this implies, in turn, that $\exodynmat$ and $\exodynmat_d$ have the same eigenvectors, so that $\bbexostate_0$ excites all natural modes of $\exodynmat_d$ if and only if it excites all natural modes of $\exodynmat$. Hence, $T_\bbexostate$ is full column rank by the condition in item (iii).
 
@@ -619,7 +619,7 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
         \State \textbf{goto} 15
     \ElsIf{$0<k_1<\rho$}
         \State $X_1 \gets 0_{1\times\bbauxdim}$
-        \State \textbf{goto} 21
+        \State \textbf{goto} 22
     \ElsIf{$k_1=\rho$}
         \State \textbf{goto} 29
     \EndIf
@@ -627,9 +627,9 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
     \State $\bar{\Sigma}\gets\bbm{H_{[:,1:h]}' \\ X_h'}$
     \State $k_h \gets \dim(\ker(\bar{\Sigma}))$
     \If{$k_h=\rho$}
-        \State \textbf{goto} 4
+        \State \textbf{goto} 29
     \Else
-        \State \textbf{goto} 3
+        \State \textbf{goto} 22
     \EndIf
 
     \State $\bar{Q}$, $\bar{R}$ $\gets$ QR decomposition of $\bar{\Sigma}'$.
@@ -685,7 +685,7 @@ A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minim
 
 \begin{remark}
   \label{rem:ddall_freqschoice}
-  The requirement of selecting frequencies $\{\bar{\omega}_i\}_{i=1}^\bbstatedim$ with a full-rank property, namely	such that $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_i)) = \bboutodim$, $i = 1,\dotsc,\bbstatedim$,	originates from the necessity to rule out pathological cases that may	arise in control systems such as those modeled by \eqref{eq:ddall_sys}. More precisely, suppose that \eqref{eq:ddall_sys} embeds a feedback control loop (recall the linear case of \Cref{sec:all_design_ssinv}), which has been designed by incorporating an internal model of the exosystem, as it is customary in output regulation problems. In that case, choosing frequencies	that belong to the internal model yields null rows in $H$, making the polynomial annihilator's computation unfeasible. It is worth observing that, in the uncertain setting, a random selection of such frequencies \emph{generally} ensures the required full-rank property.\closeremark
+  The requirement of selecting frequencies $\{\bar{\omega}_i\}_{i=1}^\bbstatedim$ with a full-rank property, namely	such that $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_i)) = \bboutodim$, $i = 1,\dotsc,\bbstatedim$,	originates from the necessity to rule out pathological cases that may	arise in control systems such as those modeled by \eqref{eq:ddall_sys}. More precisely, suppose that \eqref{eq:ddall_sys} embeds a feedback control loop (recall the linear case of \Cref{sec:all_design_ssinv}), which has been designed by incorporating an internal model of the exosystem, as is customary in output regulation problems. In that case, choosing frequencies	that belong to the internal model yields null rows in $H$, making the polynomial annihilator's computation unfeasible. It is worth observing that, in the uncertain setting, a random selection of such frequencies \emph{generally} ensures the required full-rank property.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -741,4 +741,21 @@ Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evid
   \end{algorithmic}
 \end{algorithm}
 
-% theorem: the allocator works; proof: assumptions and lemma 1 + lemma tuo
+The following result summarizes all the previous claims, and proves that the proposed control allocator is determined for any $\mu\in\mathcal{M}$.
+
+\begin{theorem}
+  \label{thm:ddall_main}
+  Consider the system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} with $\mu\in\mathcal{M}$. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy,ass:ddall_nonpatho} hold. Then, the dynamic control allocator \eqref{eq:ddall_control_all} interconnected to \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} as in \eqref{eq:ddall_all_interc} solves \Cref{prb:ddall_main_per} for any $\gamma\in\R_{>0}$.\closestatement
+\end{theorem}
+\begin{proof}
+  The validity of \Cref{thm:ddall_main} follows from the combination of all the previous results. Indeed, the full design procedure for any $\mu\in\mathcal{M}$ can now be illustrated, providing a constructive proof.
+  Consider the data \textbf{K1}, \textbf{K2}, \textbf{K3} in \Cref{def:ddall_data}.
+  If $\mu=0$, \emph{i.e.}, \eqref{eq:ddall_sys} is fully known, then \Cref{rem:ddall_nominalK123} provides a way to compute all the items.
+  Conversely, if $\mu\neq 0$, it is necessary to perform an \emph{online estimation} of all the data items. The procedure is summarized as follows.
+  \begin{enumerate}
+    \item \textbf{K1} is determined using \Cref{alg:ddall_algo1}, whose validity is proven by \Cref{prop:ddall_est_mom}.
+    \item \textbf{K2} is given by \Cref{alg:ddall_algoK2}, whose correctness is guaranteed by \Cref{lem:ddall_algoK2}.
+    \item \textbf{K3}, \emph{i.e.}, the polynomial annihilator of \eqref{eq:ddall_sys} with respect to the regulated output, is determined by first computing the matrix $H$ in \eqref{eq:ddall_H_hk} using \Cref{alg:ddall_computeH}, then using it in \Cref{alg:ddall_mincoeffbasis} to obtain a minimal polynomial basis for the null space of $W_{\bbouto\bbaux}(s)$, as stated in \Cref{prop:ddall_annih_computation}.
+  \end{enumerate}
+  Once the data \textbf{K1}, \textbf{K2}, and \textbf{K3} have been estimated, it is possible to build the control allocator \eqref{eq:ddall_control_all}, which solves \Cref{prb:ddall_main_per} for any $\gamma\in\R_{>0}$ as stated in \Cref{lem:ddall_nominal}.
+\end{proof}
