@@ -405,7 +405,8 @@ Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonp
   \caption{Data-driven pseudo-steady-state output map estimation.}
   \label{alg:ddall_algo1}
   \begin{algorithmic}[1]
-    \Require Samples $\bbexostate_k$, $k=0,\dotsc,K-1$, and $\eta_{p,k}$, $k=0,\dotsc,K+n-1$, for $K\geq n+1+\bboutpdim n_e$.
+    % NOTATION OVERRIDE: \eta_{p,k}
+    \Require $\tau_s$, $K\in\{a\in\N : a \geq \bbstatedim + 1 + \bboutpdim\bbexostatedim\}$, $\{\bbexostate_k\}_{k=0}^{K-1}$, $\{\eta_{p,k}\}_{k=0}^{K+\bbstatedim-1}$.
     \Ensure $\bar{M}_{\bboutp,\bbexostate}$.
 
     \State Define $T(\bboutp,\bbexostate)$ as:
@@ -567,7 +568,7 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
 
     \For{$i=1,\dotsc,\bbauxdim$}
       \State Apply $\bbaux(t)=e_i\psi(t)$, $t\in\R_{\geq 0}$, and measure $\bboutp^{\delta}(t)$.
-      \State Apply \Cref{alg:ddall_algo1} to the measurements $\{\zeta(t),\bboutp^{\delta}(t)\}$, yielding
+      \State Apply \Cref{alg:ddall_algo1} to the measurements of $(\zeta(t),\bboutp^{\delta}(t))$, yielding
       \Statex
         \begin{align}
           \bar{M}_{i} = \bbm{\bar{M}_{i,0} & \bar{M}_{i,1} & \ldots & \bar{M}_{i, 2 \bar{n}_e}},
@@ -605,7 +606,7 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
   \caption{Computation of a minimal coefficients basis.}
   \label{alg:ddall_mincoeffbasis}
   \begin{algorithmic}[1]
-    \Require A block partitioned matrix $H=\bbm{H_{[:,1]} & H_{[:,2]} & \ldots}$.
+    \Require $H = \bbm{H_{[:,1]} & H_{[:,2]} & \ldots}$.
     \Ensure A minimal coefficient basis $N$ for $H$.
 
     \State $\bar{\Sigma} \gets H_{[:,1]}$
@@ -697,6 +698,7 @@ Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evid
   \caption{Computation of $H$ in \eqref{eq:ddall_H_hk}.}
   \label{alg:ddall_computeH}
   \begin{algorithmic}[1]
+    \Require $\{\bar{\omega}_i\}_{i=1}^{\bbstatedim}$, $\tau_s$, $K\in\{a\in\N : a > K > \bbstatedim+\bbexostatedim+1\}$.
     \Ensure $H$.
 
     \State Define the \emph{virtual dynamics}
@@ -712,16 +714,16 @@ Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evid
       \end{subequations}
 
     \State $\bbaux(t) \gets 0$, $t\in\R_{\geq 0}$
-    \State Collect samples $\{\bbexostate(k\tau_s), \bbouto(k\tau_s)\}$, $k = 0,\dotsc,\bbstatedim+K-1$, $K > \bbstatedim+\bbexostatedim+1$.
+    \State Collect samples $\mathcal{W}_d = \{\bbexostate(k\tau_s)\}_{k=0}^{\bbstatedim+K-1}$, $\mathcal{H}_d=\{\bbouto(k\tau_s)\}_{k=0}^{\bbstatedim+K-1}$.
 
-    \State Apply \Cref{alg:ddall_algo1} to $\{\bbexostate(k\tau_s), \bbouto(k\tau_s)\}$ to obtain $\bar{M}_{\bbouto,\bbexostate}$.
+    \State Apply \Cref{alg:ddall_algo1} to $(\mathcal{W}_d,\mathcal{H}_d)$ to obtain $\bar{M}_{\bbouto,\bbexostate}$.
     \State $\bbouto^{\delta}(t) \gets \bbouto(t) - \bar{M}_{\bbouto,\bbexostate}\bbexostate(t)$
 
     \For{$i=1,\dotsc,\bbauxdim$}
         \State $\bbaux(t) \gets e_i\psi(t)$, $t\in\R_{\geq 0}$
         \Statex \Comment{Connect \eqref{eq:ddall_OmegaLambdaEv_bar} to the $i$-th input channel.}
-        \State Collect samples $\{\zeta(k\tau_s), \bbouto^{\delta}(k\tau_s)\}$, $k=0,\dotsc,\bbstatedim+K-1$, $K>\bbstatedim+\bbexostatedim+1$.
-        \State Apply \Cref{alg:ddall_algo1} and obtain $\bar{M}_{\bbouto,\zeta}^i$ partitioned as
+        \State Collect samples $\mathcal{Z}_d = \{\zeta(k\tau_s)\}_{k=0}^{\bbstatedim+K-1}$, $\bar{\mathcal{H}}_d = \{\bbouto^{\delta}(k\tau_s)\}_{k=0}^{\bbstatedim+K-1}$.
+        \State Apply \Cref{alg:ddall_algo1} to $(\mathcal{Z}_d, \bar{\mathcal{H}}_d)$ and obtain $\bar{M}_{\bbouto,\zeta}^i$ partitioned as
         \Statex
           \begin{equation}
             \label{eq:ddall_Mbar_zeta}
