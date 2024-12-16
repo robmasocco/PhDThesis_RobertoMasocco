@@ -770,7 +770,7 @@ The nominal values for the plant are
 \begin{equation}
   \label{eq:ddall_example_A0}
 	\plantdynmat(0) = \left[\begin{array}{rrr}
-    1 & -1 & 2 \\ 0 & 1 & -1 \\ -1 & 1 & 1
+    -1 & 1 & -2 \\ 0 & -1 & 1 \\ 1 & -1 & -1
 	\end{array}\right], \quad \plantctrmat(0) = \left[\begin{array}{rr}
     1 & 1 \\ -1 & 0 \\ 2 & 1
   \end{array}\right], \quad \plantoutmat(0) = \left[\begin{array}{rrr}
@@ -811,6 +811,10 @@ have been obtained with an LQR approach. Finally, the regulated and performance 
 \end{equation}
 and $D_{21} = 0$, $D_{12} = Q$, $D_{21} = I$, $D_{22} = 0$.
 
+Denote by $y_c(t)\in\R^2$ the output vector of the full regulator and by $u(t)\in\R^2$ the input vector of the plant under control. The interconnection of the plant, the regulator, and the allocator to be designed is given by
+\begin{equation}
+  u(t) = y_c(t) + \varsigma(t), \quad t\in\R_{\geq 0}.
+\end{equation}
 A polynomial annihilator of the nominal transfer matrix $W_{\bbouto\bbaux}(s)$ is
 \begin{equation}
   N_a(s) = \bbm{-s^2-s-3 \\ -3s-3}, \quad s\in\C,
@@ -821,3 +825,41 @@ hence, its state-space description is given by
   A_a =  \bbm{-3 & -3 & -1 \\ 1 & 0 & 0 \\ 0 & 1 & 0}, \quad B_a=\bbm{1 \\ 0 \\ 0},	\quad	C_a = \bbm{-1 & -1 & -3 \\ 0 & -3 & -3}.
 \end{equation}
 The optimization unit is designed as in \eqref{eq:ddall_control_all} with $R = I$ for multiple values of $\gamma$.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.7\textwidth]{images/ch7/ddall/nominal_u}
+  \caption{\emph{(Nominal case)} Top graph: time histories of $y_{c}(t)$, \emph{i.e.}, the non-allocated control input. Middle and bottom graphs: time histories of $u(t) = y_c(t)+\varsigma(t)$, \emph{i.e.}, the optimally-allocated control input, with $\gamma = 0.01$ and $\gamma = 0.1$. The steady-state values in the middle and bottom graphs are the same, but a larger $\gamma$ yields a faster convergence.}
+  \label{fig:ddall_nominal_u}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.9\textwidth]{images/ch7/ddall/uncertain_zpz0}
+  % HARDCODED REFERENCE: see the caption, points to a line of the H computation algorithm.
+  \caption{\emph{(Uncertain case)} Regulated (top graph) and performance (bottom graph) outputs of the uncertain plant during the two-phase identification process. The markers on each plot identify the sampling times and the values used by the data-driven procedures. In the last part of the upper plot, the markers show the values of $\bbouto^\delta(k\tau_s)$ (see line 8 of \Cref{alg:ddall_computeH}).}
+  \label{fig:ddall_uncertain_zpz0}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.9\textwidth]{images/ch7/ddall/uncertain_wu}
+  \caption{\emph{(Uncertain case)} Time histories of the reference input (top graph) and of the controlled input (bottom graph) during the two-phase identification process. The markers identify the sampling times.}
+  \label{fig:ddall_uncertain_wu}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.9\textwidth]{images/ch7/ddall/DeadZone_phase}
+  \caption{\emph{(Deadzone)} Behavior of the allocated control inputs, together with the deadzone representation (dashed gray box). The control actions allocated via an allocator with $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4 \spec(\kappa S)$ (red graph) achieve further amplitude reduction compared to an allocator with $\spec(A_{IM}) = \spec(S)$ (blue graph) (see \Cref{fig:ddall_DeadZone_time}).}
+  \label{fig:ddall_DeadZone_phase}
+\end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=.9\textwidth]{images/ch7/ddall/DeadZone_time}
+  \caption{\emph{(Deadzone)} Steady-state time histories of the non-allocated control input (top graph). Time histories of control actions allocated via an allocator with $\spec(A_{IM}) = \spec(S)$ (middle graph) and an allocator with $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4 \spec(\kappa S)$, (bottom graph). Higher harmonics, enlarging the finite-dimensional function space used for optimization, make possible a further cost reduction (see \Cref{fig:ddall_DeadZone_phase}).}
+  \label{fig:ddall_DeadZone_time}
+\end{figure}
+
+The top graph of \Cref{fig:ddall_nominal_u} shows the time histories of $y_{c}(t)$, \emph{i.e.}, the non-allocated control input, whereas the middle and bottom graphs display the time histories of $u(t) = y_c(t)+\varsigma(t)$, \emph{i.e.}, the optimally-allocated control input, for different values of $\gamma$. In the nominal case, the time histories of the output $\bbouto(t)$ induced by the allocated plant input is identical to that induced by the regulator output alone, hence they are not shown. The steady-state allocated input is the same in the middle and bottom graphs of \Cref{fig:ddall_nominal_u} but a larger $\gamma$	yields a faster convergence to the optimal, allocated input.
+
+It is assumed that the matrices defined in \eqref{eq:ddall_example_A0} for the nominal case are perturbed according to $A(\mu) = A(0) + \Delta A$, $B(\mu) = B(0) + \Delta B$, and $C(\mu) = C(0) + \Delta C$, with the norms of the \emph{unstructured} perturbation matrices bounded by $0.15$. The perturbation is such that the uncertain plant in closed loop with the nominal controller remains asymptotically stable. \Cref{fig:ddall_uncertain_wu,fig:ddall_uncertain_zpz0} depict the continuous-time signals and their sampled data (denoted by the circles) employed to implement \Cref{alg:ddall_algo1,alg:ddall_mincoeffbasis}. By inspecting the top graph of \Cref{fig:ddall_uncertain_zpz0}, it is worth stressing the difference between the continuous-time measurements of $\bbouto$ and the samples $\bbouto^\delta(k\tau_s)$ used in line 8 of \Cref{alg:ddall_computeH}, in which the effect of the exosystem alone has been compensated. In the absence of measurement noise, these algorithms permit the exact computation of the matrices $\bar{M}_{\bboutp,\bbexostate}$ and	$W_a(s)$ on the basis of which the control allocator \eqref{eq:ddall_control_all} is implemented, thus obtaining arbitrarily fast and optimal allocation even in the uncertain case.
+
+Consider again the nominal plant \eqref{eq:ddall_example_A0}, driven by the same exosystem defined in the nominal case, and suppose that the controller has been designed according to \eqref{eq:ddall_example_AC2}-\eqref{eq:ddall_example_KC2}. Suppose further that the cost functional is defined as in \eqref{eq:bbcost} with $\lambda(\cdot) = {\rm dz}_{\sigma}(\cdot)^2$ where ${\rm dz}_{\sigma}$ denotes the (component-wise) \emph{deadzone} function with levels prescribed by the vector $\sigma\in\mathbb{R}^{\bboutpdim}$. The purpose of the following numerical simulation is to compare alternative implementations of the definition of the dynamics in charge of generating the steady-state behavior of the allocator unit, \emph{i.e.}, of the matrix $A_{IM}$ in \eqref{eq:ddall_control_all_xim}. The latter is first defined with the property that $\spec(A_{IM}) = \spec(S)$, in line with the constructions of the LQ
+setting above, and the achieved optimal behavior is compared with the control allocation induced by the selection $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4\spec(\kappa S)$, namely containing the modes of the exosystem together with a certain number of its higher-order harmonics. In the former case the output of the allocator is denoted by $\varsigma(t)$, whereas in the latter it is denoted by $\varsigma^{h}(t)$. The deadzone levels for the two components of the control input are $\sigma = [0.9, 0.35]'$. \Cref{fig:ddall_DeadZone_phase} depicts the behavior of the allocated control inputs at steady-state, together with the deadzone representation (dashed gray box). The presence of the higher-order harmonics permits to achieve a zero value of the cost functional, since at steady-state the inputs remain for all time within the dead-zone levels. \Cref{fig:ddall_DeadZone_time} shows the steady-state time histories of the non-allocated control input (top graph), with the time histories of control actions allocated via an allocator with $\spec(A_{IM}) = \spec(S)$ and in the presence of higher-order harmonics (middle and bottom graphs, respectively).
