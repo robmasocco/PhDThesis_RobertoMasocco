@@ -387,7 +387,7 @@ The following result reveals that the structure of the control allocator \eqref{
   The observability property in the last sentence of \Cref{prop:ddall_delay_quadratic} is always satisfied if the columns of the numerator of the annihilator $W_a(s)$, namely $N_{a}(s)$, are chosen as a minimal basis,	as it can be inferred from \cite[Thm. 6.5.10]{kailath_linear_1980}.\closeremark
 \end{remark}
 
-Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}. Starting from \textbf{K1}, the first item to be estimated is the steady-state map $\bar{M}_{\bboutp,\bbexostate}$. Usually, this implies disconnecting the exosystem \eqref{eq:ddall_sys} from the system \eqref{eq:ddall_sys}; in the current context this procedure is not permitted, since one of the main goals of the allocation approach is to not alter or reconfigure in any way the preexisting control system. Thus, a data-driven algorithm for the online estimation of $\bar{M}_{\bboutp,\bbexostate}$ is proposed. Since it is based on sampled measurements of $\bbssoutp(t)$ and $\bbexostate(t)$, the first step consists in defining the characteristics of the sampling procedure. Let $\tau_s\in\R_{>0}$ be the sampling time, characterized by the following statements.
+Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}. Starting from \textbf{K1}, the first item to be estimated is the steady-state map $\bar{M}_{\bboutp,\bbexostate}$. Usually, this implies disconnecting the exosystem \eqref{eq:ddall_sys} from the system \eqref{eq:ddall_sys}; in the current context this procedure is not permitted, since one of the main goals of the allocation approach is to not alter or reconfigure in any way the preexisting control system. Thus, a data-driven algorithm for the online estimation of $\bar{M}_{\bboutp,\bbexostate}$ with $\bbaux=0$ is proposed. Since it is based on sampled measurements of $\bbssoutp(t)$ and $\bbexostate(t)$, the first step consists in defining the characteristics of the sampling procedure. Let $\tau_s\in\R_{>0}$ be the sampling time, characterized by the following statements.
 \begin{definition}[Non-pathological sampling time]
   \label{def:ddall_nonpatho}
   The sampling time $\tau_s>0$ is \emph{non-pathological} if, for any $\lambda_1,\lambda_2\in\spec(\exodynmat)\cup\spec(A)$, there is no $h\in\Z$ such that
@@ -536,4 +536,69 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   Although \Cref{alg:ddall_algo1} is provided in this context with the specific purpose of estimating $\bar{M}_{\bboutp,\bbexostate}$ to compute the dynamic allocator \eqref{eq:ddall_control_all}, it is a general-purpose algorithm for the estimation of the pseudo-steady-state output map of a linear system such as, \emph{e.g.}, system \eqref{eq:moments_my_sys}-\eqref{eq:moments_my_sys_exosys} in \Cref{app:moments}. Thus, its interest falls within the broader context of online data-driven moment estimation for linear systems, as do the statements of \Cref{prop:ddall_est_mom} and its proof requiring only an adapted notation.\closeremark
 \end{remark}
 
-% theorem: the allocator works; proof: assumptions and lemma
+\Cref{alg:ddall_algo1} provides a procedure to compute in finite time the information summarized in the item \textbf{K1}, for any $\mu\in\mathcal{M}$. Conversely, computing \textbf{K2} entails estimating the moments $W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_i)$, $\omega_i\in\spec(\exodynmat)$ , $i = 1, ..., \bar{n}_e$. In this case, however, the measurements of $\bboutp(t)$ are not influenced only by $\bbaux(t)$ but also by $\bbexostate(t)$ (since the exosystem cannot be disconnected at any given time). Thanks to the computation of \textbf{K1}, $\bar{M}_{\bboutp,\bbexostate}$ is now available. The next statement follows trivially from the previous results.
+\begin{lemma}
+  \label{lem:ddall_algoK2}
+  If \textbf{K1} is available, then \Cref{alg:ddall_algoK2} computes an estimate of \textbf{K2}.\closestatement
+\end{lemma}
+\begin{algorithm}[ht]
+  \caption{Data-driven computation of \textbf{K2}.}
+  \label{alg:ddall_algoK2}
+  \begin{algorithmic}[1]
+    \Require $\bar{M}_{\bboutp,\bbexostate}$, $\Omega$, $\Lambda$, measurements of $\bboutp(t)$.
+    \Ensure $W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_i)$, $\omega_i\in\spec(\exodynmat)$, $i = 1, ..., \bar{n}_e$.
+
+    \State Define
+    \Statex
+      \begin{align}
+        \bboutp^{\delta}(t) = \bboutp(t) - \bar{M}_{\bboutp,\bbexostate}\bbexostate(t), \quad t\in\R_{\geq 0}.
+      \end{align}
+
+    \State Define the \emph{virtual dynamics}
+    \Statex
+      \begin{subequations}
+        \label{eq:ddall_virtual_exo}
+        \begin{align}
+          \dot{\zeta}(t) &= \Omega\zeta(t), & t\in\R_{\geq 0}, \\
+          \psi(t) &= \Lambda\zeta(t), & t\in\R_{\geq 0},
+        \end{align}
+      \end{subequations}
+    \Statex with $\zeta(0)=\Lambda'$.
+
+    \For{$i=1,\dotsc,\bbauxdim$}
+      \State Apply $\bbaux(t)=e_i\psi(t)$, $t\in\R_{\geq 0}$, and measure $\bboutp^{\delta}(t)$.
+      \State Apply \Cref{alg:ddall_algo1} to the measurements $\{\zeta(t),\bboutp^{\delta}(t)\}$, yielding
+      \Statex
+        \begin{align}
+          \bar{M}_{i} = \bbm{\bar{M}_{i,0} & \bar{M}_{i,1} & \ldots & \bar{M}_{i, 2 \bar{n}_e}},
+        \end{align}
+      \Statex \hspace{.5cm}with $\bar{M}_{i,h} \in \mathbb{R}^{\bboutpdim}$, $h=0,\dotsc,2\bar{n}_e$.
+      \State The $i$-th column of $W_{\bboutp\bbaux}(0)$ is $\bar{M}_{i,0}$.
+      \State The $i$-th column of $W_{\bboutp\bbaux}(j\omega_h)$ is $\bar{M}_{i,2h-1} + j\bar{M}_{i,h}$, $h=1,\dotsc,\bar{n}_e$.
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+Finally, the key step to determine \textbf{K3} is to find a polynomial annihilator $N_a(s)$ such that its columns are a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$. It is then transformed into a rational annihilator $W_a(s)$ by adding a Hurwitz denominator to make it proper. Since the numerators in the elements of $W_{\bbouto\bbaux}(s)$ have degree at most $\bbstatedim$, then, according to \cite[Prop. 1]{zuniga_anaya_improved_2009}, $N_a(s)$ can be chosen with elements of degree not larger than $\bbstatedim\bboutodim$ exactly by selecting the columns of $N_a(s)$ as a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$ \cite[Main Thm.]{forney_jr_minimal_1975}.
+
+Define
+\begin{subequations}
+  \begin{align}
+    n_c &= \bbstatedim\bboutodim + 1, \\
+    n_r &= \min\{v\in\N : 2v\bboutodim \geq \bbauxdim n_c\}.
+  \end{align}
+\end{subequations}
+For a set of frequencies $\{\bar{\omega}_1, ..., \bar{\omega}_{n_r}\}$, define the block matrix $H$ with the $(k,h)$-th block of size $2\bboutodim\times\bbauxdim$ as
+\begin{equation}
+  \label{eq:ddall_H_hk}
+  H_{[k,h]} =
+		\bbm{
+		\re\left((j\bar{\omega}_k)^{h-1}W_{\bbouto\bbaux}(j\bar{\omega}_k)\right) \\
+		\im\left((j\bar{\omega}_k)^{h-1}W_{\bbouto\bbaux}(j\bar{\omega}_k)\right)
+		}, \quad k=1,\dotsc,n_r, \; h=1,\dotsc,n_c,
+\end{equation}
+where $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_k)) = \bboutodim$ provided that $s=j\bar{\omega}_k$ is not a pole or a zero of the transfer matrix $W_{\bbouto\bbaux}(s)$.
+
+The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$. The following algorithm is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also discussed.
+
+% theorem: the allocator works; proof: assumptions and lemma 1 + lemma tuo
