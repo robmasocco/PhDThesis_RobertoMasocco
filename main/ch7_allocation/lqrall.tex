@@ -252,61 +252,57 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 	with $a_\bbexostate,b_\bbexostate\in\R^\bbexostatedim$, then $\theta = [a' \; b']' = \bar{M}[a_\bbexostate' \; b_\bbexostate']'$ holds.\closeremark
 \end{remark}
 
-A straightforward corollary of the previous result follows from \eqref{eq:lqrall_optcoeffs}. It tells, in essence, that if $\zeta(\cdot)$ contains a single harmonic with zero amplitude, then the optimal $v$ with the same single harmonic has zero amplitude as well.
+A straightforward corollary of the previous result follows from \eqref{eq:lqrall_optcoeffs}. It tells, in essence, that if $\zeta$ contains a single harmonic with zero amplitude, then the optimal $v$ with the same single harmonic has zero amplitude as well.
 
 \begin{corollary}
 	If $v$, $\zeta$ are given by \eqref{eq:lqrall_singles} (with $v$ minimizing \eqref{eq:lqrall_optcontcost} under constraint \eqref{eq:lqrall_invint} and $a=b=0$ in \eqref{eq:lqrall_singlezeta}) then $\alpha=\beta=0$ in \eqref{eq:lqrall_singlefdecbis}.\closestatement
 \end{corollary}
 
-The following result exploits the previous lemmas and corollary to describe the optimal solution in the general case where $\zeta(\cdot)$ and $v(\cdot)$ are given by \eqref{eq:lqrall_fseries}.
+The following result exploits the previous lemmas and corollary to describe the optimal solution in the general case where $\zeta$ and $v$ are given by \eqref{eq:lqrall_fseries}.
 
 \begin{lemma}
   \label{lem:lqrall_freqs}
-  Let \eqref{eq:lqrall_zw}, \eqref{eq:lqrall_fseries} hold. Let $v^\star(\cdot)$ be the minimizer of \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} and the excitation $\zeta(\cdot)$. Then, $v^{\star}(\cdot)$ contains all and only the frequency components present, with nonzero coefficients, in $\zeta(\cdot)$, and the coefficients $\theta_k:= [a_k' \; b_k']'$, $\vartheta_k:= [\alpha_k' \; \beta_k']'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega}=k\omega$.\closestatement
+  Let \eqref{eq:lqrall_zw}, \eqref{eq:lqrall_fseries} hold. Assume that $v^\star$ is the minimizer of \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} and the excitation $\zeta$. Then, $v^{\star}$ contains all and only the frequency components present, with nonzero coefficients, in $\zeta$, and the coefficients $\theta_k = [a_k' \; b_k']'$, $\vartheta_k = [\alpha_k' \; \beta_k']'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega} = k\omega$.\closestatement
 \end{lemma}
 
 \begin{proof}
   The proof simply consists of showing that the minimization of the cost in the case of several frequency components reduces to the separate minimization of each frequency component so that the previous results immediately apply. To avoid cumbersome notation, let
 	\begin{align}
 		\label{eq:lqrall_groupedcoeffs}
-		A_k & = a_k + \alpha_k, B_k = b_k + \beta_k, &  & k = 1,\dotsc
+		A_k &= a_k + \alpha_k, & B_k &= b_k + \beta_k, & k = 1,2,\dotsc,
 	\end{align}
-	which enable to write the instantaneous cost in \eqref{eq:lqrall_optcontcost} as
-	\begin{equation}
+	which allow the instantaneous cost in \eqref{eq:lqrall_optcontcost} to be written as
+	\begin{multline}
 		\label{eq:lqrall_groupedcost}
-    \begin{aligned}
-			&\frac{1}{2} \left\Vert \zeta(t) + v(t) \right\Vert^2_2 = \frac{1}{2} \left\Vert \gamma_0 + \delta(t) + \epsilon(t) \right\Vert^2_2 \\
-      &\hspace{-1.5pt}= \frac{1}{2}(\gamma_0'\gamma_0 + \delta(t)'\delta(t) + \epsilon(t)'\epsilon(t)) + \gamma_0'\delta(t) + \delta(t)'\epsilon(t) + \gamma_0'\epsilon(t),
-    \end{aligned}
-	\end{equation}
-	with $t\in\R_{\geq 0}$, and the vector $\gamma_0$ and the functions $\delta(\cdot)$ and $\epsilon(\cdot)$ defined as
-	\begin{equation}
-		\begin{aligned}
+		\frac{1}{2} \left\Vert \zeta(t) + v(t) \right\Vert^2_2 = \frac{1}{2} \left\Vert \gamma_0 + \delta(t) + \epsilon(t) \right\Vert^2_2 \\
+    = \frac{1}{2}(\gamma_0'\gamma_0 + \delta(t)'\delta(t) + \epsilon(t)'\epsilon(t)) + \gamma_0'\delta(t) + \delta(t)'\epsilon(t) + \gamma_0'\epsilon(t), \quad t\in\R_{\geq 0},
+	\end{multline}
+	and the vector $\gamma_0$ and the functions $\delta$ and $\epsilon$ given by
+	\begin{subequations}
+		\begin{align}
 			\gamma_0  & = \zeta_0 + v^{\star}_0, \\
-			\delta(t) & = \sum_{k=1}^{+\infty} A_k \sin(k \omega t), &  &
-			\epsilon(t) = \sum_{k=1}^{+\infty} B_k \cos(k \omega t).
-		\end{aligned}
-	\end{equation}
+			\delta(t) & = \sum_{k=1}^{+\infty} A_k \sin(k \omega t), & t\in\R_{\geq 0}, \\
+			\epsilon(t) & = \sum_{k=1}^{+\infty} B_k \cos(k \omega t), & t\in\R_{\geq 0}.
+		\end{align}
+	\end{subequations}
   The functional to be minimized is
-  \begin{equation}
-		\begin{split}
-			&\hspace{2pt}\int_{0}^{\bbperiod} \left(\left\Vert\gamma_0\right\Vert^2_2 + \left\Vert\delta(t)\right\Vert^2_2 + \left\Vert \epsilon(t)\right\Vert^2_2 \right)\,dt \\
-			&= \bbperiod\left\Vert\gamma_0\right\Vert^2_2 + \sum_{k=1}^{+\infty}\left(\left\Vert A_k \right\Vert^2_2 \int_{0}^{\bbperiod} \sin^2(k \omega t)\,dt\right) + \sum_{k=1}^{+\infty}\left( \left\Vert B_k \right\Vert^2_2 \int_{0}^{\bbperiod} \cos^2(k \omega t)\,dt\right) \\
-			&= \bbperiod(\zeta_0 + v^{\star}_0)'(\zeta_0 + v^{\star}_0) + \frac{\pi}{\omega} \sum_{k=1}^{+\infty} \left[(a_k+\alpha_k)'(a_k+\alpha_k) + (b_k+\beta_k)'(b_k+\beta_k)\right],
-		\end{split}
-	\end{equation}
-  which follows considering the expansion of \eqref{eq:lqrall_groupedcost}, noting that mixed terms contain products involving sine and cosine functions that, when integrated over a period, sum to zero, and recalling \eqref{eq:lqrall_groupedcoeffs}.	On inspection, it is clear that the overall cost is simply the sum of the costs of the single frequency components; these costs are minimized by the coefficient determined in the previous Lemmas.
+  \begin{multline}
+		\int_{0}^{\bbperiod} \left\Vert\gamma_0\right\Vert^2_2 + \left\Vert\delta(t)\right\Vert^2_2 + \left\Vert \epsilon(t)\right\Vert^2_2\,dt \\
+		=\bbperiod\left\Vert\gamma_0\right\Vert^2_2 + \sum_{k=1}^{+\infty}\left\Vert A_k \right\Vert^2_2 \int_{0}^{\bbperiod} \sin^2(k \omega t)\,dt + \sum_{k=1}^{+\infty}\left\Vert B_k \right\Vert^2_2 \int_{0}^{\bbperiod} \cos^2(k \omega t)\,dt \\
+		=\bbperiod(\zeta_0 + v^{\star}_0)'(\zeta_0 + v^{\star}_0) + \frac{\pi}{\omega} \sum_{k=1}^{+\infty} ((a_k+\alpha_k)'(a_k+\alpha_k) + (b_k+\beta_k)'(b_k+\beta_k)),
+	\end{multline}
+  which is obtained by considering the expansion of \eqref{eq:lqrall_groupedcost}, noting that mixed terms contain products involving sine and cosine functions that, when integrated over a period, yield zero, and recalling \eqref{eq:lqrall_groupedcoeffs}.	It is clear that the overall cost is simply the sum of the costs of the single frequency components; these costs are minimized by the coefficient determined in the previous \Cref{lem:lqrall_solconstr,lem:lqrall_solstruct}.
 \end{proof}
 
-The following result is thus obtained collecting the intermediate ones provided by the previous Lemmas.
+The following result is thus obtained collecting the ones provided by the previous \Cref{lem:lqrall_solconstr,lem:lqrall_solstruct}.
 
 \begin{theorem}
 	\label{thm:lqrall_solution}
-	Consider the feedback control system described by \eqref{eq:linplant}-\eqref{eq:linexosystem} and suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_closedloop,ass:lqrall_kernels} hold. Then, there exists a unique solution $v^{\star}$ to \Cref{prb:lqrall_optcont}, of the form
-	\begin{equation}
+	Consider the feedback control system \eqref{eq:linplant}--\eqref{eq:linexosystem} and suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_closedloop,ass:lqrall_kernels} hold. Then, there exists a unique solution $v^{\star}$ to \Cref{prb:lqrall_optcont}, of the form
+	\begin{align}
 		\label{eq:lqrall_optsol}
-		v^{\star}(t) = v_0^\star+ \sum_{i=1}^h \alpha^{\star}_i\sin(\omega_i t)+\beta^{\star}_i\cos(\omega_i t), \quad t\in\R_{\geq 0},
-	\end{equation}
+		v^{\star}(t) &= v_0^\star+ \sum_{i=1}^h \alpha^{\star}_i\sin(\omega_i t)+\beta^{\star}_i\cos(\omega_i t), & t\in\R_{\geq 0},
+	\end{align}
 	with
 	\begin{align}
 		v_0^\star & =-\plantalllcfn^{\perp}(0)(\plantalllcfn^{\perp}(0))^{\dagger}\zeta_0, \\
@@ -325,29 +321,30 @@ The following result is thus obtained collecting the intermediate ones provided 
   \closestatement
 \end{theorem}
 
+\begin{example}
 The results illustrated so far have been corroborated by means of some numerical simulations reported below. The following numerical model has been adopted for the plant \eqref{eq:linplant}:
-\begin{equation}
+\begin{align}
 	\label{eq:lqrall_linplant}
-		A = \left[
+		A &= \left[
 			\begin{array}{cccc}
 				0 & \,  1  & \, 0 & \, 0 \\
 				0 & \, -2  & \, 0 & \, 0 \\
 				0 & \, 0   & \, 0 & \, 3 \\
 				0 & \,  -4 & \, 1 & \, 0
-			\end{array}\right],\hspace{0.1cm}
-		B = \left[
+			\end{array}\right], &
+		B &= \left[
 			\begin{array}{ccc}
 				1  & \,  0  & \,  -1 \\
 				1  & \, 0   & \,  1  \\
 				-1 & \, -1  & \,  0  \\
 				0  & \,  -1 & \, 1
-			\end{array}\right],\hspace{0.1cm}
-		C = \left[
+			\end{array}\right], &
+		C &= \left[
 			\begin{array}{cccc}
 				1 \quad   0 \quad 1 \quad  0
 			\end{array}\right].
-\end{equation}
-The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with identity weights, restricting it to only the first two inputs of the plant \eqref{eq:lqrall_linplant}. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, while its initial condition has been chosen equal to $w_0 = [2 \ 0 \ 4 \ 0 \ 6 \ 0]'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time equal to $t_f = 7~s$.
+\end{align}
+The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of natural pulses given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=.9\textwidth]{images/ch7/lqrall/sscosts}
@@ -367,6 +364,7 @@ The matrices describing the stabilizing controller \eqref{eq:lincontroller} have
 	\label{fig:lqrall_ya}
 \end{figure}
 
-The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases, showing that both solutions converge to the same steady-state cost, which is equal to $J(v^{\star})=155.836$. The behaviors of the differences between the outputs of the non-allocated and allocated closed loops for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}, where the convergence to zero of the considered signals proves the satisfaction of the steady-state output invisibility requirement. The outputs of the state-of-the-art hybrid allocator are shown in \Cref{fig:lqrall_ya} against the components of $v^{\star}(t)$, showing that both signals become coincident after a transient phase.
+The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against the one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases, showing that both solutions converge to the same steady-state cost, which is equal to $J(v^{\star})=155.836$. The time histories of the differences between the outputs of the non-allocated and allocated closed loops for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}, where the convergence to zero of the signals proves the satisfaction of the steady-state output invisibility requirement. The outputs of the state-of-the-art hybrid allocator are shown in \Cref{fig:lqrall_ya} against the components of $v^{\star}(t)$, showing that both signals become coincident after a transient phase.
 
-This study provides a first step towards the integration of optimal control theory tools and results within dynamic control allocation settings. The proposed approach allows the designer to build a control allocation device which acts, in essence, as a periodic function generator whose dynamic model is entirely determined in terms of its frequency components by \Cref{thm:lqrall_solution}. Conversely, the previous state-of-the-art solution is described by more complex hybrid dynamics.
+This study provides a first step towards the application of optimal control theory results within dynamic control allocation settings. The proposed approach allows the designer to build a control allocation device that acts, essentially, as a periodic function generator whose model is entirely determined in terms of its frequency components by \Cref{thm:lqrall_solution}. Conversely, the previous state-of-the-art solution is described by more complex hybrid dynamics.\closeexample
+\end{example}

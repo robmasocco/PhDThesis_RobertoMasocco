@@ -178,27 +178,53 @@
 
 \usepackage{subfiles} % Compile sub-main files
 
-\usepackage[capitalise,sort]{cleveref}
-\newtheorem{assumption}{Assumption}[chapter]
-\crefname{assumption}{Assumption}{Assumptions}
-\newtheorem{definition}{Definition}[chapter]
-\crefname{definition}{Definition}{Definitions}
-\newtheorem{problem}{Problem}[chapter]
-\crefname{problem}{Problem}{Problems}
 \newtheorem{theorem}{Theorem}[chapter]
-\crefname{theorem}{Theorem}{Theorems}
-\newtheorem{lemma}{Lemma}[chapter]
-\crefname{lemma}{Lemma}{Lemmas}
-\newtheorem{claim}{Claim}[chapter]
-\crefname{claim}{Claim}{Claims}
-\newtheorem{remark}{Remark}[chapter]
-\crefname{remark}{Remark}{Remarks}
-\newtheorem{corollary}{Corollary}[chapter]
-\crefname{corollary}{Corollary}{Corollaries}
-\newtheorem{proposition}{Proposition}[chapter]
-\crefname{proposition}{Proposition}{Propositions}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
 
+\usepackage[capitalise,sort]{cleveref}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{definition}{Definition}{Definitions}
+\crefname{problem}{Problem}{Problems}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{claim}{Claim}{Claims}
+\crefname{remark}{Remark}{Remarks}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{example}{Example}{Examples}
 \crefname{algorithm}{Algorithm}{Algorithms}
+
+% \newtheorem{assumption}{Assumption}[chapter]
+% \newtheorem{definition}{Definition}[chapter]
+% \newtheorem{problem}{Problem}[chapter]
+% \newtheorem{theorem}{Theorem}[chapter]
+% \newtheorem{lemma}{Lemma}[chapter]
+% \newtheorem{claim}{Claim}[chapter]
+% \newtheorem{remark}{Remark}[chapter]
+% \newtheorem{corollary}{Corollary}[chapter]
+% \newtheorem{proposition}{Proposition}[chapter]
+% \newtheorem{example}{Example}[chapter]
+
+% \usepackage[capitalise,sort]{cleveref}
+% \crefname{example}{Example}{Examples}
+% \crefname{proposition}{Proposition}{Propositions}
+% \crefname{corollary}{Corollary}{Corollaries}
+% \crefname{remark}{Remark}{Remarks}
+% \crefname{claim}{Claim}{Claims}
+% \crefname{lemma}{Lemma}{Lemmas}
+% \crefname{theorem}{Theorem}{Theorems}
+% \crefname{problem}{Problem}{Problems}
+% \crefname{definition}{Definition}{Definitions}
+% \crefname{assumption}{Assumption}{Assumptions}
+% \crefname{algorithm}{Algorithm}{Algorithms}
 
 \usepackage[labelfont=bf]{caption}
 \usepackage{svg}
