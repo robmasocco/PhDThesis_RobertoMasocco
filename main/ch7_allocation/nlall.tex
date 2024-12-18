@@ -165,58 +165,58 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an a
 \end{algorithm}
 
 \begin{example}
-The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in \eqref{eq:bbexosys}:
-\begin{subequations}
-  \label{eq:nlall_simexo}
-  \begin{align}
-    \dot{\bbexostate}(t) &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate(t), & t\in\R_{\geq 0},\\
-    \bbref(t) &= \begin{bmatrix} \bbexostate_1(t) + \bbexostate_3(t) \\ \bbexostate_2(t) \end{bmatrix}, & t\in\R_{\geq 0},
-  \end{align}
-\end{subequations}
-with $\omega=2\pi f$, $f=0.2$, and $\bbexostate_0 = \begin{bmatrix} 0 & \omega & 2 \end{bmatrix}'$. Hence, consider the following continuous-time system of the form \eqref{eq:bbsys}:
-\begin{subequations}
-  \label{eq:nlall_simplant}
-  \begin{align}
-    \dot{\bbstate}(t) &= \begin{bmatrix} 0 \\ \bbstate_1(t)+\bbstate_2(t) \\ \bbstate_1(t)-\bbstate_2(t) \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2(t)} & 1 \\ e^{\bbstate_2(t)} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate(t),r(t))+\bbaux(t)), & t\in\R_{\geq 0},\\
-    \bboutp(t) &= h_c(\bbstate(t),\bbref(t)) + \bbaux(t), & t\in\R_{\geq 0},\\
-    \bbouto(t) &= (1+\bbstate_3(t))^3, & t\in\R_{\geq 0},
-  \end{align}
-\end{subequations}
-where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a given feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate(t),\bbref(t))$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi(t)) = \begin{bmatrix} e^{\bbstate_2(t)} & e^{\bbstate_2(t)} & 0 \end{bmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=.9\textwidth]{images/ch7/nlall/errs.eps}
-  \caption{Difference between the regulated output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
-  \label{fig:nlall_errs}
-\end{figure}
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=.9\textwidth]{images/ch7/nlall/cost.eps}
-  \caption{Cost during all the iterations performed with \Cref{alg:nlall_sweep} (red) versus those with \Cref{alg:nlall_adam} (blue).}
-  \label{fig:nlall_cost}
-\end{figure}
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=.9\textwidth]{images/ch7/nlall/hcn.eps}
-  \caption{Nominal feedback-linearizing system input.}
-  \label{fig:nlall_hcn}
-\end{figure}
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=.9\textwidth]{images/ch7/nlall/ua.eps}
-  \caption{Auxiliary input determined by \Cref{alg:nlall_adam}.}
-  \label{fig:nlall_ua}
-\end{figure}
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=.9\textwidth]{images/ch7/nlall/hca.eps}
-  \caption{Performance output subject to the input allocation determined by \Cref{alg:nlall_adam}.}
-  \label{fig:nlall_hca}
-\end{figure}
+  The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in \eqref{eq:bbexosys}:
+  \begin{subequations}
+    \label{eq:nlall_simexo}
+    \begin{align}
+      \dot{\bbexostate}(t) &= \begin{bmatrix} 0 & 1 & 0\\ -\omega^2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \bbexostate(t), & t\in\R_{\geq 0},\\
+      \bbref(t) &= \begin{bmatrix} \bbexostate_1(t) + \bbexostate_3(t) \\ \bbexostate_2(t) \end{bmatrix}, & t\in\R_{\geq 0},
+    \end{align}
+  \end{subequations}
+  with $\omega=2\pi f$, $f=0.2$, and $\bbexostate_0 = \begin{bmatrix} 0 & \omega & 2 \end{bmatrix}'$. Hence, consider the following continuous-time system of the form \eqref{eq:bbsys}:
+  \begin{subequations}
+    \label{eq:nlall_simplant}
+    \begin{align}
+      \dot{\bbstate}(t) &= \begin{bmatrix} 0 \\ \bbstate_1(t)+\bbstate_2(t) \\ \bbstate_1(t)-\bbstate_2(t) \end{bmatrix} + \begin{bmatrix} e^{\bbstate_2(t)} & 1 \\ e^{\bbstate_2(t)} & 1 \\ 0 & 0 \end{bmatrix} (h_c(\bbstate(t),r(t))+\bbaux(t)), & t\in\R_{\geq 0},\\
+      \bboutp(t) &= h_c(\bbstate(t),\bbref(t)) + \bbaux(t), & t\in\R_{\geq 0},\\
+      \bbouto(t) &= (1+\bbstate_3(t))^3, & t\in\R_{\geq 0},
+    \end{align}
+  \end{subequations}
+  where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a given feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate(t),\bbref(t))$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi(t)) = \begin{bmatrix} e^{\bbstate_2(t)} & e^{\bbstate_2(t)} & 0 \end{bmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/nlall/errs.eps}
+    \caption{Difference between the regulated output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
+    \label{fig:nlall_errs}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/nlall/cost.eps}
+    \caption{Cost during all the iterations performed with \Cref{alg:nlall_sweep} (red) versus those with \Cref{alg:nlall_adam} (blue).}
+    \label{fig:nlall_cost}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/nlall/hcn.eps}
+    \caption{Nominal feedback-linearizing system input.}
+    \label{fig:nlall_hcn}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/nlall/ua.eps}
+    \caption{Auxiliary input determined by \Cref{alg:nlall_adam}.}
+    \label{fig:nlall_ua}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/nlall/hca.eps}
+    \caption{Performance output subject to the input allocation determined by \Cref{alg:nlall_adam}.}
+    \label{fig:nlall_hca}
+  \end{figure}
 
-\Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 = 0$; $\bbstate(0)$ is taken on the manifold described by $\bbstate(t)=\pi(\bbexostate(t))$, $t\in\R_{\geq 0}$, consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different values of $\alpha$: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a small output error.
+  \Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 = 0$; $\bbstate(0)$ is taken on the manifold described by $\bbstate(t)=\pi(\bbexostate(t))$, $t\in\R_{\geq 0}$, consistently with $\bbexostate_0$, which has been numerically determined, and disregarding the stopping criterion setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different values of $\alpha$: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a small output error.
 
-A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in about half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
+  A comparison has been made, retaining all the parameters, between the rates of convergence of \Cref{alg:nlall_sweep} and of \Cref{alg:nlall_adam}, selecting for the latter the parameters $\rho_1$, $\rho_2$, and $\delta$ as $\rho_1 = 0.9$, $\rho_2 = 0.999$ and $\delta = 10^{-8}$. \Cref{fig:nlall_cost} shows how \Cref{alg:nlall_adam} is faster than \Cref{alg:nlall_sweep} in this example, converging in about half the maximum number of iterations allowed and well before the convergence of \Cref{alg:nlall_sweep}.
 
-\Cref{fig:nlall_hcn} shows the nominal system input given by the feedback linearization and stabilization process and \Cref{fig:nlall_ua} depicts the auxiliary input determined by \Cref{alg:nlall_adam}. Finally, \Cref{fig:nlall_hca} illustrates the performance output subject to the allocator action. It is worth pointing out that, even if the feedback-linearizing law uses only one input, the auxiliary one uses both. Thus, in accordance with the definition of the performance output in this example, $\bboutp$ exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.
+  \Cref{fig:nlall_hcn} shows the nominal system input given by the feedback linearization and stabilization process and \Cref{fig:nlall_ua} depicts the auxiliary input determined by \Cref{alg:nlall_adam}. Finally, \Cref{fig:nlall_hca} illustrates the performance output subject to the allocator action. It is worth pointing out that, even if the feedback-linearizing law uses only one input, the auxiliary one uses both. Thus, in accordance with the definition of the performance output in this example, $\bboutp$ exhibits a reduced amplitude leading to a smaller norm, all of which while only a small alteration in the regulated output $\bbouto$ is observed.\closeexample
 \end{example}
