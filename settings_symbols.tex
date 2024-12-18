@@ -43,6 +43,7 @@
 
 % *********** Linear exosystem dynamics ***********
 \newcommand{\exodynmat}{S}
+\newcommand{\exooutmat}{C_e}
 
 % *********** Black-box model exosystem dimensions ***********
 \newcommand{\bbexostatedim}{{n_e}}
@@ -75,6 +76,14 @@
 \newcommand{\plantalllcfd}{D_\Sigma}
 \newcommand{\plantalllcfn}{N_\Sigma}
 
+% *********** Discretized linear plant dynamics ***********
+\newcommand{\dplantdynmat}{A_{p,d}}
+\newcommand{\dplantctrmat}{B_{p,d}}
+\newcommand{\dplantoutmat}{C_{p,d}}
+\newcommand{\dplanttf}{W_{\plantoutput\plantinput}^{d}}
+\newcommand{\dplantlcfd}{D_{p,d}}
+\newcommand{\dplantlcfn}{N_{p,d}}
+
 % *********** Controller ***********
 \newcommand{\ctrl}{\Gamma}
 \newcommand{\ctrlstate}{\varphi}
@@ -88,6 +97,8 @@
 \newcommand{\ctrlctrmat}{B_c}
 \newcommand{\ctrlrefmat}{P_c}
 \newcommand{\ctrloutmat}{C_c}
+\newcommand{\ctrldirgain}{D_c}
+\newcommand{\ctrlrefgain}{Q_c}
 
 % *********** Controller-centric feedback model ***********
 % NOTE: This is introduced in LQRALL.

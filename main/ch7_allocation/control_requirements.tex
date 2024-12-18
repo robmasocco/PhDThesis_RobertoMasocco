@@ -27,12 +27,12 @@ where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector, $\bbexostate(0
 
 \begin{assumption}
   \label{ass:bbexoorig}
-  The origin $w=0$ of $\;\R^\bbexostatedim$ is a stable equilibrium point associated with $\bbexovecf$.
+  The origin $w=0$ of $\;\R^\bbexostatedim$ is a stable equilibrium point associated with $\bbexovecf$.\closestatement
 \end{assumption}
 
 \begin{assumption}
   \label{ass:bbexopoisson}
-  There exists a compact and invariant set $\bbexostateset\subset\R^{\bbexostatedim}$ such that $w_0\in\bbexoinitset$ with $\bbexoinitset \subseteq \setint(\bbexostateset)$, $\bbexoinitset$ neighborhood of the origin of $\;\R^\bbexostatedim$, and $\bbexostate(t)\in\bbexostateset$ for any $t\in\R_{\geq 0}$. Moreover, any $\bbexostate_0\in\bbexoinitset$ is such that the flow $\Phi^{\bbexovecf}_{t}(\bbexostate_0)$ is defined for all $t\in\R$ and, for any neighborhood $\mathcal{U}^\circ$ of $\bbexostate_0$ and for any real number $\tau>0$, there exists a time $t_1>\tau$ such that $\Phi^{\bbexovecf}_{t_1}(\bbexostate_0)\in\mathcal{U}^\circ$, and a time $t_2<-\tau$ such that $\Phi^{\bbexovecf}_{t_2}(\bbexostate_0)\in\mathcal{U}^\circ$.
+  There exists a compact and invariant set $\bbexostateset\subset\R^{\bbexostatedim}$ such that $w_0\in\bbexoinitset$ with $\bbexoinitset \subseteq \setint(\bbexostateset)$, $\bbexoinitset$ neighborhood of the origin of $\;\R^\bbexostatedim$, and $\bbexostate(t)\in\bbexostateset$ for any $t\in\R_{\geq 0}$. Moreover, any $\bbexostate_0\in\bbexoinitset$ is such that the flow $\Phi^{\bbexovecf}_{t}(\bbexostate_0)$ is defined for all $t\in\R$ and, for any neighborhood $\mathcal{U}^\circ$ of $\bbexostate_0$ and for any real number $\tau>0$, there exists a time $t_1>\tau$ such that $\Phi^{\bbexovecf}_{t_1}(\bbexostate_0)\in\mathcal{U}^\circ$, and a time $t_2<-\tau$ such that $\Phi^{\bbexovecf}_{t_2}(\bbexostate_0)\in\mathcal{U}^\circ$.\closestatement
 \end{assumption}
 
 In other words, \Cref{ass:bbexopoisson} states that given $\bbexostate_0\in\bbexoinitset$, the trajectory $\bbexostate(t)$ that originates in $\bbexostate_0$ passes arbitrarily close to $\bbexostate_0$ for $\left|t\right|\rightarrow +\infty$. This defines the point $\bbexostate_0$ as \emph{Poisson stable} (see \cite{isidori_nonlinear_1995}) and, since this holds for any $\bbexostate_0\in\bbexoinitset$, the system $\bbexo$ is said to be Poisson stable. This property implies that no trajectory of \eqref{eq:bbexosys} can decay to zero as time tends to infinity. The interconnection of the system $\bbsys$ with the exosystem $\bbexo$ is depicted in \Cref{fig:bbsys}.
@@ -99,6 +99,7 @@ The two dynamic control allocation problems that are of interest for this work a
 		  \end{align}
 		\item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
     \end{itemize}
+    \closestatement
 \end{problem}
 
 \begin{problem}[Dynamic allocation with full output invisibility]
@@ -120,7 +121,8 @@ The two dynamic control allocation problems that are of interest for this work a
 		  \end{align}
 		  for all $t\in\R_{\geq 0}$.
       \item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
-    \end{itemize}
+  \end{itemize}
+  \closestatement
 \end{problem}
 
 It is finally worth to point out that, in both problems, the optimization process is allowed to exhibit a transient behavior: what distinguishes the two situations is whether the effect of this transient behavior on the regulated output can be visible or not. The desired configuration is depicted in \Cref{fig:allbbsys}.

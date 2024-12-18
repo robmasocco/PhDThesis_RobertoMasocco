@@ -17,7 +17,7 @@ where $\plantstate(t)\in\R^\plantstatedim$ is the plant state vector, $\plantinp
 where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state vector and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output vector at time $t$, and $\ctrldynmat\in\R^{\ctrlstatedim\times\ctrlstatedim}$, $\ctrlctrmat\in\R^{\ctrlstatedim\times\bboutodim}$, $\ctrlrefmat\in\R^{\ctrlstatedim\times\bbrefdim}$, and $\ctrloutmat\in\R^{\ctrloutputdim\times\ctrlstatedim}$ are constant matrices. The interconnection of the plant $\plant$ and the control system $\ctrl\;$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, with the dimension of the full state vector being $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$, \emph{i.e.}, $\bbouto = \plantoutput$. The following assumption characterizes the properties of the feedback interconnection.
 \begin{assumption}
   \label{ass:lqrall_closedloop}
-  The pairs $(\plantdynmat,\plantctrmat)$, $(\ctrldynmat,\ctrlctrmat)$ are reachable, and the pairs $(\plantoutmat,\plantdynmat)$, $(\ctrloutmat,\ctrldynmat)$ are detectable. Moreover, the closed-loop feedback interconnection of \eqref{eq:linplant} and \eqref{eq:lincontroller} does not induce pole-zero cancellations and it is asymptotically stable.
+  The pairs $(\plantdynmat,\plantctrmat)$, $(\ctrldynmat,\ctrlctrmat)$ are reachable, and the pairs $(\plantoutmat,\plantdynmat)$, $(\ctrloutmat,\ctrldynmat)$ are detectable. Moreover, the closed-loop feedback interconnection of \eqref{eq:linplant} and \eqref{eq:lincontroller} does not induce pole-zero cancellations and it is asymptotically stable.\closestatement
 \end{assumption}
 
 Let $s$ be a variable taking values in $\C$, and $\planttf(s)$ be the transfer matrix of system \eqref{eq:linplant} from $\plantinput$ to $\plantoutput$ with $\bbaux=0$, computed from the state-space description of $\plant$. Let $\plantalltf(s)$ be the transfer matrix of \eqref{eq:bbsys} from $\bbaux$ to $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$. The dimensions of $\planttf(s)$ and $\plantalltf(s)$ are well determined and coincide with those of their respective state-space description thanks to \Cref{ass:lqrall_closedloop}.
@@ -30,7 +30,7 @@ The reference input in this setting is defined as the state of the exosystem $\b
 		\bbref(t)            & = \bbexostate(t), & t\in\R_{\geq 0},
 	\end{align}
 \end{subequations}
-where $\exodynmat\in\R^{\bbexostatedim \times \bbexostatedim}$ is a block-diagonal matrix defined as
+where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector at time $t$ and $\exodynmat\in\R^{\bbexostatedim \times \bbexostatedim}$ is a block-diagonal matrix defined as
 \begin{subequations}
 	\label{eq:linexoblocks}
 	\begin{align}
@@ -112,7 +112,7 @@ The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is 
 	      \lim_{t_0 \to -\infty} \int_{t_0}^{t} \bboutmat e^{{\bbdynmat}(t - \tau)} \bbctrmat \hat{v}(\tau)\,d\tau = 0, \quad t\in\R_{\geq 0},
 	    \end{equation}
 	\end{itemize}
-	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$, $t\in\R_{\geq 0}$.
+	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$, $t\in\R_{\geq 0}$.\closestatement
 \end{problem}
 
 It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}.
@@ -226,7 +226,7 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 		\bar{J}(z) = \frac{1}{2}\left\Vert \theta + \Psi^{\perp}(\bar{\omega})z \right\Vert^2_2.
 	\end{equation}
 
-	Note that \eqref{eq:lqrall_finiteprb} is an unconstrained, finite-dimensional optimization problem completely equivalent to \Cref{prb:lqrall_optcont} in the setting defined by the statement of \Cref{lem:lqrall_solstruct}. Thus, the solution may be computed by solving the equation
+	Note that \eqref{eq:lqrall_finiteprb} is an unconstrained, finite-dimensional optimization problem completely equivalent to \Cref{prb:lqrall_optcont} in the setting defined by \Cref{lem:lqrall_solstruct}. Thus, the solution may be computed by solving the equation
 	\begin{equation}
 		\frac{\partial\bar{J}(z)}{\partial z} = \left(\theta + \Psi^{\perp}(\bar{\omega})z \right)'\Psi^{\perp}(\bar{\omega}) = 0,
 	\end{equation}

@@ -7,12 +7,12 @@ Consider now a continuous-time, linear time-invariant model given by
     \bboutp(t) & = C_2(\mu)\bbstate(t) + D_{21}(\mu)\bbaux(t) + D_{22}(\mu)\bbexostate(t), & t\in\R_{\geq 0}, \label{eq:ddall_sys_z}
   \end{align}
 \end{subequations}
-where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
+where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively, at time $t$. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
 \begin{align}
   \label{eq:ddall_exo}
   \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), \quad t\in\R_{\geq 0},
 \end{align}
-with initial condition $\bbexostate(0) = \bbexostate_0$. The interconnection is depicted in \Cref{fig:bbsys}.
+where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector at time $t$, with initial condition $\bbexostate(0) = \bbexostate_0$. The interconnection is depicted in \Cref{fig:bbsys}.
 
 It is assumed that the matrices in \eqref{eq:ddall_sys} depend continuously on an unmeasured vector $\mu$ belonging to a set $\mathcal{M}$ that contains the origin: $\mu = 0$ identifies the nominal case. Although in similar cases studied in the literature (see, \emph{e.g.}, \cite{cocetti_linear_2018}), the set $\mathcal{M}$ is assumed to be fully described and compact, these properties are not necessary for the results that follow. To simplify the notation in the following, the dependence of the matrices in \eqref{eq:ddall_sys} on $\mu$ is omitted unless strictly necessary. The properties of the uncertain model are characterized by the following assumption.
 
@@ -53,7 +53,7 @@ is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
       \allout &= \bbaux,
     \end{align}
   \end{subequations}
-  such that the following requirements are satisfied.
+  such that the following requirements hold.
   \begin{enumerate}[(i)]
     \item \emph{Fixed-time robust output invisibility}: there exists a finite time $t_0 \geq 0$ with the property that, for any $\mu\in\mathcal{M}$, the regulated output $\bbouto$ satisfies
     \begin{equation}
@@ -63,6 +63,7 @@ is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
     \item \emph{Steady-state periodicity}: for any $\bbexostate_0\in\bbexoinitset$, the internal state of the control allocator is bounded for any time and its unique steady-state response is periodic of period $\bbperiod$.
     \item \emph{Optimality}: the Lagrange cost functional \eqref{eq:bbcost} is minimized with respect to the class of inputs in a \emph{prescribed} finite-dimensional function space.
   \end{enumerate}
+  \closestatement
 \end{problem}
 
 The construction of a solution to \Cref{prb:ddall_main_per} for any $\mu\in\mathcal{M}$ begins by identifying the data whose knowledge is necessary for the design of the allocator. This knowledge is obtained in the uncertain case by means of algorithms that are described in the following and are based on input-output measurements. Let the spectrum of the matrix $\exodynmat$ in \eqref{eq:ddall_exo} be
@@ -154,7 +155,7 @@ The proposed dynamic allocator is given by
 
 \begin{remark}
   \label{rem:ddall_structure}
-  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state of the polynomial annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
+  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator at time $t$, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state, at time $t$, of the polynomial annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -207,7 +208,7 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
     \label{eq:ddall_cost_moving}
     J_{t} = \int_{t}^{t+\bbperiod}\ell(\bbssoutp(\sigma))\,d\sigma, \quad t\in\R_{\geq 0},
   \end{equation}
-  and consider \eqref{eq:ddall_control_all_xim} with an input $u_{IM}(t)$ to be designed, \emph{i.e.},
+  and consider \eqref{eq:ddall_control_all_xim} with an input $u_{IM}(t)$ to be determined, \emph{i.e.},
   \begin{align}
     \label{eq:ddall_control_all_xim_mod}
     \dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) + u_{IM}(t), \quad t\in\R_{\geq 0}.
