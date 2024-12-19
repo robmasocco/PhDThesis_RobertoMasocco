@@ -402,7 +402,8 @@ Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algori
   $\tau_s$ is non-pathological.\closestatement
 \end{assumption}
 Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonpatho} implies that all distinct eigenvalues of $\exodynmat$ and $A$ are mapped to distinct eigenvalues of $\exodynmat_d$ and $A_d$; moreover all structural properties (\emph{e.g.}, observability and reachability) of \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} are preserved in their sampled data equivalents. More details about this topic are found in \cite[Sec. 3.2]{chen_optimal_1995}.
-\begin{algorithm}[ht]
+
+\begin{algorithm}[h!]
   \caption{Data-driven pseudo-steady-state output map estimation.}
   \label{alg:ddall_algo1}
   \begin{algorithmic}[1]
@@ -454,7 +455,7 @@ Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonp
   \label{prop:ddall_est_mom}
 	Let \Cref{ass:ddall_plant_exo,ass:ddall_nonpatho} hold. Fix $\bbexostate_0\in\bbexoinitset$. Then, the following statements hold.
 	\begin{enumerate}
-		\item[i.] \Cref{alg:ddall_algo1} can be applied, yielding a matrix $\bar{M}_{\bboutp,\bbexostate}$.
+		\item[i.] \Cref{alg:ddall_algo1} is correct and yields a matrix $\bar{M}_{\bboutp,\bbexostate}$.
 		\item[ii.] $\bar{M}_{\bboutp,\bbexostate}$ satisfies $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for all $t\in\R_{\geq 0}$.
 		\item[iii.] If $\bbexostate_0$ excites all natural modes of \eqref{eq:ddall_exo},	then $\bar{M}_{\bboutp,\bbexostate}$ is equal to the unique solution of \eqref{eq:ddall_Mbar}.\closestatement
 	\end{enumerate}
@@ -543,7 +544,8 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   \label{lem:ddall_algoK2}
   If \textbf{K1} is available, then \Cref{alg:ddall_algoK2} computes an estimate of \textbf{K2}.\closestatement
 \end{lemma}
-\begin{algorithm}[ht]
+
+\begin{algorithm}[h!]
   \caption{Data-driven computation of \textbf{K2}.}
   \label{alg:ddall_algoK2}
   \begin{algorithmic}[1]
@@ -602,8 +604,12 @@ For a set of frequencies $\{\bar{\omega}_1, ..., \bar{\omega}_{n_r}\}$, define t
 \end{equation}
 where $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_k)) = \bboutodim$ provided that $s=j\bar{\omega}_k$ is not a pole or a zero of the transfer matrix $W_{\bbouto\bbaux}(s)$.
 
-The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$ with dimension $\rho=\bbauxdim-\bboutodim$. The following algorithm is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also discussed.
-\begin{algorithm}[ht]
+The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$ with dimension $\rho=\bbauxdim-\bboutodim$. The following \Cref{alg:ddall_mincoeffbasis} is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also proposed. A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minimal \emph{coefficient} basis matrix $N\in\R^{\bbauxdim h\times\rho}$ as
+\begin{equation}
+  \bbm{I_\bbauxdim & s I_\bbauxdim & \cdots & s^{h-1}I_\bbauxdim}N.
+\end{equation}
+
+\begin{algorithm}[h!]
   \caption{Computation of a minimal coefficients basis.}
   \label{alg:ddall_mincoeffbasis}
   \begin{algorithmic}[1]
@@ -645,10 +651,6 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
     \State $N\in\R^{\bbauxdim h\times\rho}\gets$ Any basis matrix of $\ker(\bar{\Sigma})$.
   \end{algorithmic}
 \end{algorithm}
-A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minimal \emph{coefficient} basis matrix $N\in\R^{\bbauxdim h\times\rho}$ as
-\begin{equation}
-  \bbm{I_\bbauxdim & s I_\bbauxdim & \cdots & s^{h-1}I_\bbauxdim}N.
-\end{equation}
 
 \begin{proposition}
   \label{prop:ddall_annih_computation}
@@ -695,7 +697,8 @@ A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minim
 \end{remark}
 
 Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evident that \Cref{prop:ddall_annih_computation} is stated with the ideal premise of a perfect knowledge of the transfer matrix $W_{\bbouto\bbaux}(s)$ evaluated at the frequencies $\{\bar{\omega}_1,\dotsc,\bar{\omega}_n\}$; such a knowledge is not available for a generic $\mu\neq 0$. Therefore, to extend the previous results to the case of a generic $\mu\in\mathcal{M}$, it is necessary to perform a data-driven estimation of the moments $W_{\bbouto\bbaux}(j\bar{\omega}_i)$, $i=1,\dotsc,\bbstatedim$. The proposed procedure is illustrated in \Cref{alg:ddall_computeH}.
-\begin{algorithm}[ht]
+
+\begin{algorithm}[h!]
   \caption{Computation of $H$ in \eqref{eq:ddall_H_hk}.}
   \label{alg:ddall_computeH}
   \begin{algorithmic}[1]

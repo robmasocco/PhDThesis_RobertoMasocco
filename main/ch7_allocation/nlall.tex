@@ -83,7 +83,8 @@ Let $\beta,\gamma\in\R_{>0}$, and $\bbstate_n$ be the solution of \eqref{eq:nlal
   \delta(H_v(\bbstate_a(t),\lambda_a(t),v(t))) = \left( \int_{t_f-\bbperiod}^{t_f} H_v(\bbstate_a(t),\lambda_a(t),v(t)) H_v(\bbstate_a(t),\lambda_a(t),v(t))'\,dt \right)^{1/2}.
 \end{equation}
 The proposed method is stated in \Cref{alg:nlall_sweep}, and its properties are characterized by the following theorem.
-\begin{algorithm}[ht]
+
+\begin{algorithm}[h!]
   \caption{Steady-state steepest descent algorithm \cite{masocco_dynamic_2024}.}
   \label{alg:nlall_sweep}
   \begin{algorithmic}[1]
@@ -132,7 +133,8 @@ The proposed method is stated in \Cref{alg:nlall_sweep}, and its properties are 
 The choice of the update step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}.
 
 The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an abuse of notation, the variables $s$ and $r$ store at each iteration, respectively, $H_v$ and $H_v \odot H_v$ of the current and of the previous iterations. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}$, as well as the operation $(\cdot)^{-1}$ on $(\hat{r}^{1/2}+\delta)$, reported on line 16 of \Cref{alg:nlall_adam}, are both performed component-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the update step. In particular, an appropriate choice of these parameters allows one to discard all the information related to previous iterations, thus updating the update step by relying only on the most recent information. It is worth mentioning that this scheme adjusts the update step dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
-\begin{algorithm}[ht]
+
+\begin{algorithm}[h!]
 	\caption{Steady-state ADAM algorithm \cite{masocco_dynamic_2024}.}
 	\label{alg:nlall_adam}
 	\begin{algorithmic}[1]
@@ -183,31 +185,31 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an a
     \end{align}
   \end{subequations}
   where $h_c : \R^3\times\R^3 \rightarrow \R^2$ is a given feedback control law, and $\bbaux : \R \rightarrow \R^2$ is the auxiliary input, to be determined as an extremal solution to \Cref{prb:nlall_optcont}. The control objective in this example is that of tracking, with the regulated output $\bbouto(t)$, the exogenous input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$. To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way with respect to the previous linear case, the control law $h_c(\bbstate(t),\bbref(t))$ has been designed as a feedback-linearizing input operating only on the first input, setting the second to zero since an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi(t)) = \begin{bmatrix} e^{\bbstate_2(t)} & e^{\bbstate_2(t)} & 0 \end{bmatrix}'$, to the output $\bbouto$. For a description of the synthesis procedure see \cite[Chap. 4]{isidori_nonlinear_1995}.
-  \begin{figure}[t]
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/nlall/errs.eps}
     \caption{Difference between the regulated output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
     \label{fig:nlall_errs}
   \end{figure}
-  \begin{figure}[t]
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/nlall/cost.eps}
     \caption{Cost during all the iterations performed with \Cref{alg:nlall_sweep} (red) versus those with \Cref{alg:nlall_adam} (blue).}
     \label{fig:nlall_cost}
   \end{figure}
-  \begin{figure}[t]
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/nlall/hcn.eps}
     \caption{Nominal feedback-linearizing system input.}
     \label{fig:nlall_hcn}
   \end{figure}
-  \begin{figure}[t]
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/nlall/ua.eps}
     \caption{Auxiliary input determined by \Cref{alg:nlall_adam}.}
     \label{fig:nlall_ua}
   \end{figure}
-  \begin{figure}[t]
+  \begin{figure}[h!]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/nlall/hca.eps}
     \caption{Performance output subject to the input allocation determined by \Cref{alg:nlall_adam}.}
