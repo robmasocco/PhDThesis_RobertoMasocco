@@ -274,7 +274,7 @@ The proposed steady-state optimizer is given by
 \begin{subequations}
   \label{eq:sdall_ssopt}
   \begin{align}
-    \psi_{k+1} &= (A_{IM} + F_{IM})\psi_k + F_{\zeta}\zeta_k, & k\in\Z_{\geq 0},\\
+    \psi_{k+1} &= (A_{IM} + F_{IM})\psi_k + F_{\zeta}\zeta_k, & k\in\Z_{\geq 0},\label{eq:sdall_psi}\\
     \zeta_{k+1} &= A_{\zeta}\zeta_k + B_{\zeta}\bbref_k, & k\in\Z_{\geq 0},\\
     v_k &= C_{IM}\psi_k, & k\in\Z_{\geq 0},
   \end{align}
@@ -338,3 +338,87 @@ where $\psi_k\in\R^{n_{IM}}$ is the state vector of the steady-state optimizer a
     \delta &= -(L_2'\bar{R}L_2)^{-1}(L_2'\bar{R}L_1\zeta_k + L_2'\bar{R}L_2A_{IM}\psi_k), & k\in\Z_{\geq 0}.
   \end{align}
 \end{proof}
+
+\begin{remark}
+  \label{rem:sdall_comm_delta}
+  As expressed by \eqref{eq:sdall_ssopt}, $\delta$ is computed and applied at every time $k$ instead of every $K$ steps as assumed in \eqref{eq:sdall_ssoptpred}. However, this does not invalidate the correctness of the procedure because a single update is necessary to drive $\psi$ to the optimal trajectory $\psi^\star$, namely
+  \begin{align}
+    F_\zeta\zeta_k + F_{IM}\psi_k = 0, & k > \bbexostatedim + 1,
+  \end{align}
+  and \eqref{eq:sdall_psi} generates the free response of the discretized exosystem. Moreover, if the closed-loop system goes to steady-state in $N_c$ time steps, and the allocator also does in $N_{all}$ time steps, then the allocated control system goes to steady-state in $\max\{N_c,N_{all}\}$ time steps.\closeremark
+\end{remark}
+
+\begin{proposition}
+  \label{prop:sdall_xss}
+  Let
+  \begin{subequations}
+    \label{eq:sdall_xss}
+    \begin{align}
+      \plantssinput_k &= \ctrlssoutput_k + \bar{N}\psi_k, & k\in\Z_{\geq 0},\\
+      \psi_k^\star &= \arg\min_{\psi}J_d.
+    \end{align}
+  \end{subequations}
+  If the pair $(\bar{N},A_{IM})$ is observable, then the proposed allocator is such that
+  \begin{align}
+    \psi_k &= \psi^\star_{\mod(k,K)}, & k\geq\bbexostatedim+1.
+  \end{align}
+  \closestatement
+\end{proposition}
+
+Recall that discrete-time systems are termed \emph{deadbeat}, namely such that their transient response goes to zero in a finite number of steps, if and only if all their poles are in zero.
+
+\begin{corollary}
+  \label{cor:sdall_ftconv}
+  Suppose that the closed-loop given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} interconnected as in \eqref{eq:sdall_bb} and the annihilator \eqref{eq:sdall_annss} are deadbeat, then the allocated plant input converges to its optimal trajectory in a finite number of steps.\closestatement
+\end{corollary}
+
+\begin{remark}
+  \label{rem:sdall_unixss}
+  $\psi^\star$ is uniquely defined since, in this setting, the cost functional \eqref{eq:sdall_dtsscost} is strictly convex with respect to $\plantssinput$.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_finitespace}
+  Some observations about the space of admissible control laws are in order here. In \cite{galeani_dynamic_2014}, it is observed that these belong to a prescribed set (namely, the modes of the exosystem), which however remains an infinite-dimensional space. Instead, the admissible allocator actions in the present context, hence the optimal control input with respect to \eqref{eq:sdall_ctcost}, lie in a finite-dimensional space because in this setting the controls are sampled, \emph{i.e.}, piecewise-constant signals.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_tnotinz}
+  As anticipated above, \Cref{ass:sdall_periods} may be relaxed in practice provided a few observations are discussed. To begin with, the intrinsic mismatch between the continuous time period $\bbperiod$ and any positive integer multiple of the sampling time $\tau_s$ prevents the possibility of covering exactly one period of the reference input with an integer number of discrete-time samples. This in turn implies that the correction term $\delta$ in \eqref{eq:sdall_ssoptpred} exhibits a persistent oscillation for which $\psi$ cannot converge to $\psi^{\star}$. As a further consequence, also the cost functional \eqref{eq:sdall_ctcost} would not settle to a constant value, oscillating instead around the minimal steady-state cost. Finally, note that $K$ can still be chosen according to
+  \begin{equation}
+    \label{eq:sdall_krule}
+    K = \begin{cases}
+            \left\lfloor \frac{\bbperiod}{\tau_s} \right\rfloor, & \text{if $\frac{\bbperiod}{\tau_s} \leq \frac{1}{2}$},\\
+            \left\lceil \frac{\bbperiod}{\tau_s} \right\rceil, & \text{otherwise},
+        \end{cases}
+  \end{equation}
+  in order to reduce the amplitude of such oscillations, as illustrated in the following.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_ximtrans}
+  In \eqref{eq:sdall_ssopt}, the update law proposed for $\psi$ effectively steers it towards the optimal trajectory $\psi^{\star}$, as the proof of \Cref{thm:sdall_main} shows, without any assumption about the initial states of the optimizer unit. In practical applications, however, it might be desirable to start updating $\psi$ only after the buffer $\zeta$ has been filled with meaningful samples of the reference input $r$, \emph{i.e.}
+  \begin{equation}
+    \label{eq:sdall_switchedxim}
+    \psi_{k+1} = \begin{cases}
+                    A_{IM}\psi_k + F_{\zeta}\zeta_k + F_{IM}\psi_k, & \text{if $k \geq \bbexostatedim$},\\
+                    A_{IM}\psi_k, & \text{otherwise},
+                  \end{cases}
+  \end{equation}
+  to prevent potentially unwanted transients of the optimizer from being added to the control input.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_alp}
+  In \eqref{eq:sdall_ssopt}, after $\zeta$ has been filled with $\bbexostatedim$ samples of $\bbref$, only one state update is necessary for $\psi$ to reach $\psi^{\star}$. In practical applications, one might prefer a softer allocation action trading more time steps necessary to reach the optimal trajectory for a less intense allocator output. A possible alternative implementation is
+  \begin{align}
+    \label{eq:sdall_ximalp}
+    \psi_{k+1} &= A_{IM}\psi_k + \alpha(F_{\zeta}\zeta_k + F_{IM}\psi_k), & k\in\Z_{\geq 0},
+  \end{align}
+  where $\alpha\in(0,1)$.\closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_buf}
+  In \eqref{eq:sdall_zeta}, the buffer $\zeta$ is designed to store $\bbexostatedim$ samples of the reference input, namely as many as the order of the exosystem. In practice, $\bar{k}<\bbexostatedim$ may be enough, where $\bar{k}\in\N$ is the smallest integer such that $O_{\bar{k}}(\exooutmat,\dexodynmat)$, \emph{i.e.}, the observability matrix up to order $\bar{k}$, has full column rank.\closeremark
+\end{remark}
