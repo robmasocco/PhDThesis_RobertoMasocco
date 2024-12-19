@@ -48,7 +48,17 @@ The model described by the equations \eqref{eq:bbsys}-\eqref{eq:bbexosys} is fur
   \label{ass:bboveract}
   $\bbauxdim>\bboutodim$.\closestatement
 \end{assumption}
-\Cref{ass:bboveract} states that the system $\bbsys$ is \emph{over-actuated} with respect to the auxiliary input $\bbaux$ and the regulated output $\bbouto$. The next assumption characterizes $\bbsys$ as a preexisting dynamic system whose auxiliary input can be exploited to improve the performance indicator.
+\Cref{ass:bboveract} states that the system $\bbsys$ is \emph{over-actuated} (namely, \emph{input-redundant}) with respect to the auxiliary input $\bbaux$ and the regulated output $\bbouto$.
+\begin{definition}[Degree of redundancy]
+  \label{def:bbreddeg}
+  The \emph{degree of redundancy} of the system \eqref{eq:bbsys} with respect to the auxiliary input $\bbaux$ and the regulated output $\bbouto$ is
+  \begin{equation}
+    \label{eq:bbreddeg}
+    \bbreddeg = \bbauxdim - \bboutodim.
+  \end{equation}
+  \closestatement
+\end{definition}
+The next assumption characterizes $\bbsys$ as a preexisting dynamic system whose auxiliary input can be exploited to improve the performance indicator.
 \begin{assumption}
   \label{ass:bbiss}
   The system $\bbsys$ is input-to-state stable (ISS) with respect to the input $(\bbref,\bbaux)$. Moreover, the equilibrium $\bbstate=0$ of the system $\dot{\bbstate} = \bbvecf(\bbstate,0)$ is exponentially stable.\closestatement

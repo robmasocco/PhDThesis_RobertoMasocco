@@ -1,4 +1,4 @@
-To investigate this aspect, consider the continuous-time, linear time-invariant plant $\plant$ given by
+To investigate this, consider the continuous-time, linear time-invariant plant $\plant$ given by
 \begin{subequations}
   \label{eq:sdall_ctsys}
   \begin{align}
@@ -68,7 +68,7 @@ It is worth pointing out that \Cref{ass:sdall_exo} implies that the reference in
   \label{ass:sdall_periods}
   There exists $K\in\N$ such that $\bbperiod = K\tau_s$.\closestatement
 \end{assumption}
-Although \Cref{ass:sdall_periods} is instrumental to simplify the following analysis, it can be relaxed in practice as shown later on. Similarly to the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} is a sampled-data variant of \eqref{eq:bbsys} considering
+Although \Cref{ass:sdall_periods} is instrumental to simplify the following analysis, it can be relaxed in practice as shown later on. Similarly to the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} is a variant of \eqref{eq:bbsys} including discrete-time variables:
 \begin{subequations}
   \label{eq:sdall_bb}
   \begin{align}
@@ -105,7 +105,7 @@ The dynamic input allocation problem for the feedback control system hereby defi
   \closestatement
 \end{problem}
 The full control scheme is depicted in \Cref{fig:sdall_controlscheme}.
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \includesvg[width=.8\textwidth]{images/ch7/sdall/sdall.svg}
   \caption{Sampled-data feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} interconnected as in \eqref{eq:sdall_bb}, and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks}; the discrete-time allocator is enclosed in the $\mathcal{A}\ell\ell$ block.}
@@ -114,7 +114,53 @@ The full control scheme is depicted in \Cref{fig:sdall_controlscheme}.
 
 \begin{remark}
   \label{rem:sdall_fullinvprb}
-  The statement of \Cref{prb:sdall_all} is indeed a sampled-data variant of \Cref{prb:fullinv}. Although the two problems share the steady-state optimality requirement, what differentiates them is the full output invisibility one. From a continuous-time perspective, \emph{i.e.}, the time domain of the plant \eqref{eq:sdall_ctsys}, \Cref{prb:fullinv} requires the effect of the allocator to be invisible in the plant output at all times. Conversely, \Cref{prb:sdall_all} requires the effect of the allocator to be invisible only at the sampling times. Conceptually, this difference is motivated by the fact that the control system is implemented using digital devices, which are now modeled with discrete-time dynamics; this reasonably leads to the formulation of the full output invisibility requirement given in \Cref{prb:sdall_all}. This scenario, completely new in the literature, poses two questions which are the subject of the following investigation: how the structure of the allocator introduced in \Cref{sec:all_design_fullinv} (see \Cref{fig:fullallocator}) must be adapted to a sampled-data design, and how the allocator action affects the plant output between the sampling times.\closeremark
+  The statement of \Cref{prb:sdall_all} is indeed a sampled-data variant of \Cref{prb:fullinv}. Although the two problems share the steady-state optimality requirement, what differentiates them is the full output invisibility one. From a continuous-time perspective, \emph{i.e.}, the time domain of the plant \eqref{eq:sdall_ctsys}, \Cref{prb:fullinv} requires the effect of the allocator to be invisible in the plant output at all times. Conversely, \Cref{prb:sdall_all} requires the effect of the allocator to be invisible only at the sampling times. Conceptually, this difference is motivated by the fact that the control system is implemented using digital devices that are now modeled with discrete-time dynamics; this fact reasonably leads to the formulation of the full output invisibility requirement given in \Cref{prb:sdall_all}.\closeremark
 \end{remark}
 
-% Example: numerical simulation of the ct ann ZOH interconnection.
+This scenario, completely new in the literature to the best of the author's knowledge, poses two questions which are the subject of the following investigation: how the structure of the allocator introduced in \Cref{sec:all_design_fullinv} (see \Cref{fig:fullallocator}) has to be adapted to a sampled-data design, and how the allocator action affects the plant output between the sampling times \cite{galeani_dynamic_2022}.
+
+\begin{example}
+  \label{ex:sdall_ctann}
+  The necessity of a discrete-time allocator design approach to solve \Cref{prb:sdall_all} is highlighted by the following numerical example. Consider the continuous-time, linear time-invariant plant of the form \eqref{eq:sdall_ctsys} given by
+  \begin{align}
+    \label{eq:sdall_cex_ctsys}
+    \plantdynmat &= \begin{bmatrix}
+      -8 & 2 & -9\\
+      9 & -12 & 8\\
+      5 & -7 & -3
+    \end{bmatrix}, & \plantctrmat &= \begin{bmatrix}
+      4 & 7\\
+      -10 & -6\\
+      10 & -7
+    \end{bmatrix}, & \plantoutmat &= \begin{bmatrix}
+      -7 & -4 & 1
+    \end{bmatrix}.
+  \end{align}
+  An inspection of \eqref{eq:sdall_cex_ctsys} reveals that the plant is asymptotically stable since $\spec(\plantdynmat)\subset\C_{< 0}$, that the pair $(\plantdynmat,\plantctrmat)$ is controllable, and that the pair $(\plantoutmat,\plantdynmat)$ is observable. Let
+  \begin{align}
+    \label{eq:sdall_cex_sine}
+    v(t) &= 5\sin(10t), & t\in\R_{\geq 0},
+  \end{align}
+  where $v(t)\in\R$ since \eqref{eq:sdall_cex_ctsys} has degree of redundancy $\bbreddeg = 1$. Then, design a \emph{polynomial annihilator} for \eqref{eq:sdall_cex_ctsys} following the procedure described in \Cref{prop:ddall_annih_computation}. Fix the sampling time $\tau_s =$ \SI{0.1}{\second}. Let $u_a$ be the input and $\allout$ be the output of the annihilator; interconnect the plant \eqref{eq:sdall_cex_ctsys} and its polynomial annihilator such that
+  \begin{align}
+    \label{eq:sdall_cex_interconn}
+    u_a(t) &= v(t), & t\in\R_{\geq 0},\\
+    \plantinput(t) &= \allout(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},
+  \end{align}
+  \emph{i.e.}, the annihilator output is fed to the plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device with sampling time $\tau_s$. The situation hereby described is depicted in \Cref{fig:sdall_dtann}. The output of \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine} is shown in \Cref{fig:sdall_y_ctzct}.
+  \begin{figure}[t]
+    \centering
+    \includesvg[width=.8\textwidth]{images/ch7/sdall/dtann.svg}
+    \caption{Interconnection of a continuous-time polynomial annihilator (represented by the $Ann$ block) with the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device.}
+    \label{fig:sdall_dtann}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/y_ctzct}
+    \caption{Output of the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine}.}
+    \label{fig:sdall_y_ctzct}
+  \end{figure}
+  The interconnection \eqref{eq:sdall_cex_interconn} of the plant \eqref{eq:sdall_cex_ctsys} with its polynomial annihilator by means of a zero-order hold device represents the discretization of the continuous-time polynomial annihilator designed as in \Cref{prop:ddall_annih_computation}. As shown in \Cref{fig:sdall_y_ctzct}, not only is the plant output not equal to zero between the sampling instants but it is also not equal to zero at the sampling instants.\closeexample
+\end{example}
+
+\Cref{ex:sdall_ctann} suggests that the entire polynomial annihilator design approach should be revised in a discrete-time setting when system \eqref{eq:bbsys} involves sampled-data devices. Let $z$ be a variable taking values in $\C$, and $\dplanttf(z)\in\C^{\plantoutputdim\times\plantinputdim}$ be the transfer function of the discretized plant \eqref{eq:sdall_dtsys}.
