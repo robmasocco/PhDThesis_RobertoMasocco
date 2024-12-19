@@ -141,17 +141,17 @@ This scenario, completely new in the literature to the best of the author's know
     \label{eq:sdall_cex_sine}
     v(t) &= 5\sin(10t), & t\in\R_{\geq 0},
   \end{align}
-  where $v(t)\in\R$ since \eqref{eq:sdall_cex_ctsys} has degree of redundancy $\bbreddeg = 1$. Then, design a \emph{polynomial annihilator} for \eqref{eq:sdall_cex_ctsys} following the procedure described in \Cref{prop:ddall_annih_computation}. Fix the sampling time $\tau_s =$ \SI{0.1}{\second}. Let $u_a$ be the input and $\allout$ be the output of the annihilator; interconnect the plant \eqref{eq:sdall_cex_ctsys} and its polynomial annihilator such that
+  where $v(t)\in\R$ since \eqref{eq:sdall_cex_ctsys} has degree of redundancy $\bbreddeg = 1$. Then, design a \emph{polynomial annihilator} for \eqref{eq:sdall_cex_ctsys} following the procedure described in \Cref{prop:ddall_annih_computation}. Fix the sampling time $\tau_s =$ \SI{0.1}{\second}. Let $u_a$ be the input and $\allout$ be the output of the resulting annihilator; interconnect the plant \eqref{eq:sdall_cex_ctsys} and the annihilator such that
   \begin{align}
     \label{eq:sdall_cex_interconn}
     u_a(t) &= v(t), & t\in\R_{\geq 0},\\
     \plantinput(t) &= \allout(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},
   \end{align}
-  \emph{i.e.}, the annihilator output is fed to the plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device with sampling time $\tau_s$. The situation hereby described is depicted in \Cref{fig:sdall_dtann}. The output of \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine} is shown in \Cref{fig:sdall_y_ctzct}.
+  \emph{i.e.}, the annihilator output is fed to the plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device with sampling time $\tau_s$. The situation hereby described is depicted in \Cref{fig:sdall_dtann}. The output of \eqref{eq:sdall_cex_ctsys} in presence of its annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine} is shown in \Cref{fig:sdall_y_ctzct}.
   \begin{figure}[t]
     \centering
     \includesvg[width=.8\textwidth]{images/ch7/sdall/dtann.svg}
-    \caption{Interconnection of a continuous-time polynomial annihilator (represented by the $Ann$ block) with the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device.}
+    \caption{Interconnection of the continuous-time annihilator (represented by the $Ann$ block) with the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device.}
     \label{fig:sdall_dtann}
   \end{figure}
   \begin{figure}[t]
@@ -160,7 +160,52 @@ This scenario, completely new in the literature to the best of the author's know
     \caption{Output of the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine}.}
     \label{fig:sdall_y_ctzct}
   \end{figure}
-  The interconnection \eqref{eq:sdall_cex_interconn} of the plant \eqref{eq:sdall_cex_ctsys} with its polynomial annihilator by means of a zero-order hold device represents the discretization of the continuous-time polynomial annihilator designed as in \Cref{prop:ddall_annih_computation}. As shown in \Cref{fig:sdall_y_ctzct}, not only is the plant output not equal to zero between the sampling instants but it is also not equal to zero at the sampling instants.\closeexample
+  The interconnection \eqref{eq:sdall_cex_interconn} of the plant \eqref{eq:sdall_cex_ctsys} with its annihilator by means of a zero-order hold device represents the discretization of the continuous-time annihilator designed as in \Cref{prop:ddall_annih_computation}. As shown in \Cref{fig:sdall_y_ctzct}, not only is the plant output not equal to zero between the sampling instants but it is also not equal to zero at the sampling instants.\closeexample
 \end{example}
 
-\Cref{ex:sdall_ctann} suggests that the entire polynomial annihilator design approach should be revised in a discrete-time setting when system \eqref{eq:bbsys} involves sampled-data devices. Let $z$ be a variable taking values in $\C$, and $\dplanttf(z)\in\C^{\plantoutputdim\times\plantinputdim}$ be the transfer function of the discretized plant \eqref{eq:sdall_dtsys}.
+\Cref{ex:sdall_ctann} suggests that the entire annihilator design approach should be revised in a discrete-time setting when system \eqref{eq:bbsys} involves sampled-data devices. Let $z$ be a variable taking values in $\C$, and $\dplanttf(z)\in\C^{\plantoutputdim\times\plantinputdim}$ be the transfer function of the discretized plant \eqref{eq:sdall_dtsys}. The approach outlined in \cite{cristofaro_output_2014} and further characterized in \Cref{prop:ddall_annih_computation} is extended to the discrete-time case as follows.
+
+\begin{proposition}
+  \label{prop:sdall_annih_computation}
+  Let $N_a(z)\in\C^{\ctrloutputdim\times\bbreddeg}$ be a polynomial matrix whose columns form a minimal polynomial basis for the null space of $\dplanttf(z)$, and $d_a(z)$ be a monic polynomial with degree larger than that of each element of $N_a(z)$ and whose roots all lie in $\C_{<1}$.
+  Define
+  \begin{equation}
+    \label{eq:sdall_Wa}
+    W_a(z) = N_a(z)d_a^{-1}(z).
+  \end{equation}
+  Then, it holds that
+  \begin{align}
+    \label{eq:sdall_annih}
+    \dplanttf(z)W_a(z) &= 0, & z\in\C\setminus(\poleset(\dplanttf(z))\cup\poleset(W_a(z))).
+  \end{align}
+  Furthermore, given any minimal realization $(A_a,B_a,C_a,0)$ of $\,W_a(z)$, the system
+  \begin{align}
+    \label{eq:sdall_annss}
+    {x_a}_{k+1} &= A_a {x_a}_k + B_a v_k, & k\in\Z_{\geq 0},\\
+    \allout_k &= C_a {x_a}_k, & k\in\Z_{\geq 0},
+  \end{align}
+  where $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.\closestatement
+\end{proposition}
+
+\begin{remark}
+  \label{rem:sdall_lcf}
+  Suppose that $\dplanttf(z)$ admits a left coprime polynomial factorization \cite[§7.8]{chen_linear_2009} such that
+  \begin{equation}
+    \label{eq:sdall_lcf}
+    \dplanttf(z) = \dplantlcfd(z)^{-1}\dplantlcfn(z),
+  \end{equation}
+  where $\dplantlcfd(z)$, $\dplantlcfn(z)$ are polynomial matrices.
+  Then, the polynomial matrix $N_a(z)$ in \Cref{prop:sdall_annih_computation} may be selected among the solutions of
+  \begin{equation}
+    \label{eq:sdall_lcf_annih}
+    \dplantlcfn(z)N_a(z) = 0.
+  \end{equation}
+  \closeremark
+\end{remark}
+
+\begin{remark}
+  \label{rem:sdall_sdinv}
+  It is worth pointing out that \eqref{eq:sdall_annss} is a discrete-time system designed such that \eqref{eq:sdall_annih} holds. Hence, the discrete-time annihilator given by \eqref{eq:sdall_annss} satisfies the sampled output invisibility requirement in \Cref{prb:sdall_all}. However, the annihilator \eqref{eq:sdall_annss} does not guarantee output invisibility between sampling instants and the effect of the allocator action on the plant output is not characterized.\closeremark
+\end{remark}
+
+The proof of \Cref{prop:sdall_annih_computation} follows a reasoning similar to that of \Cref{prop:ddall_annih_computation}, hence it is omitted.
