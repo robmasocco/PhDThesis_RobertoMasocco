@@ -68,17 +68,21 @@ It is worth pointing out that \Cref{ass:sdall_exo} implies that the reference in
   \label{ass:sdall_periods}
   There exists $K\in\N$ such that $\bbperiod = K\tau_s$.\closestatement
 \end{assumption}
-Although \Cref{ass:sdall_periods} is instrumental to simplify the following analysis, it can be relaxed in practice as shown later on. Similarly to the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} is a variant of \eqref{eq:bbsys} including discrete-time variables:
-\begin{subequations}
-  \label{eq:sdall_bb}
-  \begin{align}
-    \plantinput(t) &= \ctrlouput(k\tau_s) + \bbaux(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},\\
-    \bbstate_k &= \begin{bmatrix}\plantstate_k' & \ctrlstate_k'\end{bmatrix}', & k\in\Z_{\geq 0},\\
-    \bboutp(t) &= \plantinput(t), & t\in\R_{\geq 0},\\
-    \bbouto(t) &= \plantoutput(t), & t\in\R_{\geq 0},
-  \end{align}
-\end{subequations}
-with $\bbstate_k\in\R^{\plantstatedim + \ctrlstatedim}$ and $\bbstatedim = \plantstatedim + \ctrlstatedim$, and $\bbaux_k\in\R^{\bbauxdim}$ is the auxiliary input at time $k$.
+Although \Cref{ass:sdall_periods} is instrumental to simplify the following analysis, it can be relaxed in practice as shown later on.
+
+\begin{remark}
+  Similarly to the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} can be modeled as in \eqref{eq:bbsys}:
+  \begin{subequations}
+    \label{eq:sdall_bb}
+    \begin{align}
+      \plantinput(t) &= \ctrlouput(k\tau_s) + \bbaux(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},\\
+      \bbstate(t) &= \begin{bmatrix}\plantstate(t)' & \ctrlstate(k\tau_s)'\end{bmatrix}', & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},\\
+      \bboutp(t) &= \plantinput(t), & t\in\R_{\geq 0},\\
+      \bbouto(t) &= \plantoutput(t), & t\in\R_{\geq 0},
+    \end{align}
+  \end{subequations}
+  where $\bbstate(t)\in\R^{\plantstatedim + \ctrlstatedim}$.\closeremark
+\end{remark}
 
 Let $R\in\R^{\plantinputdim\times\plantinputdim}$ be a constant matrix such that $R=R'$, $R\succ 0$. The steady-state plant input is denoted by $\plantssinput$. Consider the following cost functional:
 \begin{equation}
@@ -141,7 +145,7 @@ This scenario, completely new in the literature to the best of the author's know
     \label{eq:sdall_cex_sine}
     v(t) &= 5\sin(10t), & t\in\R_{\geq 0},
   \end{align}
-  where $v(t)\in\R$ since \eqref{eq:sdall_cex_ctsys} has degree of redundancy $\bbreddeg = 1$. Then, design a \emph{polynomial annihilator} for \eqref{eq:sdall_cex_ctsys} following the procedure described in \Cref{prop:ddall_annih_computation}. Fix the sampling time $\tau_s =$ \SI{0.1}{\second}. Let $u_a$ be the input and $\allout$ be the output of the resulting annihilator; interconnect the plant \eqref{eq:sdall_cex_ctsys} and the annihilator such that
+  where $v(t)\in\R$ since \eqref{eq:sdall_cex_ctsys} has degree of redundancy $\bbreddeg = 1$. Then, design a \emph{polynomial annihilator} for \eqref{eq:sdall_cex_ctsys} following the procedure described in \Cref{prop:ddall_annih_computation}. Fix the sampling time $\tau_s = \SI{0.1}{\second}$. Let $u_a$ be the input and $\allout$ be the output of the resulting annihilator; interconnect the plant \eqref{eq:sdall_cex_ctsys} and the annihilator such that
   \begin{align}
     \label{eq:sdall_cex_interconn}
     u_a(t) &= v(t), & t\in\R_{\geq 0},\\
@@ -160,7 +164,7 @@ This scenario, completely new in the literature to the best of the author's know
     \caption{Output of the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine}.}
     \label{fig:sdall_y_ctzct}
   \end{figure}
-  The interconnection \eqref{eq:sdall_cex_interconn} of the plant \eqref{eq:sdall_cex_ctsys} with its annihilator by means of a zero-order hold device represents the discretization of the continuous-time annihilator designed as in \Cref{prop:ddall_annih_computation}. As shown in \Cref{fig:sdall_y_ctzct}, not only is the plant output not equal to zero between the sampling instants but it is also not equal to zero at the sampling instants.\closeexample
+  The interconnection \eqref{eq:sdall_cex_interconn} of the plant \eqref{eq:sdall_cex_ctsys} with its annihilator by means of a zero-order hold device represents the straightforward implementation of the continuous-time annihilator designed as in \Cref{prop:ddall_annih_computation} on a digital device. As shown in \Cref{fig:sdall_y_ctzct}, not only is the plant output not equal to zero between the sampling instants but it is also not equal to zero at the sampling instants.\closeexample
 \end{example}
 
 \Cref{ex:sdall_ctann} suggests that the entire annihilator design approach should be revised in a discrete-time setting when system \eqref{eq:bbsys} involves sampled-data devices. Let $z$ be a variable taking values in $\C$, and $\dplanttf(z)\in\C^{\plantoutputdim\times\plantinputdim}$ be the transfer function of the discretized plant \eqref{eq:sdall_dtsys}. The approach outlined in \cite{cristofaro_output_2014} and further characterized in \Cref{prop:ddall_annih_computation} is extended to the discrete-time case as follows.
@@ -225,7 +229,7 @@ Let $n_{IM}=\bbreddeg\bbexostatedim$ and
 \end{equation}
 with $A_{IM}\in\R^{n_{IM}\times n_{IM}}$.
 Furthermore, let $(\feedbackdynmat,\feedbackctrmat,\feedbackoutmat,0)$ be a minimal realization of the feedback loop having $\ctrlouput$ as output and note that $\feedbackctrmat = \begin{bmatrix}B_\bbref & B_\bbaux\end{bmatrix}$ since the feedback loop has two exogenous inputs, namely $\bbref$ and $\bbaux$.
-Select $C_{IM}\in\R^{\bbreddeg\times n_{IM}}$ such that the pair $(C_{IM},A_{IM})$ is observable and solve the following Sylvester equations for $\Pi_{\bar{M}}\in\R^{\bbstatedim\times\bbexostatedim}$, $\Pi_{\bar{N}}\in\R^{n_a \times n_{IM}}$:
+Select $C_{IM}\in\R^{\bbreddeg\times n_{IM}}$ such that the pair $(C_{IM},A_{IM})$ is observable and solve the following Sylvester equations for $\Pi_{\bar{M}}\in\R^{(\plantstatedim + \ctrlstatedim)\times\bbexostatedim}$, $\Pi_{\bar{N}}\in\R^{n_a \times n_{IM}}$:
 \begin{subequations}
   \label{eq:sdall_inv}
   \begin{align}
@@ -241,7 +245,7 @@ yielding (see, again, \Cref{app:moments} and references therein)
     \bar{N} &= C_{a}\Pi_{\bar{N}},\label{eq:nbar}
   \end{align}
 \end{subequations}
-with $\bar{M}\in\R^{\bbauxdim\times\bbexostatedim}$, $\bar{N}\in\R^{\bbauxdim\times n_{IM}}$. Denote by $O(\exooutmat,\dexodynmat)$ the observability matrix of the pair $(\exooutmat,\dexodynmat)$ and let
+with $\bar{M}\in\R^{\bbauxdim\times\bbexostatedim}$, $\bar{N}\in\R^{\bbauxdim\times n_{IM}}$. Let
 \begin{equation}
   \label{eq:sdall_Z}
   Z = \dexodynmat^{\bbexostatedim}O(\exooutmat,\dexodynmat)^\dagger.
@@ -420,5 +424,78 @@ Recall that discrete-time systems are termed \emph{deadbeat}, namely such that t
 
 \begin{remark}
   \label{rem:sdall_buf}
-  In \eqref{eq:sdall_zeta}, the buffer $\zeta$ is designed to store $\bbexostatedim$ samples of the reference input, namely as many as the order of the exosystem. In practice, $\bar{k}<\bbexostatedim$ may be enough, where $\bar{k}\in\N$ is the smallest integer such that $O_{\bar{k}}(\exooutmat,\dexodynmat)$, \emph{i.e.}, the observability matrix up to order $\bar{k}$, has full column rank.\closeremark
+  In \eqref{eq:sdall_zeta}, the buffer $\zeta$ is designed to store $\bbexostatedim$ samples of the reference input, namely as many as the order of the exosystem. In practice, $\bar{k}<\bbexostatedim$ may be enough, where $\bar{k}\in\N$ is the smallest integer such that $O_{\bar{k}}(\exooutmat,\dexodynmat)$ has full column rank.\closeremark
 \end{remark}
+
+\begin{example}
+  \label{ex:sdall}
+  Consider the following state-space representation for system \eqref{eq:sdall_ctsys}:
+  \begin{align}
+    \label{eq:sdall_ex_ctsys}
+    \plantdynmat &= \begin{bmatrix}
+      -3 & 2 & -9\\
+      9 & -7 & 8\\
+      5 & -7 & 2\end{bmatrix}, & \plantctrmat &= \begin{bmatrix}
+      4 & 7\\
+      -10 & -6\\
+      10 & -7\end{bmatrix}, & \plantoutmat &= \begin{bmatrix}
+      -7 & -4 & 1\end{bmatrix}.
+  \end{align}
+  In this framework, the objective of the preexisting feedback control system consists in tracking the sinusoidal reference input $r(t)$ with the plant output $y(t)$. The reference input has $h=2$ frequency components and is generated by an exosystem of the form \eqref{eq:sdall_ctexo}, which satisfies \Cref{ass:sdall_exo} with
+  \begin{align}
+    \label{eq:sdall_ex_ctexodata}
+    \bbperiod &= \frac{2\pi}{\omega_1} = \SI{1}{\second}, & \omega_2 &= \frac{\omega_1}{2}, & \exooutmat &= \begin{bmatrix}1 & 1 & 0 & 1 & 0\end{bmatrix}, & \bbexostate(0) &= \begin{bmatrix}1 & 0 & 5 & 0 & 2\end{bmatrix}'.
+  \end{align}
+  An inspection of \eqref{eq:sdall_ex_ctsys} reveals that it satisfies \Cref{ass:bboveract} with $\bbreddeg=1$ and that the pair $(\plantdynmat,\plantctrmat)$ is controllable, as is the pair $(\plantdynmat,{\plantctrmat}_{\left[:,1\right]})$ that is relative to the first input component alone. Thus, the regulator is designed to act only on the first input, setting the second to zero to better highlight the allocation action. The sampling time is $\tau_s=\SI{0.1}{\second}$. The regulator solves the error-feedback regulation problem applying the Internal Model Principle \cite{francis_internal_1975}, ensuring that the closed-loop system is asymptotically stable and that the steady-state tracking error is equal to zero at the sampling instants. The regulator is of the form given in \eqref{eq:sdall_dtcontroller} and, together with the plant \eqref{eq:sdall_ex_ctsys}, satisfies \Cref{ass:sdall_controller}. The discrete-time annihilator \eqref{eq:sdall_annss} is designed as stated in \Cref{prop:sdall_annih_computation}. The parameters of the steady-state optimizer \eqref{eq:sdall_ssopt} are
+  \begin{align}
+    \label{eq:sdall_ex_ssopt}
+    R &= \begin{bmatrix}10 & 0 \\ 0 & 1\end{bmatrix}, & C_{IM} &= \begin{bmatrix}1 & 1 & 1 & 1 & 1\end{bmatrix}, & K &= \frac{\bbperiod}{\tau_s} = 10,
+  \end{align}
+  which satisfy \Cref{ass:sdall_periods}.
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/cost_aligned.eps}
+    \caption{Continuous-time steady-state cost with allocation (continuous) versus steady-state cost without allocation (dashed); the final value is the relevant one.}
+    \label{fig:sdall_costaligned}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/delta_aligned.eps}
+    \caption{Steady-state optimizer correction term $\delta$.}
+    \label{fig:sdall_deltaaligned}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/ripple_e_aligned.eps}
+    \caption{Difference between the continuous-time tracking errors with and without control allocation, respectively.}
+    \label{fig:sdall_errorripplealigned}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/y_a_aligned.eps}
+    \caption{Discrete-time allocator output $\allout$.}
+    \label{fig:sdall_yaaligned}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/delta_aligned_alpha.eps}
+    \caption{Optimizer correction term $\delta$ smoothened by $\alpha=0.5$ (see \Cref{rem:sdall_alp}).}
+    \label{fig:sdall_deltaalpha}
+  \end{figure}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/cost_unaligned.eps}
+
+    \vspace{.2cm}
+
+    \includegraphics[width=.9\textwidth]{images/ch7/sdall/delta_unaligned.eps}
+    \caption{Continuous-time steady-state cost (top) and optimizer correction term $\delta$ (bottom) in a case where $K=\frac{\bbperiod}{\tau_s}\notin\N$ (see \Cref{rem:sdall_tnotinz}); for the cost (top), the final value is the relevant one.}
+    \label{fig:sdall_simresunaligned}
+  \end{figure}
+
+  The performance of the allocated scheme is compared with that of a \emph{reference}, \emph{i.e.}, non-allocated one. \Cref{fig:sdall_costaligned} shows that the proposed allocator solves \Cref{prb:sdall_all}, since it brings the steady-state cost to a value that is lower than the one reached with the reference scheme. The initial transients in the allocated time history are almost entirely due to the regulator and not relevant to the analysis, since what matters is the end value, nonetheless it is interesting to note how the time history of the allocated cost maintains lower values than those of the reference one even during transients.
+  \Cref{fig:sdall_deltaaligned} shows how the allocator applies the optimal correction to its internal state in just one time step, as anticipated in the proof of \Cref{thm:sdall_main}, and how then $\delta$ remains equal to zero.
+  \Cref{fig:sdall_errorripplealigned} shows the difference between the continuous-time tracking errors of the allocated and non-allocated schemes, respectively. The time histories of the tracking error differences show that they exhibit different tracking errors at all times except the sampling ones. This agrees with the sampled output invisibility requirement of \Cref{prob:sdall_all}, and proves that the discrete-time allocator induces a behavior which is invisible to the discrete-time control system but is visible onto the continuous-time plant output. In this example, the ripple trend depends on both the reference signal's amplitude and the sampling time being relatively long, but also on the way in which the control inputs are weighted by $R$.
+  \Cref{fig:sdall_deltaalpha} shows what the optimizer does if implemented as explained in \Cref{rem:sdall_alp}. In that case, more than one time step is required to converge but intermediate corrections are less intense in terms of their amplitude.
+  \cref{fig:sdall_simresunaligned} shows a similar simulation performed on a control scheme where $\bbperiod$ is such that $K\notin\N$, \emph{i.e.} relaxing \Cref{ass:sdall_periods} as anticipated, but still picked according to \eqref{eq:sdall_krule}. Both the steady-state cost and the correction term $\delta$ never converge but start oscillating, as stated in \Cref{rem:sdall_tnotinz}. The other considerations made above are still valid in this case.\closeexample
+\end{example}

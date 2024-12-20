@@ -28,7 +28,7 @@ $e_j$ denotes the $j$-th vector of the canonical basis of	$\R^n$.
 The expression $\|v\|^{2}_R$ denotes the product $v'Rv$.
 
 Given a matrix $A$, $\Imag(A)$ denotes its image, $\ker(A)$ denotes its null space, $A'$ denotes its transpose,  $A^{\dagger}$ denotes its Moore-Penrose inverse, and $A^\perp$ denotes a basis matrix for its null space. $\spec(A)$ denotes the spectrum of the matrix $A$, and $\rank(A)$ denotes its rank. $\vec(A)$ denotes the vectorization of the matrix $A$.
-Given a square matrix $A$, $A\succ 0$ denotes that $A$ is positive definite, while $A\succeq 0$ denotes that $A$ is positive semidefinite.
+Given a square matrix $A$, $A\succ 0$ denotes that $A$ is positive definite.
 Given two matrices $A,B\in\R^{m \times n}$ $A \odot B$ denotes their Hadamard, or entrywise, product, while $A \otimes B$ denotes their Kronecker product.
 Given the square matrices $\{A_1,\dotsc,A_n\}$, the operator $\diag(A_1,\dotsc,A_n)$ denotes the square matrix obtained by concatenating the former matrices on its diagonal, while the operator $\row(A_1,\dotsc,A_n)$ denotes the matrix obtained by concatenating the former matrices on a row.
 
@@ -44,9 +44,16 @@ Let $k\in\Z_{\geq 0}$ be the discrete time variable.
 Let $t\in\R_{\geq 0}$ be the continuous time variable.
 Given a signal $v(t)$, $v_k$ denotes its value at time $t=k\tau_s$, \emph{i.e.}, $v_k=v(k\tau_s)$, where $\tau_s\in\R_{>0}$ is the sampling time.
 Consider the continuous-time dynamic system $\Sigma$ defined by the equation
-\begin{equation*}
-  \dot{x}(t) = f(x(t)), \quad t\in\R_{\geq 0},
-\end{equation*}
+\begin{align*}
+  \dot{x}(t) &= f(x(t)), & t\in\R_{\geq 0},
+\end{align*}
 where $x(t)\in\R^n$ is the state vector and the function $f : \R^n \rightarrow \R^n$ is smooth. Let $x(0) = x_0$, $x_0\in\mathcal{U}$. Then, for any $x_0\in\mathcal{U}$, the solution of the system $\Sigma$ is uniquely defined for $t\in[0,T)$, where $T = T(x_0)$, and it can be expressed by a function $x(t) = \Phi_t^f(x_0)$. The function $\Phi_t^f : \mathcal{U} \rightarrow \R^n$ is termed \emph{flow} of $f$. Moreover, the system $\Sigma$ is said to be \emph{complete} if and only if its solution exists for any $t\in\R_{\geq 0}$.
 
-For $s\in\C$, let $W(s)$ be the transfer function of a continuous-time, linear time-invariant system; $\poleset(W(s))$ denotes the set of poles of $W(s)$.
+Consider the continuous-time, linear time-invariant system
+\begin{align*}
+  \dot{x}(t) &= Ax(t), & t\in\R_{\geq 0},\\
+  y(t) &= Cx(t), & t\in\R_{\geq 0},
+\end{align*}
+where $A\in\R^{n \times n}$, $C^{p \times n}$ are constant matrices. For $h\in\N$, $O_h(C,A)$ denotes the observability matrix of order $h$ of the pair $(C,A)$, and $O(C,A)$ denotes the observability matrix of the pair $(C,A)$ (\emph{i.e.}, $O(C,A)=O_n(C,A)$).
+
+Let $s$ be a variable taking values in $\C$, and $W(s)$ be a rational function of $s$; $\poleset(W(s))$ denotes the set of poles of $W(s)$.
