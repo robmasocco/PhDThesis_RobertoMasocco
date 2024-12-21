@@ -19,7 +19,7 @@ where $\ctrlstate_k\in\R^{\ctrlstatedim}$ is the controller state vector, and $\
   \label{eq:sdall_discretization}
   \begin{align}
     \dplantdynmat &= e^{\plantdynmat\tau_s},\\
-    \dplantctrmat &= \int_{0}^{\tau_s} e^{\plantdynmat(\tau_s - \sigma)}\plantctrmat\,d\sigma,\\
+    \dplantctrmat &= \int_{0}^{\tau_s} e^{\plantdynmat\sigma}\plantctrmat\,d\sigma,\\
     \dplantoutmat &= \plantoutmat.
   \end{align}
 \end{subequations}
@@ -188,7 +188,7 @@ This scenario, completely new in the literature to the best of the author's know
     \vartheta_{k+1} &= A_a \vartheta_k + B_a v_k, & k\in\Z_{\geq 0},\\
     \allout_k &= C_a \vartheta_k, & k\in\Z_{\geq 0},
   \end{align}
-  where $\vartheta_k\in\R^{n_a}$ is the state vector of the annihilator at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.\closestatement
+  where $\vartheta_k\in\R^{n_a}$ is the state vector at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.\closestatement
 \end{proposition}
 
 \begin{remark}
