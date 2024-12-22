@@ -90,7 +90,7 @@ Let $R\in\R^{\plantinputdim\times\plantinputdim}$ be a constant matrix such that
   J = \int_{0}^{\bbperiod} \left\Vert\plantssinput(t)\right\Vert^2_{R}\,dt.
 \end{equation}
 The dynamic input allocation problem for the feedback control system hereby defined is formulated as follows.
-\begin{problem}
+\begin{problem}[Dynamic allocation with sampled output invisibility]
   \label{prb:sdall_all}
   Consider the sampled-data feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} interconnected as in \eqref{eq:sdall_bb}, and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks}. Let \Cref{ass:bboveract,ass:sdall_periods,ass:sdall_exo,ass:sdall_controller} hold. Find, if any, a \emph{discrete-time input allocation device} (namely, an \emph{allocator}) such that, when interconnected to the feedback loop according to
   \begin{align}

@@ -1,4 +1,4 @@
-Consider now the nonlinear case. Thus, consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model $\bbsys$ subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
+The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model \eqref{eq:bbsys} subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
 \begin{equation}
   \label{eq:nlall_sscost}
   J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau.
@@ -20,7 +20,7 @@ and let $\bbssstate_{n},\,\bbssstate_{a}$ denote the corresponding steady-state 
 \end{align}
 A relaxed formulation of \Cref{prb:ssinv} is the following constrained optimal control problem.
 
-\begin{problem}
+\begin{problem}[Optimal input allocation for nonlinear dynamics]
   \label{prb:nlall_optcont}
   Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Given $\bbexostate_0\in\bbexostateset^{\circ}$, let $\bbexostate(0) = \bbexostate_0$. Let $h_i(\bbstate_n(t),\bbstate_a(t))$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
   \begin{subequations}
@@ -167,7 +167,7 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an a
 \end{algorithm}
 
 \begin{example}
-  The proposed approach has been validated by means of a numerical example. Consider the following continuous-time exosystem of the form given in \eqref{eq:bbexosys}:
+  Consider the following continuous-time exosystem of the form given in \eqref{eq:bbexosys}:
   \begin{subequations}
     \label{eq:nlall_simexo}
     \begin{align}

@@ -41,9 +41,9 @@ Finally, recall the definition of the cost functional \eqref{eq:bbcost} as well 
   \label{ddall:eta0}
   \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad \tau\in[t_0, t],
 \end{equation}
-is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate(\cdot)$ and $\bbaux(\cdot)$. The control problem of interest in this context is formulated as follows.
+is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate$ and $\bbaux$. The control problem of interest in this context is formulated as follows.
 
-\begin{problem}
+\begin{problem}[Dynamic allocation with robust output invisibility]
   \label{prb:ddall_main_per}
   Consider the systems \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} and the steady-state cost functional \eqref{eq:bbcost}. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Find, if possible, a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
   \begin{subequations}
@@ -761,7 +761,7 @@ The following result summarizes all the previous claims, and proves that the pro
 \end{proof}
 
 \begin{example}
-  The results hereby described are now corroborated by a numerical example. The dynamics \eqref{eq:ddall_sys} are now interpreted as the output feedback interconnection of a plant and a controller, whose state vectors are denoted by $\plantstate(t)\in\R^{\plantstatedim}$ and $\ctrlstate(t)\R^{\ctrlstatedim}$, respectively. This situation is similar to the one addressed by the linear case of \Cref{sec:all_design_ssinv}. Thus, the matrices in \eqref{eq:ddall_sys} are decomposed into
+  The results described above are now corroborated by a numerical example. The dynamics \eqref{eq:ddall_sys} are now interpreted as the output feedback interconnection of a plant and a controller, whose state vectors are denoted by $\plantstate(t)\in\R^{\plantstatedim}$ and $\ctrlstate(t)\R^{\ctrlstatedim}$, respectively. This situation is similar to the one addressed by the linear case of \Cref{sec:all_design_ssinv}. Thus, the matrices in \eqref{eq:ddall_sys} are decomposed into
   \begin{equation}
     \label{eq:ddall_example_sys}
     A(\mu) = \bbm{\plantdynmat(\mu) & \plantctrmat(\mu)\ctrloutmat \\ \ctrlctrmat\plantoutmat(\mu) & \ctrldynmat}, \quad B(\mu) = \bbm{\plantctrmat(\mu) \\ 0}, \quad P(\mu) = \bbm{0 \\ \ctrlctrmat Q}.

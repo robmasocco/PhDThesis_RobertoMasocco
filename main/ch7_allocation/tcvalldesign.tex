@@ -4,12 +4,12 @@ The design of a dynamic coil current allocator for the TCV shape controller requ
 
 \subsection{Problem statement}
 \label{sec:tcvalldesign_problem}
-Consider the simplified control scheme given in \Cref{fig:tcvall}, which summarizes the interconnection of the main control subsystems with the TCV plant. Before going further, it is instrumental to anticipate that every dynamic model considered in the following is continuous-time, linear time-invariant; this is possible thanks to the powerful yet real-time equilibrium reconstruction codes that are part of the SCD control suite, which allow control engineers to work on a linearized model of the plant around the prescribed shape equilibrium (see \Cref{sec:tcv,sec:scd,sec:sota_tcvshapectrl}).
+Consider the simplified control scheme given in \Cref{fig:tcvcsh}, which summarizes the interconnection of the main control subsystems with the TCV plant. Before going further, it is instrumental to anticipate that every dynamic model considered in the following is continuous-time, linear time-invariant; this is possible thanks to the powerful real-time equilibrium reconstruction codes that are part of the SCD control suite, which allow control engineers to work on a linearized model of the plant around the prescribed shape equilibrium for every shot (see \Cref{sec:tcv,sec:scd,sec:sota_tcvshapectrl}).
 \begin{figure}[t]
   \centering
-  \includesvg[width=\linewidth]{images/ch7/tcvall.svg}
-  \caption{Simplified diagram of the TCV control scheme: the $P_h$ block represents the actual plant, couple with the \emph{hybrid} feedback controller $C_h$; the shape controller is represented by the $C_sh$ block, whereas the proposed allocator is embedded in the $\mathcal{A}\ell\ell$ block.}
-  \label{fig:tcvall}
+  \includesvg[width=\linewidth]{images/ch7/tcvcsh.svg}
+  \caption{Simplified diagram of the TCV control scheme: the $P_h$ block represents the actual plant, interconnected to the \emph{hybrid} feedback controller $C_h$ and to the shape controller, represented by the $C_{sh}$ block.}
+  \label{fig:tcvcsh}
 \end{figure}
 
 The central block $P_h$ represents the dynamics of the plasma and coils, described by the following equations:
@@ -20,11 +20,11 @@ The central block $P_h$ represents the dynamics of the plasma and coils, describ
     y(t) &= C_{ph}x_{ph}(t) + D_{ph}u_{h}(t), & t\in\R_{\geq 0},
   \end{align}
 \end{subequations}
-where $x_{ph}(t)\in\R^{275}$ is the state vector at time $t$, containing the currents in the active circuits $I_a(t)\in\R^{19}$ and in the filaments used to represent the vessel, namely $I_u(t)\in\R^{256}$; $u_{h}(t)\in\R^{19}$ is the plant input, containing the voltages to be applied to the active circuits $V_a(t)\in\R^{19}$; $y(t) = \begin{bmatrix}y_h(t)' & y_{sh}(t)' & I_{EF}(t)'\end{bmatrix}'$ is the plant output, containing the controlled variables $y_h(t)\in\R^{24}$, namely the plasma current and its radial and vertical positions as well as the currents of the PF coils, the shape output $y_{sh}(t)\in\R^{\bboutodim}$ whose dimension depends on the design of the shape controller for the desired equilibrium, and the measurements of the currents of the EF coils, namely $I_{EF}(t)\in\R^{16}$.
+where $x_{ph}(t)\in\R^{275}$ is the state vector at time $t$, containing the currents in the active circuits $I_a(t)\in\R^{19}$ and in the filaments used to represent the vessel, namely $I_u(t)\in\R^{256}$; $u_{h}(t)\in\R^{19}$ is the plant input, containing the voltages $V_a(t)\in\R^{19}$ to be applied to the active circuits; $y(t) = \begin{bmatrix}y_h(t)' & y_{sh}(t)' & I_{EF}(t)'\end{bmatrix}'$ is the plant output, containing the controlled variables $y_h(t)\in\R^{24}$, namely the plasma current and its radial and vertical positions as well as the currents of the PF coils, the shape output $y_{sh}(t)\in\R^{q_{sh}}$ whose dimension depends on the design of the shape controller for the desired equilibrium, and the measurements $I_{EF}(t)\in\R^{16}$ of the currents of the EF coils.
 
 The inner control loop comprises also the feedback controller $C_h$, informally termed \emph{hybrid} due to its composition of both analog and digital devices \cite{lister_control_1997}. The role of $C_h$ is to compute the active voltages $V_a$ which are to be applied to the PF coils to track the reference input $r_h$, taking care of the vertical and radial stabilization of the plasma and controlling the current flow in the PF coils. Its state-space representation is given by
 \begin{subequations}
-  \label{eq:tvc_ch}
+  \label{eq:tcv_ch}
   \begin{align}
     \dot{x}_{ch}(t) &= A_{ch}x_{ch}(t) + B_{ch}e_h(t), & t\in\R_{\geq 0},\\
     u_h(t) &= C_{ch}x_{ch}(t) + D_{ch}e_h(t), & t\in\R_{\geq 0},
@@ -32,7 +32,7 @@ The inner control loop comprises also the feedback controller $C_h$, informally 
 \end{subequations}
 where $x_{ch}(t)\in\R^{n_{ch}}$ is the state vector of the hybrid controller at time $t$, $e_h(t)\in\R^{24}$ is the hybrid error, $e_h = r_h - y_h$, and $u_h(t)\in\R^{19}$ is the hybrid controller output.
 
-The shape controller is embedded in the $C_{sh}$ block, and it is given by the following state-space representation:
+The shape controller is embedded in the $C_{sh}$ block and its state-space representation is
 \begin{subequations}
   \label{eq:tcv_csh}
   \begin{align}
@@ -40,7 +40,7 @@ The shape controller is embedded in the $C_{sh}$ block, and it is given by the f
     u_{sh}(t) &= C_{csh}x_{csh}(t) + D_{csh}e_{sh}(t), & t\in\R_{\geq 0},
   \end{align}
 \end{subequations}
-where $x_{csh}(t)\in\R^{n_{csh}}$ is the state vector of the shape controller at time $t$, $e_{sh}(t)\in\R^{\bboutodim}$ is the shape error, $e_{sh} = r_{sh} - y_{sh}$, and $u_{sh}(t)\in\R^{24}$ is the shape controller output, namely the variations to be applied to modify the prescribed feedforward references $r_{h,ff}$ for the hybrid controller, which are precomputed for each shot.
+where $x_{csh}(t)\in\R^{n_{csh}}$ is the state vector of the shape controller at time $t$, $e_{sh}(t)\in\R^{q_{sh}}$ is the shape error, $e_{sh} = r_{sh} - y_{sh}$, and $u_{sh}(t)\in\R^{24}$ is the shape controller output, namely the variations to be applied to modify the prescribed feedforward references $r_{h,ff}$ for the hybrid controller, which are precomputed for each shot.
 
 \begin{assumption}
   \label{ass:tcvstab}
@@ -52,8 +52,53 @@ where $x_{csh}(t)\in\R^{n_{csh}}$ is the state vector of the shape controller at
   is well-posed and aymptotically stable.\closestatement
 \end{assumption}
 
-% ass: overact
-% ass: constant shape references
-% rem: hybrid ff given, not constant in practice, some ramp, cannot really circumvent all the time
-% define steady state cost function for generic function \ell of steady-state I_{EF} for which you do not assume any property
-% prb: steady state cost, full output invisibility
+\begin{assumption}
+  \label{ass:tcvoveract}
+  $q_{sh} < 24$.\closestatement
+\end{assumption}
+
+In practice, the validity of \Cref{ass:tcvoveract} that is analogous to \Cref{ass:bboveract}, depends on the design of the shape controller, \emph{i.e.}, on the number $q_{sh}$ of shape outputs that are considered to track the desired shape. This is a tunable parameter of the TCV shape controller \cite{mele_design_2024}, because it depends on the number of control points that define the desired shape. Thus, if the control objective for a given experiment is suitable, the designer can reduce the number of regulated outputs and exploit TCV's redundant array of coils to improve the performance of the control system.
+
+\begin{assumption}
+  \label{ass:tcvrefs}
+  The shape reference signal $r_{sh}$ is such that
+  \begin{align}
+    \label{eq:tcvrefs}
+    r_{sh}(t) &= \bar{r}_{sh}, & t\in\R_{\geq 0},
+  \end{align}
+  with $\bar{r}_{sh}\in\R^{q_{sh}}$.\closestatement
+\end{assumption}
+
+It is worth to point out that even if \Cref{ass:tcvrefs} holds, which in other words implies that a desired shape to track is encoded as a set of $q_{sh}$ constant scalar references, the resulting steady-state reference for the hybrid controller $C_h$, namely $\tilde{r}_h$, may not be a constant signal; this is due to the precomputed hybrid reference $r_{h,ff}$ that may include ramps. However, for the sake of simplicity, the design of the allocator can be carried out discarding the presence of the feedforward term $r_{h,ff}$. Thus, in accordance with the analysis carried out in \Cref{sec:all_design}, \Cref{ass:tcvrefs} implies that the steady-state behavior of the closed loop is not periodic. Hence, the steady-state cost functional \eqref{eq:bbcost} reduces to the \emph{steady-state cost function}
+\begin{equation}
+  \label{eq:tcvcost}
+  J = \ell(\tilde{I}_{EF}),
+\end{equation}
+where $\tilde{I}_{EF}$ is the steady-state value of the EF coil currents, and the function $\ell : \R^{16} \rightarrow \R$ is at least locally convex. A specific choice of the performance criterion with respect to which the steady-state behavior of the EF coil currents must be optimized yields a specific form of the function $\ell$. The dynamic EF coil current allocation problem for the TCV tokamak can be formulated as follows.
+
+\begin{problem}[Dynamic EF coil current allocation for TCV shape control]
+  \label{prb:tcvall}
+  Consider the TCV feedback control system \eqref{eq:tcv_ph}--\eqref{eq:tcv_ch} with the shape controller \eqref{eq:tcv_csh} and suppose that \Cref{ass:tcvstab,ass:tcvoveract,ass:tcvrefs} hold.
+  Find, if any, an input allocation device (briefly, an \emph{allocator}) having input $\allin$ and output $\allout$ such that, when interconnected according to
+  \begin{align}
+    \label{eq:tcv_all_interconn}
+    \allin &= u_{sh} + r_{h,ff}, & r_h &= u_{sh} + r_{h,ff} + \allout,
+  \end{align}
+  ensures that the following requirements hold.
+  \begin{itemize}
+    \item[\emph{(I)}] \emph{Full shape output invisibility:} the shape output both in presence and absence of the allocator is such that
+      \begin{align}
+        \label{eq:tcv_all_inv}
+        y_{sh}(t) &= y^a_{sh}(t), & t\in\R_{\geq 0}.
+      \end{align}
+    \item[\emph{(O)}] \emph{Steady-state optimality}: the cost function \eqref{eq:tcvcost} is brought to its minimum value.
+  \end{itemize}
+  \closestatement
+\end{problem}
+
+% \begin{figure}[t]
+%   \centering
+%   \includesvg[width=\linewidth]{images/ch7/tcvall.svg}
+%   \caption{Full diagram of the TCV shape control scheme: the $P_h$ block represents the actual plant, interconnected to the \emph{hybrid} feedback controller $C_h$ and to the shape controller $C_{sh}$; the proposed allocator is embedded in the $\mathcal{A}\ell\ell$ block.}
+%   \label{fig:tcvall}
+% \end{figure}

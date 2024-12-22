@@ -96,7 +96,7 @@ which is termed the \emph{pseudo-steady-state output map}. Let $\ctrlssoutput(\c
 \end{equation}
 The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is formulated as follows.
 
-\begin{problem}
+\begin{problem}[Optimal input allocation for linear dynamics]
 	\label{prb:lqrall_optcont}
 	Consider the continuous-time, linear time-invariant feedback control system described by \eqref{eq:linplant}, \eqref{eq:lincontroller}, and the exosystem \eqref{eq:linexosystem}. Suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_closedloop,ass:lqrall_kernels} hold, and define $\bar{M}$ as in \eqref{eq:lqrall_memontinv_mbar}.
 	Determine, if it exists, a function $v^{\star}(\cdot)\in\mathcal{L}_2([0,\bbperiod])$ that
@@ -322,7 +322,7 @@ The following result is thus obtained collecting the ones provided by the previo
 \end{theorem}
 
 \begin{example}
-  The results illustrated so far have been corroborated by means of some numerical simulations reported below. The following numerical model has been adopted for the plant \eqref{eq:linplant}:
+  Consider the following numerical model for the plant \eqref{eq:linplant}:
   \begin{align}
     \label{eq:lqrall_linplant}
       A &= \left[
