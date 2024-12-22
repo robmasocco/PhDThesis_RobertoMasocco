@@ -1,4 +1,4 @@
-The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model \eqref{eq:bbsys} subject to the allocation action of the auxiliary input $\bbaux$. Similarly to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
+The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model \eqref{eq:bbsys} subject to the allocation action of the auxiliary input $\bbaux$. In a similar way the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
 \begin{equation}
   \label{eq:nlall_sscost}
   J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau.
@@ -45,7 +45,7 @@ A relaxed formulation of \Cref{prb:ssinv} is the following constrained optimal c
 
 \begin{remark}
   \label{rem:nlall_ssua}
-  Although a generic allocator that solves \Cref{prb:ssinv} may generally exhibits transients in its output $\allout$, the solution to \Cref{prb:nlall_optcont} consists of a steady-state behavior repeated over the time interval $[0,\bbperiod]$, similarly to the previous linear case \cite{galeani_optimal_2023}. However, there may still be transients in the overall system response of \eqref{eq:bbsys} and in the remaining signals as they converge to their steady-state, allocated behavior.\closeremark
+  Although a generic allocator that solves \Cref{prb:ssinv} may generally exhibit transients in its output $\allout$, the solution to \Cref{prb:nlall_optcont} consists of a steady-state behavior repeated over the time interval $[0,\bbperiod]$, similar to the previous linear case \cite{galeani_optimal_2023}. However, there may still be transients in the overall system response of \eqref{eq:bbsys} and in the remaining signals as they converge to their steady-state, allocated behavior.\closeremark
 \end{remark}
 
 Let $\lambda_n(t),\lambda_a(t)\in\R^{\bbstatedim}$ be the costate variables, associated to the nominal (\emph{i.e.}, non-allocated) and allocated state variables, respectively. In the following, time dependencies are omitted to ease the notation. Recalling \eqref{eq:nlall_xnxa}--\eqref{eq:nlall_J}, define the Hamiltonian function

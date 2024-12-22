@@ -71,7 +71,7 @@ It is worth pointing out that \Cref{ass:sdall_exo} implies that the reference in
 Although \Cref{ass:sdall_periods} is instrumental to simplify the following analysis, it can be relaxed in practice as shown later on.
 
 \begin{remark}
-  Similarly to the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} can be modeled as in \eqref{eq:bbsys}:
+  In a similar way the continuous-time, linear case presented in \Cref{sec:all_design_ssinv}, the feedback control system given by \eqref{eq:sdall_ctsys}--\eqref{eq:sdall_dtsys} and \eqref{eq:sdall_ctexo}--\eqref{eq:sdall_exoblocks} can be modeled as in \eqref{eq:bbsys}:
   \begin{subequations}
     \label{eq:sdall_bb}
     \begin{align}
@@ -171,7 +171,7 @@ This scenario, completely new in the literature to the best of the author's know
 
 \begin{proposition}
   \label{prop:sdall_annih_computation}
-  Let $N_a(z)\in\C^{\ctrloutputdim\times\bbreddeg}$ be a polynomial matrix whose columns form a minimal polynomial basis for the null space of $\dplanttf(z)$, and $d_a(z)$ be a monic polynomial with degree larger than that of each element of $N_a(z)$ and whose roots all lie in $\C_{<1}$.
+  Let $N_a(z)\in\C^{\ctrloutputdim\times\bbreddeg}$ be a polynomial matrix whose columns form a minimal polynomial basis for the null space of $\dplanttf(z)$, and $d_a(z)$ be a monic Schur polynomial with degree larger than that of each element of $N_a(z)$.
   Define
   \begin{equation}
     \label{eq:sdall_Wa}

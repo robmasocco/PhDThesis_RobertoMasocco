@@ -1,9 +1,9 @@
 \section{Design of a dynamic current allocator for the TCV shape controller}
-\label{sec:tcvalldesign}
+\label{sec:tcvall}
 The design of a dynamic coil current allocator for the TCV shape controller requires an inspection of the preexisting control scheme, to clarify which among the novel formulations presented in \Cref{sec:all_design} is the most appropriate. Subsequently, the selected solution is adapted to the specific case of the TCV shape controller, accounting for any differences arising with respect to the previously analyzed scenarios.
 
 \subsection{Problem statement}
-\label{sec:tcvalldesign_problem}
+\label{sec:tcvall_problem}
 Consider the simplified control scheme given in \Cref{fig:tcvcsh}, which summarizes the interconnection of the main control subsystems with the TCV plant. Before going further, it is instrumental to anticipate that every dynamic model considered in the following is continuous-time, linear time-invariant; this is possible thanks to the powerful real-time equilibrium reconstruction codes that are part of the SCD control suite, which allow control engineers to work on a linearized model of the plant around the prescribed shape equilibrium for every shot (see \Cref{sec:tcv,sec:scd,sec:sota_tcvshapectrl}).
 \begin{figure}[t]
   \centering
@@ -91,14 +91,69 @@ where $\tilde{I}_{EF}$ is the steady-state value of the EF coil currents, and th
         \label{eq:tcv_all_inv}
         y_{sh}(t) &= y^a_{sh}(t), & t\in\R_{\geq 0}.
       \end{align}
-    \item[\emph{(O)}] \emph{Steady-state optimality}: the cost function \eqref{eq:tcvcost} is brought to its minimum value.
+    \item[\emph{(O)}] \emph{Steady-state optimality}: the cost function \eqref{eq:tcvcost} is minimized.
   \end{itemize}
   \closestatement
 \end{problem}
 
-% \begin{figure}[t]
-%   \centering
-%   \includesvg[width=\linewidth]{images/ch7/tcvall.svg}
-%   \caption{Full diagram of the TCV shape control scheme: the $P_h$ block represents the actual plant, interconnected to the \emph{hybrid} feedback controller $C_h$ and to the shape controller $C_{sh}$; the proposed allocator is embedded in the $\mathcal{A}\ell\ell$ block.}
-%   \label{fig:tcvall}
-% \end{figure}
+\subsection{Design of the dynamic EF current allocator}
+\label{sec:tcvall_design}
+The statement of \Cref{prb:tcvall} shows many similarities with that of \Cref{prb:fullinv}. Thus, recalling the literature review offered in \Cref{sec:sota_allocation}, a suitable solution to it is found starting from those presented in \Cref{sec:all_design_fullinv}. First, the full shape output invisibility requirement stated in item (I) justifies an approach similar to that introduced in \cite{cristofaro_output_2014}, \emph{i.e.}, the design of an allocator comprising three subsystems each responsible for one of the requirements, such as the dynamic annihilator that deals with the shape output preservation. However, the main difference with respect to all the cases analyzed in \Cref{sec:all_design_fullinv} and in \cite{cristofaro_output_2014} is stated in \Cref{ass:tcvrefs}, \emph{i.e.}, the intended steady-state behavior is not periodic but constant. This implies that the \emph{steady-state generator} component of the architecture introduced in \cite{cristofaro_output_2014} and further developed in this work is not necessary and that the interconnection of the allocator with the preexisting shape control system can be carried out as in \eqref{eq:tcv_all_interconn}. The proposed architecture is depicted in \Cref{fig:tcvall}, whereas the design procedure of both the \emph{dynamic annihilator} and \emph{steady-state optimizer} units is described in the following. After the selection of the most suitable architecture, the next design decision that has been taken concerned the nature of the dynamic systems to be implemented, having to choose among either a continuous-time or a discrete-time design. Even if the TCV control system is now almost entirely composed of sampled-data, digital devices (see \Cref{sec:scd,sec:all_design_fullinv}), the proposed design has been carried out in the continuous time domain. This choice has been made for two technical reasons related to the SCD implementation: first, the design of all the control systems integrated in the SCD is performed in continuous-time, and their discretization is automatically performed by the build system that generates and compiles the real-time control code. Secondly, the sampling rates of the SCD are very high, typically in the order of $\SI{e4}{\hertz}$, thus making negligible any error induced by the discretization. The validity of the proposed design follows from the results cited in \Cref{sec:sota_allocation} and from those illustrated in \Cref{sec:all_design_fullinv}.
+\begin{figure}[t]
+  \centering
+  \includesvg[width=\linewidth]{images/ch7/tcvall.svg}
+  \caption{Full diagram of the TCV shape control scheme: the $P_h$ block represents the actual plant, interconnected to the \emph{hybrid} feedback controller $C_h$ and to the shape controller $C_{sh}$; the proposed allocator is enclosed in the $\mathcal{A}\ell\ell$ block.}
+  \label{fig:tcvall}
+\end{figure}
+
+\subsubsection{Design of the dynamic annihilator}
+\label{sec:tcvall_ann}
+Let $\bbreddeg = q_{sh} - 24$ be the degree of redundancy of the closed loop system \eqref{eq:tcv_ph}--\eqref{eq:tcv_ch} with respect to the shape output $y_{sh}$. Let $W_{{r_h}y_{sh}}(s)$ be the transfer matrix from the hybrid reference input $r_h$ to the shape output $y_{sh}$, $W_{{r_h}y_{sh}}(s)\in\C^{q_{sh} \times 24}$. Recalling \Cref{sec:all_design_fullinv}, the transfer matrix of the dynamic annihilator is designed as $W_a(s)\in\C^{24 \times \bbreddeg}$ such that
+\begin{equation}
+  \label{eq:tcvall_ann_cf}
+  W_a(s) = N_a(s)d^{-1}(s),
+\end{equation}
+where $d^{-1}(s)$ is a Hurwitz polynomial of degree larger than that of any element of $N_a(s)$, and $N_a(s)\in\C^{24 \times \bbreddeg}$ is a polynomial annihilator for $W_{{r_h}y_{sh}}(s)$, \emph{i.e.}, it is such that
+\begin{align}
+  \label{eq:tcvall_ann}
+  W_{{r_h}y_{sh}}(s)N_a(s) &= 0, & s\in\C\setminus(\poleset(W_{{r_h}y_{sh}}(s))).
+\end{align}
+Then, the state-space representation of the annihilator is obtained by a minimal realization $(A_a,B_a,C_a,0)$ of $W_a(s)$, yielding
+\begin{subequations}
+  \label{eq:tcvall_ann_ss}
+  \begin{align}
+    \dot{x}_a(t) &= A_a x_a(t) + B_a v(t), & t\in\R_{\geq 0},\\
+    \allout(t) &= C_a x_a(t), & t\in\R_{\geq 0},
+  \end{align}
+\end{subequations}
+where $x_a(t)$ is the state vector of the annihilator at time $t$, $v(t)\in\R^{\bbreddeg}$ is the input of the annihilator, and $\allout(t)\in\R^{24}$ is the output of the annihilator.
+
+\subsubsection{Design of the steady-state optimizer}
+\label{sec:tcvall_ssopt}
+Recall \eqref{eq:tcv_all_interconn} and the steady-state cost function \eqref{eq:tcvcost}. Let $P^\star_{I_{EF}}\in\R^{16 \times 24}$ be the static gain of the TCV plant from the input $r_h$ to the output $I_{EF}$, and $P^\star_a\in\R^{24 \times \bbreddeg}$ be the static gain of the dynamic annihilator \eqref{eq:tcvall_ann_ss}. It holds that
+\begin{equation}
+  \label{eq:tcvall_ssef}
+  \tilde{I}_{EF} = P^\star_{I_{EF}}(\allssin + \tilde{\allout}) = P^\star_{I_{EF}}(\allssin + P^\star_a \tilde{v}).
+\end{equation}
+Thus, let $x_o(t)\in\R^{\bbreddeg}$ for any $t\in\R_{\geq 0}$ and consider the cost function
+\begin{equation}
+  \label{eq:tcvall_sscost}
+  \tilde{J}(x_o,\allin) = \ell(P^\star_{I_{EF}}(\allin + P^\star_a x_o)),
+\end{equation}
+with $\ell$ as in \eqref{eq:tcvcost}. Let $\gamma\in\R_{>0}$ and $K\in\R^{\bbreddeg\times\bbreddeg}$ such that $K\succ 0$. According to \cite{zaccarian_dynamic_2009,cristofaro_output_2014}, applying the gradient descent method \cite{khalil_nonlinear_2002} yields the following dynamics for the steady-state optimizer:
+\begin{subequations}
+  \label{eq:tcvall_ssopt}
+  \begin{align}
+    \dot{x}_o(t) &= -\gamma K \left.\frac{\partial\tilde{J}(x_o,\allin)}{\partial x_o}\right|_{x_o = x_o(t),\,\allin = \allin(t)}', & t\in\R_{\geq 0},\\
+    v(t) &= x_o(t), & t\in\R_{\geq 0},
+  \end{align}
+\end{subequations}
+where $\gamma$ is the update step of the gradient descent method, which can be tuned to control the convergence speed of the optimizer, and $K$ further tunes the convergence speed of the single optimization directions in $x_o$.
+
+\subsubsection{Offline design and validation procedure}
+\label{sec:tcvall_val}
+TODO
+
+% model reduction with balancing (cite refs.)
+% brutti signori algorithm
+% simulations and parameter tuning for shape controller + allocator with SPC codes
