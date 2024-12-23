@@ -1,45 +1,65 @@
 \section{Experimental results of dynamic annihilation on the TCV tokamak}
 \label{sec:shots}
+This section presents the results of the first experiments conducted on the TCV tokamak to test a dynamic EF coil current allocator integrating a dynamic annihilator to achieve full invisibility in the shape output. The purpose of the allocation device is to improve the performance of the shape controller in terms of specific criteria concerning the EF coil currents. The considered shape controller has been presented in \Cref{sec:sota_tcvshapectrl} and \cite{mele_design_2024}, and its limitations with respect to such an optimization have been highlighted in \Cref{sec:tcvshapectrl_limitations}. The dynamic coil current allocator with dynamic annihilator for the TCV shape control system has been designed in \Cref{sec:tcvall_design}, based on the results provided in \Cref{sec:sota_allocation,sec:all_design_fullinv}.
+
+The selected plasma shape is a \emph{diverted single null} configuration, informally termed a \emph{standard shot}, yielding a specific shape controller design that is the same in both experiments; this decision has been made to test the new allocation scheme in a well-known and stable plasma configuration, where both the plant and the control systems exhibit little to no technical issues. Two experiments, \emph{i.e.}, two plasma discharges have been performed: $\#81457$ and $\#81460$, corresponding to two different coil current optimization criteria illustrated in the following, each yielding a different allocator design as described in \Cref{sec:tcvall_design}.
+
+The results of these discharges are compared against two other experiments each. First, a comparison is made against the configuration with the shape controller alone achieving the same plasma shape, namely discharge $\#79742$. This comparison is made to ensure that the allocation scheme, in practice, does not disrupt the operation of the shape controller. Secondly, each discharge is compared against an experiment in which a coil current allocator is also present, designed to meet the same optimization criteria but embedding a \emph{static} annihilator as described in \cite{tenaglia_dynamic_2024}. The purpose of this comparison is to highlight in practice the differences between a state-of-the-art dynamic allocator (see again \Cref{sec:sota_allocation}) and the new scheme developed in this work. To this end, it is worth to point out that this work also constitutes the first real implementation of a dynamic allocation device integrating the dynamic annihilator since its very first proposal in \cite{cristofaro_output_2014}.
+
+For each experiments, two sets of data are analyzed and discussed. First, the coil currents are presented in two forms: their steady-state value is shown in bar plots to verify that the optimization objective has been met, and their time histories are plotted to show the behavior induced by the allocator during the entire discharge. Secondly, the shapes are presented in two forms as well: the time histories of the components of the shape error $e_{sh}$ are presented to highlight the performance of the dynamic annihilator with respect to the other schemes, and the steady-state shapes are plotted against the reference one to show the overall performance of the shape control scheme in each case. Each experiment lasts $\SI{1}{\second}$ from the breakdown to the shutdown initiation, and the activation instant of the shape control system (including the allocation devices, if any) is marked in each time history plot, happening at $\SI{0.6}{\second}$. There is one aspect that is worth anticipating here concerning the time histories of the shape errors, to avoid any confusion: at the beginning of each discharge, there are noticeable transient motions that usually fade beyond $\SI{0.75}{\second}$. Such transients are caused by the OH coil current crossing the zero value while ramping up: due to a technical problem with the OH power supplies of TCV, when the ramping OH current crosses the zero value it stays flat for a few milliseconds, then it resumes its ramping. This undesired behavior induces unmodeled effects in the plasma that are reflected in the shape error time histories, which exhibit non-deterministic transient motions. This issue is known by the TCV operators and is currently not addressed.
 
 \subsection{Steady-state current norm minimization}
 \label{sec:shots_ssmin}
+This experiment corresponds to the discharge $\#81457$. The EF coil current optimization objective is given by the cost function
+\begin{equation}
+  \label{eq:shots_ssmin_cost}
+  J = \frac{1}{2} \left\Vert \tilde{I}_{EF} \right\Vert^2_2,
+\end{equation}
+\emph{i.e.}, the intention is to alter the shape controller output to achieve the same reference plasma shape minimizing the norm of the EF coil currents that are necessary to track it at steady-state. The cost function \eqref{eq:shots_ssmin_cost} is strictly convex and radially unbounded, hence a unique solution exists and the steady-state optimizer \eqref{eq:tcvall_ssopt} converges to it with speed determined by the choice of the parameters. The main purpose of this experiment is to verify that the entire implementation of the novel dynamic allocation scheme works without issues, before testing it with more sophisticated optimization criteria, because there is not a significant optimization margin in this case. The FBT and MEQ codes (see \Cref{sec:tcvall_val}), when used to compute the feedforward reference for the standard plasma shape, already apply the EF coil current norm minimization as a regularization criterion. Hence, the dynamic allocator does not have much room to improve the performance of the shape controller in this case. The steady-state optimizer parameters for this experiment are set to
+\begin{align}
+  \label{eq:shots_ssmin_params}
+  \gamma &= 10, & K &= I_{\bbreddeg}.
+\end{align}
+This experiment is compared against pulse $\#81032$, in which a state-of-the-art allocator with static annihilator has been used.
 
 \subsubsection{Coil currents}
 \label{sec:shots_ssmin_currs}
+\Cref{fig:shots_ssmin_currs_bars} shows the steady-state values of the EF coil currents for both pulses $\#81457$ and $\#81032$, respectively, against the reference $\#79742$. An inspection reveals that both allocators perform in a similar way, remodulating all the currents to achieve the desired optimization objective. \Cref{fig:shots_ssmin_currs_traces} shows the time histories of the EF coil currents for the same pulses. It is interesting to note the similarity in the current traces of the two allocated pulses $\#81457$ and $\#81032$, which is a consequence of the similarity in the optimization criteria and of the limited optimization margin in this case. This proves that, from the point of view of the EF coil currents, the proposed dynamic allocator works as expected, maintaining a meaningful similarity with the state-of-the-art solution in the considered scenario.
 
 \subsubsection{Shape errors}
 \label{sec:shots_ssmin_errs}
+\Cref{fig:shots_ssmin_errs_deltas} shows the time histories of the components of the shape error $e_{sh}$ for pulses $\#81457$ and $\#81032$, respectively. Both pulses exhibit a similar behavior, including unwanted and non-deterministic transients induced by the OH zero crossing discussed above. The fact that the shape errors remain bounded in both cases suggest that both allocation scheme work without disrupting the desired plasma shape and the operation of the shape controller. The dynamic allocator with static annihilator in pulse $\#81032$ exhibits a steadier performance with less oscillatory motions but a higher average shape error with respect to that achieved by the dynamic annihilator in pulse $\#81457$, in particular in the time intervals $[\SI{0.6}{\second},\SI{0.7}{\second}]$ and $[\SI{0.85}{\second},\SI{0.95}{\second}]$. However, due to the limited optimization margin and the unwanted transients, this result may only be interpreted again as a confirmation that the proposed dynamic allocator works as expected, a fact further confirmed by \Cref{fig:shots_ssmin_errs_shapes} which depicts the steady-state shapes achieved in presence of both allocation schemes against the one obtained by the shape controller alone and the reference: their negligible differences yield that in practice, all three schemes are equivalent in terms of the steady-state shape output.
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.95\linewidth]{images/ch7/shots/currents/linear/bar_79742_81457.eps}
-  \\[.3cm]
+  \\[.2cm]
   \includegraphics[width=.95\linewidth]{images/ch7/shots/currents/linear/bar_79742_81032.eps}
-  \caption{TODO}
+  \caption{Steady-state values of the EF coil currents for pulses $\#81457$ (top) and $\#81032$ (bottom) against the reference pulse $\#79742$.}
   \label{fig:shots_ssmin_currs_bars}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/linear/curr_81457.eps}
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/linear/curr_81032.eps}
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/linear/curr_79742.eps}
-  \caption{TODO}
+  \caption{Time histories of the EF coil currents for pulses $\#81457$ (top), $\#81032$ (middle), and $\#79742$ (bottom).}
   \label{fig:shots_ssmin_currs_traces}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.95\linewidth]{images/ch7/shots/errors/linear/delta_81457.eps}
   \includegraphics[width=.95\linewidth]{images/ch7/shots/errors/linear/delta_81032.eps}
-  \caption{TODO}
+  \caption{Time histories of the components of the shape error $e_{sh}$ for pulses $\#81457$ with the dynamic annihilator (top) and $\#81032$ with the static annihilator (bottom).}
   \label{fig:shots_ssmin_errs_deltas}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \begin{minipage}{.45\linewidth}
@@ -51,49 +71,75 @@
     \centering
     \includegraphics[width=\linewidth]{images/ch7/shots/errors/linear/shape_79742_81032.eps}
   \end{minipage}
-  \caption{TODO}
+  \caption{Steady-state shapes achieved in pulses $\#81457$ with the dynamic annihilator (left) and $\#81032$ with the static annihilator (right) against the shape obtained by the shape controller alone in pulse $\#79742$ and the reference shape.}
   \label{fig:shots_ssmin_errs_shapes}
 \end{figure}
 
 \subsection{Saturation and deadzone avoidance}
 \label{sec:shots_satdz}
+This experiment corresponds to the pulse $\#81460$ and it is motivated by practical necessities that arise when dealing with the actual TCV EF coils, with which a dynamic allocator is conceptually helpful. The EF coil power supplies are subject to deadzone effects, \emph{i.e.}, when the requested current values are below $\SI{1}{\kilo\ampere}$ in absolute value, the power supplies may not respond and produce a current that is not only different from the requested one but also unpredictable and uncontrollable. This issue is known but can currently be addressed only by ensuring that the current requests do not drop below the deadzone threshold, identified by the TCV team practically at $\pm\SI{600}{\ampere}$. This requirement, as stated in \Cref{sec:tcvshapectrl_limitations}, is not observed by the shape controller, which may request currents below the deadzone threshold. Let $\bar{a}_{i},\ubar{a}_{i},\bar{\delta}_{i},\ubar{\delta}_{i} \in \R_{\geq 0}$, then let $\bar{b}_{i},\ubar{b}_{i},\bar{c}_{i},\ubar{c}_{i}\in\R$, and consider
+\begin{align}
+  \label{eq:shots_satdz_xi}
+  \xi_{i}(\tilde{I}_{EF,i}) &= \left\{
+    \begin{aligned}
+        &\frac{1}{2}\bar{a}_{i} (\tilde{I}_{EF,i} - \bar{b}_{i})^2 &\text{if } &\tilde{I}_{EF,i} > \bar{b}_{i}\,,\\
+        &\frac{1}{2}\bar{\delta}_{i} (\tilde{I}_{EF,i} - \bar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [0,\bar{c}_{i}]\,,\\
+        &\frac{1}{2}\ubar{\delta}_{i} (\tilde{I}_{EF,i} - \ubar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [\ubar{c}_{i},0]\,,\\
+        &\frac{1}{2}\ubar{a}_{i} (\tilde{I}_{EF,i} - \ubar{b}_{i})^2 &\text{if } &\tilde{I}_{EF,i} < \ubar{b}_{i}\,,\\
+        &0 &\, &\hspace{-9.5pt}\text{otherwise}\,,
+    \end{aligned}
+  \right. & i=1,\dotsc,16.
+\end{align}
+The EF coil current optimization objective is given by the cost function
+\begin{equation}
+  \label{eq:shots_satdz_cost}
+  J(\tilde{I}_{EF}) = \sum_{i=1}^{16} \xi_{i}(\tilde{I}_{EF,i}),
+\end{equation}
+where, essentially, $(\ubar{c}_i,\bar{c}_i)$ are the deadzone thresholds for the $i$-th EF coil, and $(\ubar{b}_i,\bar{b}_i)$ are saturation limits for the $i$-th EF coil, respectively, for each $i=1,\dotsc,16$; the coefficients $(\ubar{a}_i,\bar{a}_i)$ and $(\ubar{\delta}_i,\bar{\delta}_i)$ allow the designer to weigh differently each optimization objective on each coil, with $i=1,\dotsc,16$. The cost function \eqref{eq:shots_satdz_cost} is only locally convex but admits local minima for each component, hence the gradient descent-based steady-state optimizer \eqref{eq:tcvall_ssopt} moves each component towards a local minimum that depends on the initial condition, a behavior that is totally acceptable in practice. The saturation boundaries are set to $\pm\SI{3}{\kilo\ampere}$ to further test the capabilities of the proposed allocation scheme. The remaining dynamic allocator parameters are set to
+\begin{align}
+  \label{eq:shots_satdz_params}
+  \gamma &= 22, & K &= I_{\bbreddeg}, & (\ubar{a}_i,\bar{a}_i,\ubar{\delta}_i,\bar{\delta}_i) &= (1,1,10^4,10^4), & i &= 1,\dotsc,16.
+\end{align}
+This experiment is compared against pulse $\#79868$, in which a state-of-the-art allocator with static annihilator has been used to meet the same optimization criteria with the same design parameters.
 
 \subsubsection{Coil currents}
 \label{sec:shots_satdz_currs}
+The steady-state values of the EF coil currents are shown in \Cref{fig:shots_satdz_currs_bars} for pulses $\#81460$ and $\#79868$, respectively, against the reference $\#79742$. The most important thing to note is that, despite the similarities in the design as well as in the optimization objective, the novel proposed dynamic allocator performs better than the state-of-the-art solution in this case: the EF coil currents are remodulated in a way such that they avoid both the deadzone and the saturation boundaries, while the state-of-the-art allocator fails to ensure so in particular for the coils $E4$, $E8$, and $F7$ whose currents remain within the deadzone threshold. Furthermore, \Cref{fig:shots_satdz_currs_traces} shows the time histories of the EF coil currents for the same pulses, providing another important result: the proposed dynamic allocator with dynamic annihilator induces significant variations in the EF coil currents with respect not only to the reference discharge but also to the state-of-the-art allocator test, requesting steeper current variations that the power supplies successfully achieve. The steady-state values of the EF coil currents for pulse $\#81460$ are, thus, different from those of the reference pulse $\#79742$, a fact that would have important consequences on the plasma shape if not for the presence of the dynamic annihilator, as discussed below.
 
 \subsubsection{Shape errors}
 \label{sec:shots_satdz_errs}
+The time histories of the components of the shape error $e_{sh}$ for this pulse $\#81460$ are shown in \Cref{fig:shots_satdz_errs_deltas}, compared against the results of pulse $\#79868$. After the initial unmodeled transient motion due to the OH coil zero crossing fades, both the allocators achieve a similar, steady performance in terms of shape error, with the proposed novel dynamic allocator resulting in a lower shape error towards the end of the experiment. The validity of this approach is confirmed by the steady-state shapes depicted in \Cref{fig:shots_satdz_errs_shapes} for the pulses $\#81460$ and $\#79868$, respectively, against the reference shape and the shape obtained by the shape controller alone in pulse $\#79742$. Again, the shapes are practically the same, confirming that the proposed dynamic allocator works as expected even if in this case the steady-state currents are much different as highlighted above. The possibility to achieve the same prescribed plasma shape with such different EF coil currents without disrupting the operation of the shape controller is clearly the effect of the dynamic annihilator, confirming the performance improvements expected since the theoretical results in \Cref{sec:all_design_fullinv}.
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.95\linewidth]{images/ch7/shots/currents/nonlinear/bar_79742_81460.eps}
-  \\[.3cm]
+  \\[.2cm]
   \includegraphics[width=.95\linewidth]{images/ch7/shots/currents/nonlinear/bar_79742_79868.eps}
-  \caption{TODO}
+  \caption{Steady-state values of the EF coil currents for pulses $\#81460$ (top) and $\#79868$ (bottom) against the reference pulse $\#79742$.}
   \label{fig:shots_satdz_currs_bars}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/nonlinear/curr_81460.eps}
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/nonlinear/curr_79868.eps}
   \includegraphics[width=.7\linewidth]{images/ch7/shots/currents/nonlinear/curr_79742.eps}
-  \caption{TODO}
+  \caption{Time histories of the EF coil currents for pulses $\#81460$ (top), $\#79868$ (middle), and $\#79742$ (bottom).}
   \label{fig:shots_satdz_currs_traces}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.95\linewidth]{images/ch7/shots/errors/nonlinear/delta_81460.eps}
   \includegraphics[width=.95\linewidth]{images/ch7/shots/errors/nonlinear/delta_79868.eps}
-  \caption{TODO}
+  \caption{Time histories of the components of the shape error $e_{sh}$ for pulses $\#81460$ with the dynamic annihilator (top) and $\#79868$ with the static annihilator (bottom).}
   \label{fig:shots_satdz_errs_deltas}
 \end{figure}
 
-\newpage
+% \newpage
 \begin{figure}[ht]
   \centering
   \begin{minipage}{.45\linewidth}
@@ -105,6 +151,6 @@
     \centering
     \includegraphics[width=\linewidth]{images/ch7/shots/errors/nonlinear/shape_79742_79868.eps}
   \end{minipage}
-  \caption{TODO}
+  \caption{Steady-state shapes achieved in pulses $\#81460$ with the dynamic annihilator (left) and $\#79868$ with the static annihilator (right) against the shape obtained by the shape controller alone in pulse $\#79742$ and the reference shape.}
   \label{fig:shots_satdz_errs_shapes}
 \end{figure}
