@@ -14,13 +14,13 @@ where $\plantstate(t)\in\R^\plantstatedim$ is the plant state vector, $\plantinp
 		\ctrlouput(t)       & = \ctrloutmat\ctrlstate(t), & t\in\R_{\geq 0},
 	\end{align}
 \end{subequations}
-where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state vector and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output vector at time $t$, and $\ctrldynmat\in\R^{\ctrlstatedim\times\ctrlstatedim}$, $\ctrlctrmat\in\R^{\ctrlstatedim\times\bboutodim}$, $\ctrlrefmat\in\R^{\ctrlstatedim\times\bbrefdim}$, and $\ctrloutmat\in\R^{\ctrloutputdim\times\ctrlstatedim}$ are constant matrices. The interconnection of the plant $\plant$ and the control system $\ctrl\;$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, with the dimension of the full state vector being $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, until otherwise specified the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$, \emph{i.e.}, $\bbouto = \plantoutput$. The following assumption characterizes the properties of the feedback interconnection.
+where $\ctrlstate(t)\in\R^{\ctrlstatedim}$ is the controller state vector and $\ctrlouput(t)\in\R^\ctrloutputdim$ is the controller output vector at time $t$, and $\ctrldynmat\in\R^{\ctrlstatedim\times\ctrlstatedim}$, $\ctrlctrmat\in\R^{\ctrlstatedim\times\bboutodim}$, $\ctrlrefmat\in\R^{\ctrlstatedim\times\bbrefdim}$, and $\ctrloutmat\in\R^{\ctrloutputdim\times\ctrlstatedim}$ are constant matrices. The interconnection of the plant $\plant$ and the control system $\ctrl\;$ forms the feedback loop $\bbsys$ according to $\plantinput = \ctrlouput + \bbaux$, with the dimension of the full state vector being $\bbstatedim = \plantstatedim + \ctrlstatedim$; to keep the notation as concise as possible, the plant output $\plantoutput$ is considered as the regulated output of the system $\bbsys$, \emph{i.e.}, $\bbouto = \plantoutput$, unless specified otherwise. The following assumption characterizes the properties of the feedback interconnection.
 \begin{assumption}
   \label{ass:lqrall_closedloop}
   The pairs $(\plantdynmat,\plantctrmat)$, $(\ctrldynmat,\ctrlctrmat)$ are reachable, and the pairs $(\plantoutmat,\plantdynmat)$, $(\ctrloutmat,\ctrldynmat)$ are detectable. Moreover, the closed-loop feedback interconnection of \eqref{eq:linplant} and \eqref{eq:lincontroller} does not induce pole-zero cancellations and it is asymptotically stable.\closestatement
 \end{assumption}
 
-Let $s$ be a variable taking values in $\C$, and $\planttf(s)$ be the transfer matrix of system \eqref{eq:linplant} from $\plantinput$ to $\plantoutput$ with $\bbaux=0$, computed from the state-space description of $\plant$. Let $\plantalltf(s)$ be the transfer matrix of \eqref{eq:bbsys} from $\bbaux$ to $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$. The dimensions of $\planttf(s)$ and $\plantalltf(s)$ are well determined and coincide with those of their respective state-space description thanks to \Cref{ass:lqrall_closedloop}.
+Let $s$ be a variable taking values in $\C$, and $\planttf(s)$ be the transfer matrix of system \eqref{eq:linplant} from $\plantinput$ to $\plantoutput$, computed from the state-space description of $\plant$. Let $\plantalltf(s)$ be the transfer matrix of \eqref{eq:bbsys} from $\bbaux$ to $\plantoutput$; moreover, let $(\bbdynmat,\bbctrmat,\bboutmat,0)$ be a realization of $\plantalltf(s)$. The Smith-McMillan degrees of $\planttf(s)$ and $\plantalltf(s)$ coincide with those of their respective state-space description thanks to \Cref{ass:lqrall_closedloop}.
 
 The reference input in this setting is defined as the state of the exosystem $\bbexo$, which is a continuous-time linear time-invariant system of the form
 \begin{subequations}
@@ -38,7 +38,7 @@ where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector at time $t$ and
 		\exodynmat_0 & = 0,	\exodynmat_i = \begin{bmatrix} 0 & \omega_i \\ -\omega_i & 0 \end{bmatrix}, &  & i=1,\dotsc,h,
 	\end{align}
 \end{subequations}
-with $\bbexostate(0) = \bbexostate_0\in\R^{\bbexostatedim}$. The natural pulses $\{\omega_1,\dotsc,\omega_h\}$ in \eqref{eq:linexoblocks} are positive integer multiples of $2\pi/\bbperiod$, \emph{i.e.}, such that $\omega_i = k_i\frac{2\pi}{\bbperiod}$, $k_i\in\N$, $i=1,\dotsc,h$.
+with $\bbexostate(0) = \bbexostate_0\in\R^{\bbexostatedim}$. The angular frequencies $\{\omega_1,\dotsc,\omega_h\}$ in \eqref{eq:linexoblocks} are positive integer multiples of $2\pi/\bbperiod$, \emph{i.e.}, such that $\omega_i = k_i\frac{2\pi}{\bbperiod}$, $k_i\in\N$, $i=1,\dotsc,h$.
 
 The feedback controller \eqref{eq:lincontroller}, together with exosystem \eqref{eq:linexoblocks}, ensure that \Cref{ass:bbiss,ass:bbssresp} hold. The complete block diagram of the closed loop is shown in \Cref{fig:lqrall}.
 \begin{figure}[t!]
@@ -59,7 +59,7 @@ Both the transfer matrices $\planttf(s)$ and $\plantalltf(s)$ admit left coprime
 where $\plantlcfd(s)$, $\plantalllcfd(s)$, $\plantlcfn(s)$ and $\plantalllcfn(s)$ are polynomial matrices. The following assumption is introduced to simplify the discussion, although it implies that the controller \eqref{eq:lincontroller} cannot embed an internal model of exosystem \eqref{eq:linexosystem}.
 \begin{assumption}
   \label{ass:lqrall_kernels}
-  There exists a left coprime factorization \eqref{eq:lqrall_lcfs} such that the following holds:
+  The left coprime factorization \eqref{eq:lqrall_lcfs} is such that the following holds:
 	\begin{subequations}
 		\label{eq:lqrall_kernels}
 		\begin{align}
@@ -344,7 +344,7 @@ The following result is thus obtained collecting the ones provided by the previo
           1 \quad   0 \quad 1 \quad  0
         \end{array}\right].
   \end{align}
-  The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of natural pulses given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
+  The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of angular frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
   \begin{figure}[t]
     \centering
     \includegraphics[width=.9\textwidth]{images/ch7/lqrall/sscosts}

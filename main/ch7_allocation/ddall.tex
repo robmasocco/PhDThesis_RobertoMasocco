@@ -19,7 +19,7 @@ It is assumed that the matrices in \eqref{eq:ddall_sys} depend continuously on a
 \begin{assumption}
   \label{ass:ddall_plant_exo}
   \eqref{eq:ddall_sys} is fully known for $\mu=0$ and the matrix $A$ in \eqref{eq:ddall_sys_x} is Hurwitz for any $\mu\in\mathcal{M}$.
-  The matrix $\exodynmat\in\R^{\bbexostatedim\times\bbexostatedim}$ in \eqref{eq:ddall_exo} is such that $\spec(\exodynmat)\subset\C_{0}$; moreover, its eigenvalues are all distinct and possess \emph{commensurate} angular frequencies.\closestatement
+  The matrix $\exodynmat\in\R^{\bbexostatedim\times\bbexostatedim}$ in \eqref{eq:ddall_exo} is such that $\spec(\exodynmat)\subset\C_{0}$; moreover, its eigenvalues are all distinct and possess angular frequencies that are positive integer multiples of a given angular frequency $\omega_b\in\R_{>0}$.\closestatement
 \end{assumption}
 
 As an immediate consequence of \Cref{ass:ddall_plant_exo} and of the ``blanket'' \Cref{ass:bbexoorig,ass:bbexopoisson}, the exosystem \eqref{eq:ddall_exo} is Poisson stable (see \Cref{sec:all_design_ssinv}) and its evolution is periodic of period $\bbperiod$ defined by the least common multiple of the individual periods.
@@ -34,14 +34,18 @@ For $s\in\C$,
 denote the transfer matrices of \eqref{eq:ddall_sys} from $\bbaux$ to $\bbouto$ and from $\bbaux$ to $\bboutp$, respectively. Recalling \Cref{ass:bbiss,ass:bboveract}, it is necessary to further characterize the over-actuation property in the uncertain case introduced by \eqref{eq:ddall_sys} to ensure that input allocation remains possible.
 \begin{assumption}
   \label{ass:ddall_redundancy}
-  For any $\mu\in\mathcal{M}$, the system \eqref{eq:ddall_sys_x}, \eqref{eq:ddall_sys_z0} is such that $\bbauxdim>\bboutodim$, $\rank(B) = \bbauxdim$, and $\rank(W_{\bbouto\bbaux}(s)) = \bboutodim$.\closestatement
+  For any $\mu\in\mathcal{M}$, the system \eqref{eq:ddall_sys_x}, \eqref{eq:ddall_sys_z0} is such that $\bbauxdim>\bboutodim$, $\rank(B) = \bbauxdim$, and
+  \begin{align}
+    \rank(W_{\bbouto\bbaux}(s)) &= \bboutodim, & s\in\C\setminus\poleset(W_{\bbouto\bbaux}(s)).
+  \end{align}
+  \closestatement
 \end{assumption}
-Finally, recall the definition of the cost functional \eqref{eq:bbcost} as well as the properties of the instantaneous cost function $\ell$. To provide a concise description of the control objective in this scenario,
+Finally, recall the definition of the cost functional \eqref{eq:bbcost} as well as the properties of the instantaneous cost function $\ell$. To provide a concise description of the control objective in this scenario, let
 \begin{equation}
   \label{ddall:eta0}
-  \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad \tau\in[t_0, t],
+  \eta_0(t,t_0,\bbstate_0,\bbexostate,\bbaux)
 \end{equation}
-is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate$ and $\bbaux$. The control problem of interest in this context is formulated as follows.
+be the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\bbsys$ initialized at $\bbstate(t_0) = \bbstate_0$ and driven by the inputs $\bbexostate$ and $\bbaux$. The control problem of interest in this context is formulated as follows.
 
 \begin{problem}[Dynamic allocation with robust output invisibility]
   \label{prb:ddall_main_per}
@@ -56,10 +60,10 @@ is the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
   such that the following requirements hold.
   \begin{enumerate}[(i)]
     \item \emph{Fixed-time robust output invisibility}: there exists a finite time $t_0 \geq 0$ with the property that, for any $\mu\in\mathcal{M}$, the regulated output $\bbouto$ satisfies
-    \begin{equation}
+    \begin{align}
       \label{eq:ddall_output_invis}
-      \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),0) = \eta_0(t,t_0,\bbstate_0,\bbexostate(\tau),\bbaux(\tau)), \quad t \geq t_0,\,\tau\in[t_0, t],\,(\bbstate_0,\bbexostate_0)\in\R^{\bbstatedim}\times\bbexoinitset.
-    \end{equation}
+      \eta_0(t,t_0,\bbstate_0,\bbexostate,0) &= \eta_0(t,t_0,\bbstate_0,\bbexostate,\bbaux), & t \geq t_0,\,(\bbstate_0,\bbexostate_0)\in\R^{\bbstatedim}\times\bbexoinitset.
+    \end{align}
     \item \emph{Steady-state periodicity}: for any $\bbexostate_0\in\bbexoinitset$, the internal state of the control allocator is bounded for any time and its unique steady-state response is periodic of period $\bbperiod$.
     \item \emph{Optimality}: the Lagrange cost functional \eqref{eq:bbcost} is minimized with respect to the class of inputs in a \emph{prescribed} finite-dimensional function space.
   \end{enumerate}
@@ -71,7 +75,7 @@ The construction of a solution to \Cref{prb:ddall_main_per} for any $\mu\in\math
   \label{eq:ddall_exo_spec}
   \spec(\exodynmat) = \{0, j \omega_1, -j \omega_1, ..., j \omega_{\bar{n}_e}, - j \omega_{\bar{n}_e} \}, \quad \bar{n}_e = \frac{\bbexostatedim-1}{2}.
 \end{equation}
-Recall \Cref{def:bbreddeg}. The design of the allocator requires the following information.
+Recall that $\bbreddeg=\bbauxdim-\bboutodim$ (see \Cref{def:bbreddeg}). The design of the allocator requires the following information.
 \begin{definition}[Data for the dynamic control allocator \eqref{eq:ddall_control_all}]
   \label{def:ddall_data}
   The data necessary for the design of the dynamic control allocator \eqref{eq:ddall_control_all} is divided into three items.
@@ -86,7 +90,7 @@ Recall \Cref{def:bbreddeg}. The design of the allocator requires the following i
         \label{eq:ddall_K2mom}
         W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_1), \ldots, W_{\bboutp\bbaux}(j \omega_{\bar{n}_e}).
       \end{equation}
-    \item[K3] A \emph{polynomial annihilator} for the transfer matrix $W_{\bbouto\bbaux}(s)$ of \eqref{eq:ddall_sys}, namely $W_a(s)\in\mathbb{C}^{\bbauxdim\times m_a}$, with poles with negative real part, such that
+    \item[K3] An \emph{annihilator} for the transfer matrix $W_{\bbouto\bbaux}(s)$ of \eqref{eq:ddall_sys}, namely $W_a(s)\in\mathbb{C}^{\bbauxdim\times m_a}$, with poles with negative real part, such that
       \begin{equation}
         \label{eq:ddall_W_a}
         W_{\bbouto\bbaux}(s)W_a(s)=0, \quad s\in\C\setminus(\poleset(W_{\bbouto\bbaux}(s))\cup\poleset(W_a(s))).
@@ -134,8 +138,8 @@ Define the functions $\xi(t)$ and $L(\bbexostate(t),x_{IM}(t))$ as
 \begin{subequations}
   \label{eq:ddall_G_xi}
 	\begin{align}
-		\xi(t) & = \bar{M}_{\bboutp, \bbexostate}e^{\exodynmat t}\bbexostate(t) + \bar{N}_{\mu}e^{A_{IM}t}x_{IM}(t), & t\in\R_{\geq 0}, \label{eq:ddall_xi} \\
-		L(\bbexostate(t),x_{IM}(t)) & = \left( \int_{0}^{\bbperiod} \nabla \ell(\xi(\sigma))'\bar{N}_{\mu}e^{A_{IM}\sigma} d\sigma \right)', & t\in\R_{\geq 0}. \label{eq:ddall_delta_def}
+		\xi(\sigma) & = \bar{M}_{\bboutp,\bbexostate}e^{\exodynmat\sigma}\bbexostate(\sigma) + \bar{N}_{\mu}e^{A_{IM}\sigma}x_{IM}(\sigma), & \sigma\in\R_{\geq 0}, \label{eq:ddall_xi} \\
+		L(\bbexostate,x_{IM}) & = \left( \int_{0}^{\bbperiod} \nabla \ell(\xi(\sigma))'\bar{N}_{\mu}e^{A_{IM}\sigma} d\sigma \right)'.\label{eq:ddall_delta_def}
 	\end{align}
 \end{subequations}
 The proposed dynamic allocator is given by
@@ -150,7 +154,7 @@ The proposed dynamic allocator is given by
 
 \begin{remark}
   \label{rem:ddall_structure}
-  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator at time $t$, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state, at time $t$, of the polynomial annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
+  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator at time $t$, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state, at time $t$, of the annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -297,12 +301,12 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
 
 \begin{remark}
   \label{rem:ddall_nablaG_comp}
-  In practice, the dynamic control allocation scheme \eqref{eq:ddall_control_all} can be implemented by approximating the integral in \eqref{eq:ddall_delta_def} with a finite sum. Given a sufficiently small sampling time $\tau_s\in\R_{>0}$, $\tau_s = \frac{\bbperiod}{K}$, $K\in\N$, define $\bar{\exodynmat} = e^{\exodynmat\tau_s}$ and $\bar{A}_{IM} = e^{A_{IM}\tau_s}$. Then, the gradient of the cost functional can be approximated as
+  In practice, the dynamic control allocation scheme \eqref{eq:ddall_control_all} can be implemented by approximating the integral in \eqref{eq:ddall_delta_def} with a finite sum. Given a sufficiently small sampling time $\tau_s\in\R_{>0}$, $\tau_s = \frac{\bbperiod}{K}$, $K\in\N$, define $\bar{\exodynmat} = e^{\exodynmat\tau_s}$ and $\bar{A}_{IM} = e^{A_{IM}\tau_s}$. Then, the gradient of the cost functional is approximated as
   \begin{subequations}
     \label{eq:ddall_approx_G}
     \begin{align}
-      \xi_k & = \bar{M}_{\bboutp,\bbexostate}\bar{\exodynmat}^k \bbexostate(k\tau_s) + \bar{N}_{\mu}\bar{A}_{IM}^k x_{IM}(k\tau_s),\label{eq:ddall_approx_G_xi}\\
-      L(\bbexostate(t), x_{IM}(t))' & \approx \sum_{k = 1}^{K}\, \nabla \ell(\xi_k)' \cdot \bar{N}_{\mu}\bar{A}_{IM}^k, \quad t\in\R_{\geq 0}, \label{eq:ddall_approx_G_G}
+      \xi_k &= \bar{M}_{\bboutp,\bbexostate}\bar{\exodynmat}^k \bbexostate(k\tau_s) + \bar{N}_{\mu}\bar{A}_{IM}^k x_{IM}(k\tau_s), & k\in\Z_{\geq 0},\label{eq:ddall_approx_G_xi}\\
+      L(\bbexostate,x_{IM})' &\approx \sum_{k = 1}^{K}\, \nabla \ell(\xi_k)' \cdot \bar{N}_{\mu}\bar{A}_{IM}^k,\label{eq:ddall_approx_G_G}
     \end{align}
   \end{subequations}
   which is a nonlinear function of the measurements of $x_{IM}(t)$ and $\bbexostate(t)$. The core difficulties in the implementation of \eqref{eq:ddall_control_all} arise in the nonlinear terms of \eqref{eq:ddall_approx_G} and fall within the wide spectrum of problems concerning function approximation with digital devices. In this specific case, assuming that the quantities $\bbexostate(t)$ and $x_{IM}(t)$ remain constant during sampling intervals, a digital device with a sampling time equal to $\tau_s$ in \eqref{eq:ddall_approx_G} can be used to implement the control allocator \eqref{eq:ddall_control_all}.\closeremark
@@ -315,7 +319,7 @@ The following result reveals that the structure of the control allocator \eqref{
   Consider the control allocator \eqref{eq:ddall_control_all} and suppose that $\ell(\bbssoutp(t)) = \frac{1}{2}\|\bbssoutp(t)\|^{2}_R$, with $R = R' \succ 0$. Then, $L(\bbexostate(t),x_{IM}(t))$ in \eqref{eq:ddall_xi}-\eqref{eq:ddall_delta_def} becomes
 	\begin{equation}
     \label{eq:ddall_delta_quadratic}
-		L(\bbexostate(t),x_{IM}(t)) = H_1 x_{IM}(t) +	H_2 \bbexostate(t), \quad t\in\R_{\geq 0},
+		L(\bbexostate,x_{IM}) = H_1 x_{IM}(t) +	H_2 \bbexostate(t), \quad t\in\R_{\geq 0},
   \end{equation}
   with
 	\begin{subequations}
@@ -340,11 +344,11 @@ The following result reveals that the structure of the control allocator \eqref{
   Applying standard properties of integrals, \eqref{eq:ddall_delta_def} reduces to
   \begin{equation}
     \begin{split}
-      L(\bbexostate(t),x_{IM}(t)) & = \int_{0}^{\bbperiod}  e^{A_{IM}'\sigma}\bar{N}_{\mu}'R\bar{N}_{\mu}e^{A_{IM}\sigma}\,d\sigma x_{IM} + \int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}R\bar{M}_{\bboutp,\bbexostate}e^{S\sigma}\,d\sigma \bbexostate(t)\\
+      L(\bbexostate,x_{IM}) & = \int_{0}^{\bbperiod}  e^{A_{IM}'\sigma}\bar{N}_{\mu}'R\bar{N}_{\mu}e^{A_{IM}\sigma}\,d\sigma x_{IM} + \int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}R\bar{M}_{\bboutp,\bbexostate}e^{S\sigma}\,d\sigma \bbexostate(t)\\
                                   & = H_1 x_{IM}(t) + H_2 \bbexostate(t), \quad t\in\R_{\geq 0}.
     \end{split}
   \end{equation}
-  The last claim of \Cref{prop:ddall_delay_quadratic} follows from two facts: first, $H_1$ is the observability Gramian matrix of the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$, and secondly, the matrix $A_{IM}$ is Hurwitz by construction.
+  The last claim of \Cref{prop:ddall_delay_quadratic} follows from two facts: first, $H_1$ is the observability Gramian matrix of the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$, and secondly, the matrix $A_{IM}$ is such that $\spec(A_{IM})\subset\C_{0}$.
 \end{proof}
 
 \begin{remark}
@@ -450,12 +454,12 @@ Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonp
   \label{prop:ddall_est_mom}
 	Let \Cref{ass:ddall_plant_exo,ass:ddall_nonpatho} hold. Fix $\bbexostate_0\in\bbexoinitset$. Then, the following statements hold.
 	\begin{enumerate}
-		\item[i.] \Cref{alg:ddall_algo1} is correct and yields a matrix $\bar{M}_{\bboutp,\bbexostate}$.
+		\item[i.] \Cref{alg:ddall_algo1} terminates yielding a matrix $\bar{M}_{\bboutp,\bbexostate}$.
 		\item[ii.] $\bar{M}_{\bboutp,\bbexostate}$ satisfies $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for all $t\in\R_{\geq 0}$.
 		\item[iii.] If $\bbexostate_0$ excites all natural modes of \eqref{eq:ddall_exo},	then $\bar{M}_{\bboutp,\bbexostate}$ is equal to the unique solution of \eqref{eq:ddall_Mbar}.\closestatement
 	\end{enumerate}
 \end{proposition}
-Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix $\bar{M}_{\bboutp,\bbexostate}$ computed by \Cref{alg:ddall_algo1} always ensures a correct prediction of the steady-state evolution \emph{for the trajectory used in the computation}, even if such matrix does not coincide with the unique solution of \eqref{eq:ddall_Mbar}. Further conditions, concerning the quantity of information that the data provides, are required to ensure the conincidence of the two matrices; this is specified in statement (ii) of \Cref{prop:ddall_est_mom}. Since the algorithm is intended to be used for data-driven, online estimation, the trajectory used in the computation (arising from the fixed $\bbexostate_0$) is exactly the one of interest for correctly controlling the plant, hence statement (ii) is the one actually useful in practice. The issue at hand is the same as the one in classic adaptive regulation, where the control objective is achieved even without fully identifying the parameters of the plant. Statement (iii) is given to complete the analysis and provide a full understanding of the issues at play.
+Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix $\bar{M}_{\bboutp,\bbexostate}$ computed by \Cref{alg:ddall_algo1} always ensures a correct prediction of the steady-state evolution \emph{for the trajectory used in the computation}, even if such matrix does not coincide with the unique solution of \eqref{eq:ddall_Mbar}. Further conditions, concerning the quantity of information that the data provides, are required to ensure the coincidence of the two matrices; this is specified in statement (ii) of \Cref{prop:ddall_est_mom}. Since the algorithm is intended to be used for data-driven, online estimation, the trajectory used in the computation (arising from the fixed $\bbexostate_0$) is exactly the one of interest for correctly controlling the plant, hence statement (ii) is the one actually useful in practice. The issue at hand is the same as the one in classic adaptive regulation, where the control objective is achieved even without fully identifying the parameters of the plant. Statement (iii) is given to complete the analysis and provide a full understanding of the issues at play.
 \begin{proof}
   To prove item (i) of \Cref{prop:ddall_est_mom}, notice that all steps in \Cref{alg:ddall_algo1} can be performed, provided that \eqref{eq:ddall_aM_hat} is solvable and the matrix inverse in \eqref{eq:ddall_Minv} exists; both facts are shown in the following.
   In the following, given a signal $x(t)$, $x^{\circ}(t)$ denotes its transient response, provided that the latter exists.
@@ -578,7 +582,7 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   \end{algorithmic}
 \end{algorithm}
 
-Finally, the key step to determine \textbf{K3} is to find a polynomial annihilator $N_a(s)$ such that its columns are a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$. It is then transformed into a rational annihilator $W_a(s)$ by adding a Hurwitz denominator to make it proper. Since the numerators in the elements of $W_{\bbouto\bbaux}(s)$ have degree at most $\bbstatedim$, then, according to \cite[Prop. 1]{zuniga_anaya_improved_2009}, $N_a(s)$ can be chosen with elements of degree not larger than $\bbstatedim\bboutodim$ exactly by selecting the columns of $N_a(s)$ as a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$ \cite[Main Thm.]{forney_jr_minimal_1975}.
+Finally, the key step to determine \textbf{K3} is to find a polynomial annihilator $N_a(s)$ such that its columns are a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$. It is then transformed into a rational annihilator $W_a(s)$ by adding a Hurwitz denominator to make it strictly proper. Since the numerators in the elements of $W_{\bbouto\bbaux}(s)$ have degree at most $\bbstatedim$, then, according to \cite[Prop. 1]{zuniga_anaya_improved_2009}, $N_a(s)$ can be chosen with elements of degree not larger than $\bbstatedim\bboutodim$ exactly by selecting the columns of $N_a(s)$ as a minimal polynomial base of the null space of $W_{\bbouto\bbaux}(s)$ \cite[Main Thm.]{forney_jr_minimal_1975}.
 
 Define
 \begin{subequations}

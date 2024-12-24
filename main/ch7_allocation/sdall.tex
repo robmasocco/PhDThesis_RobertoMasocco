@@ -31,7 +31,7 @@ The matrices in \eqref{eq:sdall_discretization} yield the following \emph{discre
     \plantoutput_k &= \dplantoutmat\plantstate_k, & k\in\Z_{\geq 0}.
   \end{align}
 \end{subequations}
-Let $\{0,\omega_1,\dotsc,\omega_h\}$ be natural pulses such that there exist $\bbperiod\in\R_{>0}$ and $\{k_i\}_{i=1}^{h}\subset\N$ such that
+Let $\{0,\omega_1,\dotsc,\omega_h\}$ be angular frequencies such that there exist $\bbperiod\in\R_{>0}$ and $\{k_i\}_{i=1}^{h}\subset\N$ such that
 \begin{align}
   \label{eq:sdall_exofreqs}
   \omega_i &= k_i\frac{2\pi}{\bbperiod}, & i=1,\dotsc,h.
@@ -347,7 +347,7 @@ where $\psi_k\in\R^{n_{IM}}$ is the state vector of the steady-state optimizer a
   \label{rem:sdall_comm_delta}
   As expressed by \eqref{eq:sdall_ssopt}, $\delta$ is computed and applied at every time $k$ instead of every $K$ steps as assumed in \eqref{eq:sdall_ssoptpred}. However, this does not invalidate the correctness of the procedure because a single update is necessary to drive $\psi$ to the optimal trajectory $\psi^\star$, namely
   \begin{align}
-    F_\zeta\zeta_k + F_{IM}\psi_k = 0, & k > \bbexostatedim + 1,
+    F_\zeta\zeta_k + F_{IM}\psi_k &= 0, & k > \bbexostatedim + 1,
   \end{align}
   and \eqref{eq:sdall_psi} generates the free response of the discretized exosystem. Moreover, if the closed-loop system goes to steady-state in $N_c$ time steps, and the allocator also does in $N_{all}$ time steps, then the allocated control system goes to steady-state in $\max\{N_c,N_{all}\}$ time steps.\closeremark
 \end{remark}
@@ -383,7 +383,7 @@ Recall that discrete-time systems are termed \emph{deadbeat}, namely such that t
 
 \begin{remark}
   \label{rem:sdall_finitespace}
-  Some observations about the space of admissible control laws are in order here. In \cite{galeani_dynamic_2014}, it is observed that these belong to a prescribed set (namely, the modes of the exosystem), which however remains an infinite-dimensional space. Instead, the admissible allocator actions in the present context, hence the optimal control input with respect to \eqref{eq:sdall_ctcost}, lie in a finite-dimensional space because in this setting the controls are sampled, \emph{i.e.}, piecewise-constant signals.\closeremark
+  Some observations about the space of admissible control laws are in order here. In \cite{galeani_dynamic_2014}, it is observed that these belong to a prescribed set (namely, the modes of the exosystem), which however remains an infinite-dimensional space. Instead, the admissible allocator actions in the present context, hence the optimal control input with respect to \eqref{eq:sdall_ctcost}, lie in a finite-dimensional space because in this setting the controls are sampled, \emph{i.e.}, piecewise-constant periodic signals.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -493,9 +493,9 @@ Recall that discrete-time systems are termed \emph{deadbeat}, namely such that t
     \label{fig:sdall_simresunaligned}
   \end{figure}
 
-  The performance of the allocated scheme is compared with that of a \emph{reference}, \emph{i.e.}, non-allocated one. \Cref{fig:sdall_costaligned} shows that the proposed allocator solves \Cref{prb:sdall_all}, since it brings the steady-state cost to a value that is lower than the one reached with the reference scheme. The initial transients in the allocated time history are almost entirely due to the regulator and not relevant to the analysis, since what matters is the end value, nonetheless it is interesting to note how the time history of the allocated cost maintains lower values than those of the reference one even during transients.
+  The performance of the allocated scheme is compared with the \emph{reference} one yielded by the control scheme without the allocator. \Cref{fig:sdall_costaligned} shows that the proposed allocator solves \Cref{prb:sdall_all}, since it brings the steady-state cost to a value that is lower than the one reached with the reference scheme. The initial transients in the allocated time history are almost entirely due to the regulator and not relevant to the analysis, since what matters is the end value, nonetheless it is interesting to note how the time history of the allocated cost maintains lower values than those of the reference one even during transients.
   \Cref{fig:sdall_deltaaligned} shows how the allocator applies the optimal correction to its internal state in just one time step, as anticipated in the proof of \Cref{thm:sdall_main}, and how then $\delta$ remains equal to zero.
-  \Cref{fig:sdall_errorripplealigned} shows the difference between the continuous-time tracking errors of the allocated and non-allocated schemes, respectively. The time histories of the tracking error differences show that they exhibit different tracking errors at all times except the sampling ones. This agrees with the sampled output invisibility requirement of \Cref{prob:sdall_all}, and proves that the discrete-time allocator induces a behavior which is invisible to the discrete-time control system but is visible onto the continuous-time plant output. In this example, the ripple trend depends on both the reference signal's amplitude and the sampling time being relatively long, but also on the way in which the control inputs are weighted by $R$.
+  \Cref{fig:sdall_errorripplealigned} shows the difference between the continuous-time tracking errors of the allocated and non-allocated schemes, respectively. The time histories of the tracking error differences show that they exhibit different tracking errors at all times except the sampling ones. This agrees with the sampled output invisibility requirement of \Cref{prb:sdall_all}, and proves that the discrete-time allocator induces a behavior which is invisible to the discrete-time control system but is visible onto the continuous-time plant output. In this example, the ripple trend depends on both the reference signal's amplitude and the sampling time being relatively long, but also on the way in which the control inputs are weighted by $R$.
   \Cref{fig:sdall_deltaalpha} shows what the optimizer does if implemented as explained in \Cref{rem:sdall_alp}. In that case, more than one time step is required to converge but intermediate corrections are less intense in terms of their amplitude.
   \cref{fig:sdall_simresunaligned} shows a similar simulation performed on a control scheme where $\bbperiod$ is such that $K\notin\N$, \emph{i.e.} relaxing \Cref{ass:sdall_periods} as anticipated, but still picked according to \eqref{eq:sdall_krule}. Both the steady-state cost and the correction term $\delta$ never converge but start oscillating, as stated in \Cref{rem:sdall_tnotinz}. The other considerations made above are still valid in this case.\closeexample
 \end{example}
