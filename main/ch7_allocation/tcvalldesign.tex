@@ -69,12 +69,12 @@ In practice, the validity of \Cref{ass:tcvoveract} (that is analogous to \Cref{a
   with $\bar{r}_{sh}\in\R^{q_{sh}}$.\closestatement
 \end{assumption}
 
-It is worth to point out that even if \Cref{ass:tcvrefs} holds, which in other words implies that a desired shape to track is encoded as a set of $q_{sh}$ constant scalar references, the resulting steady-state reference for the hybrid controller $C_h$, namely $\tilde{r}_h$, may not be a constant signal; this is due to the precomputed hybrid reference $r_{h,ff}$ that may include ramps. However, for the sake of simplicity, the design of the allocator can be carried out discarding the presence of the feedforward term $r_{h,ff}$. Thus, in accordance with the analysis carried out in \Cref{sec:all_design}, \Cref{ass:tcvrefs} implies that the steady-state behavior of the closed loop is not periodic. Hence, the steady-state cost functional \eqref{eq:bbcost} reduces to the \emph{steady-state cost function}
+It is worth to point out that even if \Cref{ass:tcvrefs} holds, which in other words implies that a desired shape to track is encoded as a set of $q_{sh}$ constant scalar references, the resulting reference for the hybrid controller $C_h$, namely $r_h$, may not be a constant signal; this is due to the precomputed hybrid reference $r_{h,ff}$ that may include ramps. However, for the sake of simplicity, the design of the allocator can be carried out discarding the presence of the feedforward term $r_{h,ff}$. Thus, in accordance with the analysis carried out in \Cref{sec:all_design}, \Cref{ass:tcvrefs} implies that the steady-state behavior of the closed loop is not periodic. Hence, the steady-state cost functional \eqref{eq:bbcost} reduces to the \emph{steady-state cost function}
 \begin{equation}
   \label{eq:tcvcost}
   J = \ell(\tilde{I}_{EF}),
 \end{equation}
-where $\tilde{I}_{EF}$ is the steady-state value of the EF coil currents, and the function $\ell : \R^{16} \rightarrow \R$ is at least locally convex. A specific choice of the performance criterion with respect to which the steady-state behavior of the EF coil currents must be optimized yields a specific form of the function $\ell$. The dynamic EF coil current allocation problem for the TCV tokamak can be formulated as follows.
+where $\tilde{I}_{EF}$ is the steady-state value of the EF coil currents, and the function $\ell : \R^{16} \rightarrow \R$ is at least locally convex. A specific choice of the performance criteria with respect to which the steady-state behavior of the EF coil currents must be optimized yields a specific form of the function $\ell$. The dynamic EF coil current allocation problem for the TCV tokamak can be formulated as follows.
 
 \begin{problem}[Dynamic EF coil current allocation for TCV shape control]
   \label{prb:tcvall}
