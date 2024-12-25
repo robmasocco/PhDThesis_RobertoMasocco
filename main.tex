@@ -13,16 +13,22 @@
 % Enable selective compilation of chapters to speed up development.
 % For this to work, the full document has to be compiled at least once.
 % DO NOT FORGET TO COMMENT THESE LINES BEFORE PUSHING!
+% \includeonly{head/preface/preface}
 % \includeonly{main/ch1_introduction/ch1,tail/biblio}
 % \includeonly{main/ch2_problem/ch2,tail/biblio}
 % \includeonly{main/ch3_tools/ch3,tail/biblio}
 % \includeonly{main/ch4_dua/ch4,tail/biblio}
 % \includeonly{main/ch5_robots/ch5,tail/biblio}
 % \includeonly{main/ch6_tcvscd/ch6,tail/biblio}
-% \includeonly{head/preface,main/ch7_allocation/ch7,tail/app/moments,tail/biblio}
-% \includeonly{head/preface,main/ch8_conclusions/ch8,tail/biblio}
+% \includeonly{head/preface/preface,main/ch7_allocation/ch7,tail/app/moments,tail/biblio}
+% \includeonly{head/preface/preface,main/ch8_conclusions/ch8,tail/biblio}
 
 \begin{document}
+
+% Space before each new paragraph.
+% (Needs to be after titlepage and frontmatter to keep the table of contents lists short.)
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% HEAD: Frontmatter
@@ -33,7 +39,7 @@
 \include{head/dedication}
 \setcounter{page}{0}
 \include{head/acknowledgements}
-\include{head/preface}
+\include{head/preface/preface}
 
 \singlespacing
 \tableofcontents
@@ -49,10 +55,6 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Listings}
 \lstlistoflistings
-
-% Space before each new paragraph according to the template guidelines.
-% (Needs to be after titlepage and frontmatter to keep the table of contents lists short.)
-\setlength{\parskip}{1em}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% MAIN: Mainmatter

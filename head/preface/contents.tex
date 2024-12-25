@@ -1,0 +1,56 @@
+\section*{Contents}
+The presentation of the contents is organized to flow as much as possible from the general to the specific, giving all the necessary background on a topic before introducing new concepts, then practical scenarios, and finally the results obtained. Nonetheless, despite all the effort, in very few sections of the text it is inevitable to mention some concepts and items before they are properly introduced: each time this happens, the reader is referred to the appropriate section where a detailed description is provided. Furthermore, some of the solutions presented in this work, in particular those introduced in \Cref{ch:dua}, are under active development. This book reflects their most up-to-date version at the time of writing, including some fixes and upgrades planned for the short term. Even if the possibility of drastic changes from what is hereby described is minimal, an occasional check at the proposed references might reveal that the actual implementations differ slightly from what is presented here: this is simply due to the ongoing design process and appropriate clarification will be given if requested. The full organization of the chapters is depicted in \Cref{fig:chapters}.
+
+\Cref{ch:intro} contextualizes the work and provides the first basic definitions of the most important concepts found throughout the whole book.
+
+\Cref{ch:prb} defines the problem of interest in this work, introducing both basic requirements and practical scenarios that confirm their relevance. It also contains an overview of the related work, whose analysis results in a justification for the following developments.
+
+\Cref{ch:tools} presents available technologies and tools that are of interest to this work, mainly because, if properly integrated and configured, they provide assistance in solving some parts of the main problem. Their description is detailed enough to allow the reader to understand their basic functioning as well as the features that make them valuable for this work.
+
+The solution that this work proposes is presented in \Cref{ch:dua}. The chapter offers a detailed description of its structure, implementation, and functionalities, leveraging on all the concept introduced thus far.
+
+At this point, the contents of the book follow two paths that stem from the framework developed previously, representing application scenarios for the proposed solutions and technologies. The first one is that of autonomous robotics, discussed in \Cref{ch:robots}. The chapter presents the main adaptations and specific features of the proposed framework targeted at this application scenario, and it also provides a detailed description of the results obtained.
+
+The second scenario that has been considered during the development of this work is that of magnetic confinement nuclear fusion, introduced in \Cref{ch:tokamaks}. The chapter presents the experimental device that has been the subject of this part of the work, together with its distributed control system. New results concerning the latter are also presented.
+
+Working on the distributed control architecture of an experimental nuclear fusion device also highlighted possible improvements to its control system. Their introduction and motivation is the starting point of \Cref{ch:allocation}, which proceeds with the description of novel methodological results and concludes with their application to the development of a suitable solution. Experimental results are also presented and discussed.
+
+Finally, \Cref{ch:conclusions} summarizes the results obtained and discusses the possible future developments of the work presented in this book.
+
+\begin{figure}[ht]
+  \centering
+  \begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+    node distance=1cm,
+    box/.style={draw, rectangle, minimum width=2.5cm, minimum height=1cm},
+    >={Stealth[scale=1.0]}
+  ]
+    % Nodes
+    \node[box](c1){Chapter 1};
+    \node[box](c2)[below=of c1]{Chapter 2};
+    \node[box](c3)[below=of c2]{Chapter 3};
+    \node[box](c4)[below=of c3]{Chapter 4};
+
+    % Branch left
+    \node[box](c5)[below left=2cm and 1cm of c4]{Chapter 5};
+
+    % Branch right
+    \node[box](c6)[below right=1cm and 1cm of c4]{Chapter 6};
+    \node[box](c7)[below=of c6]{Chapter 7};
+
+    % Conclusions
+    \node[box](c8)[below left=1cm and 1cm of c7]{Chapter 8};
+
+    % Connections
+    \draw[->](c1.south)--(c2.north);
+    \draw[->](c2.south)--(c3.north);
+    \draw[->](c3.south)--(c4.north);
+    \draw[->](c4.south)--(c5.north);
+    \draw[->](c4.south)--(c6.north);
+    \draw[->](c4.south)--(c8.north);
+    \draw[->](c6.south)--(c7.north);
+    \draw[->](c5.south)--($(c8.north) + (-5mm,0)$);
+    \draw[->](c7.south)--($(c8.north) + (5mm,0)$);
+  \end{tikzpicture}\end{adjustbox}
+  \caption{Organization of the chapters.}
+  \label{fig:chapters}
+\end{figure}

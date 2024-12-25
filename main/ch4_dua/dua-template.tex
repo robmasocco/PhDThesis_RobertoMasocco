@@ -13,7 +13,51 @@ The description of the functionalities offered by this template starts from the 
 The filesystem layout of a DUA unit is designed to be as simple and intuitive as possible, to allow the user to quickly understand the structure of the project and to easily find the files that they are looking for. The layout is also designed to be consistent across all units, to allow the user to quickly understand the structure of a new unit even if they have never seen it before. The layout is also designed to be flexible, to allow the user to easily add new files and directories to the project as needed. However, a standard set of directories is provided to help the user organize their project in a way that is consistent with the DUA framework. The layout is also designed to be compatible with the structure of the base units, to allow the user to easily integrate their software modules with the base units and to quickly deploy them on the target platform. A visual inspection of the layout of \cite{masocco_dua-template_nodate}, which is also depicted in \Cref{fig:duatemplatelayout}, shows that it resembles the organization of a colcon workspace discussed in \Cref{sec:ros2_buildsys}: this is due to the fact that the template is designed to be used also to develop software based on \ROS, and the colcon workspace is the standard way to organize \ROS projects. Nonetheless, a set of countermeasures are put in place to avoid adding build artifacts and similar contents to version control: almost every directory among those listed below contains an appropriate \texttt{.gitignore} file that prevents known file types to be added to Git, and the user is free to modify them as they see fit to customize this behavior. The best way to understand the \texttt{dua-template} filesystem layout is to examine the purpose and contents of each directory it contains, keeping in mind that the actual usage of some files is clarified later on.
 \begin{figure}[t!]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/ch4/dua_template_filesystem.pdf}
+  \begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+    % Global settings
+    node distance=.5cm,
+    box/.style={
+        draw,
+        rectangle,
+        minimum width=2.2cm,
+        minimum height=0.8cm,
+        align=center
+    },
+    >={Stealth[scale=1.0]},
+    shorten >=1pt, shorten <=1pt
+  ]
+    % Root node
+    \node[box] (root) {\texttt{workspace}};
+
+    % Second level (horizontal layout)
+    % Position each child relative to the previous or to root
+    \node[box] (github) [below=1.0cm of root, xshift=-9.5cm]  {\texttt{.github}};
+    \node[box] (vscode) [right=0.5cm of github]               {\texttt{.vscode}};
+    \node[box] (bin)    [right=0.5cm of vscode]               {\texttt{bin}};
+    \node[box] (config) [right=0.5cm of bin]                  {\texttt{config}};
+    \node[box] (docker) [right=0.5cm of config]               {\texttt{docker}};
+    \node[box] (logs)   [right=0.5cm of docker]               {\texttt{logs}};
+    \node[box] (src)    [right=0.5cm of logs]                 {\texttt{src}};
+    \node[box] (tools)  [right=0.5cm of src]                  {\texttt{tools}};
+
+    % Third level: directories under "docker"
+    \node[box] (dockerchild1) [below left=1.0cm and 0.5cm of docker]  {\texttt{container-x86-base}};
+    \node[box] (dockerchild2) [below right=1.0cm and 0.5cm of docker] {\texttt{...}};
+
+    % Connections from root to second level
+    \draw[->] (root.south) -- (github.north);
+    \draw[->] (root.south) -- (vscode.north);
+    \draw[->] (root.south) -- (bin.north);
+    \draw[->] (root.south) -- (config.north);
+    \draw[->] (root.south) -- (docker.north);
+    \draw[->] (root.south) -- (logs.north);
+    \draw[->] (root.south) -- (src.north);
+    \draw[->] (root.south) -- (tools.north);
+
+    % Connections from "docker" to third-level children
+    \draw[->] (docker.south) -- (dockerchild1.north);
+    \draw[->] (docker.south) -- (dockerchild2.north);
+  \end{tikzpicture}\end{adjustbox}
   \caption{Directory tree of a DUA unit based on \texttt{dua-template} \cite{masocco_dua-template_nodate}.}
   \label{fig:duatemplatelayout}
 \end{figure}
