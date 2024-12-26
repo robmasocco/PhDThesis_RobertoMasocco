@@ -1,46 +1,46 @@
-The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the TITO model \eqref{eq:bbsys} subject to the allocation action of the auxiliary input $\bbaux$. In a similar way the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
+The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys}, subject to the reference input produced by the exosystem \eqref{eq:bbexosys}. Suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold and consider the steady-state cost functional \eqref{eq:bbcost}, which evaluates the steady-state performance output of the system \eqref{eq:bbsys} subject to the allocation action of the auxiliary input $\bbaux$. In a similar way to the previous linear case, let $\ell(\bbssoutp(t))=\left\Vert\bbssoutp(t)\right\Vert^2_2$ and $\tau_0=0$ in \eqref{eq:bbcost}, yielding
 \begin{equation}
   \label{eq:nlall_sscost}
   J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau.
 \end{equation}
-In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most cumbersome requirement set by \Cref{prb:ssinv} is the output invisibility item (I), which, in the previous linear case of \Cref{prb:lqrall_optcont}, was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}-\eqref{eq:bbexosys} stems from a different reasoning: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by penalizing the steady-state output invisibility requirement in the cost functional \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
+In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most cumbersome requirement set by \Cref{prb:ssinv} is the output invisibility statement (I), which, in the previous linear case of \Cref{prb:lqrall_optcont}, was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}-\eqref{eq:bbexosys} stems from a different reasoning: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by penalizing the steady-state output invisibility requirement in the cost functional \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
 
-To substantiate this evidence few preliminary definitions are in order. Let $\bbstate_n(t)$, $\bbstate_a(t)\in\R^\bbstatedim$ denote the state vector of \eqref{eq:bbsys} at time $t$ in the absence or presence of the allocator, respectively, that is
+To substantiate this evidence few preliminary definitions are in order. Let $\bbstate_N(t)$, $\bbstate_N(t)\in\R^\bbstatedim$ denote the state vector of \eqref{eq:bbsys} at time $t$ in the absence or presence of the allocator, respectively, that is
 \begin{subequations}
   \label{eq:nlall_xnxa}
   \begin{align}
-    \dot{\bbstate}_n(t) & = \bbvecf(\bbstate_n(t), \bbref(t)), & t\in\R_{\geq 0},\label{eq:nlall_xn} \\
-    \dot{\bbstate}_a(t) & = \bbvecf(\bbstate_a(t), \bbref(t)) + \bbinmap(\bbstate_a(t))\bbaux(t), & t\in\R_{\geq 0},\label{eq:nlall_xa}
+    \dot{\bbstate}_N(t) & = \bbvecf(\bbstate_N(t), \bbref(t)), & t\in\R_{\geq 0},\label{eq:nlall_xn} \\
+    \dot{\bbstate}_A(t) & = \bbvecf(\bbstate_A(t), \bbref(t)) + \bbinmap(\bbstate_A(t))\bbaux(t), & t\in\R_{\geq 0},\label{eq:nlall_xa}
   \end{align}
 \end{subequations}
-and let $\bbssstate_{n},\,\bbssstate_{a}$ denote the corresponding steady-state responses, provided that the latter exists. Define the \emph{output invisibility function} $h_i(\bbstate_n, \bbstate_a) : \R^\bbstatedim\times\R^\bbstatedim \rightarrow \R$ in the following way:
+and let $\bbssstate_{N},\,\bbssstate_{A}$ denote the corresponding steady-state responses, provided that the latter exists. Define the \emph{output invisibility function} $h_I(\bbstate_N, \bbstate_A) : \R^\bbstatedim\times\R^\bbstatedim \rightarrow \R$ in the following way:
 \begin{align}
   \label{eq:nlall_hi}
-  h_i(\bbstate_n(t), \bbstate_a(t)) &= \frac{1}{2} \left\Vert \bboutmapo(\bbstate_n(t)) - \bboutmapo(\bbstate_a(t)) \right\Vert_2^2, & t\in\R_{\geq 0}.
+  h_I(\bbstate_N(t), \bbstate_A(t)) &= \frac{1}{2} \left\Vert \bboutmapo(\bbstate_N(t)) - \bboutmapo(\bbstate_A(t)) \right\Vert_2^2, & t\in\R_{\geq 0}.
 \end{align}
 A relaxed formulation of \Cref{prb:ssinv} is the following constrained optimal control problem.
 
 \begin{problem}[Optimal input allocation for nonlinear dynamics]
   \label{prb:nlall_optcont}
-  Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Given $\bbexostate_0\in\bbexostateset^{\circ}$, let $\bbexostate(0) = \bbexostate_0$. Let $h_i(\bbstate_n(t),\bbstate_a(t))$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
+  Consider the system \eqref{eq:bbsys} and suppose that \Cref{ass:bboveract,ass:bbiss,ass:bbssresp} hold. Given $\bbexostate_0\in\bbexostateset^{\circ}$, let $\bbexostate(0) = \bbexostate_0$. Let $h_I(\bbstate_N(t),\bbstate_A(t))$ be defined as in \eqref{eq:nlall_hi}. Let $v : \R \rightarrow \R^\bbauxdim$ and define the cost functionals
   \begin{subequations}
     \label{eq:nlall_Js}
     \begin{align}
-      J_p(v) & = \frac{1}{2} \int_0^\bbperiod \left\Vert \bboutmapp(\bbssstate_{a}(t), v(t)) \right\Vert_2^2\,dt,\label{eq:nlall_Jp} \\
-      J_i(v) & = \int_0^\bbperiod h_i(\bbssstate_{n}(t),\bbssstate_{a}(t))\,dt.\label{eq:nlall_Ji}
+      J_p(v) & = \frac{1}{2} \int_0^\bbperiod \left\Vert \bboutmapp(\bbssstate_{A}(t), v(t)) \right\Vert_2^2\,dt,\label{eq:nlall_Jp} \\
+      J_I(v) & = \int_0^\bbperiod h_I(\bbssstate_{N}(t),\bbssstate_{A}(t))\,dt.\label{eq:nlall_Ji}
     \end{align}
   \end{subequations}
   Determine, if any, a function $v^\star\in\mathcal{L}_2([0, \bbperiod])$, periodic of period $\bbperiod$, such that the cost functional
   \begin{equation}
     \label{eq:nlall_J}
-    J(v) = J_p(v) + \alpha J_i(v),
+    J(v) = J_p(v) + \alpha J_I(v),
   \end{equation}
   with a fixed $\alpha\in\R_{>0}$, is brought to its minimum value, satisfying the differential constraints \eqref{eq:nlall_xn}-\eqref{eq:nlall_xa} with $\bbaux=v$.\closestatement
 \end{problem}
 
 \begin{remark}
   \label{rem:nlall_prbrel}
-  The output invisibility requirement, \emph{i.e.}, item (I) of \Cref{prb:ssinv}, represents the main challenge of dynamic input allocation problems in general. In \Cref{prb:nlall_optcont}, by \eqref{eq:nlall_Ji} and \eqref{eq:nlall_J}, this requirement is included as part of the minimization objective, implying that the solutions to \Cref{prb:nlall_optcont} can only approximate the behavior of those to \Cref{prb:ssinv}. It is reasonable to expect that the quality of the approximation depends on the specific solutions to \Cref{prb:nlall_optcont} that can be determined, using numerical methods, as $\alpha\rightarrow +\infty$.\closeremark
+  The output invisibility requirement, \emph{i.e.}, statement (I) of \Cref{prb:ssinv}, represents the main challenge of dynamic input allocation problems in general. In \Cref{prb:nlall_optcont}, by \eqref{eq:nlall_Ji} and \eqref{eq:nlall_J}, this requirement is included as part of the minimization objective, implying that the solutions to \Cref{prb:nlall_optcont} can only approximate the behavior of those to \Cref{prb:ssinv}. It is reasonable to expect that the quality of the approximation depends on the specific solutions to \Cref{prb:nlall_optcont} that can be determined, using numerical methods, as $\alpha\rightarrow +\infty$.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -48,60 +48,54 @@ A relaxed formulation of \Cref{prb:ssinv} is the following constrained optimal c
   Although a generic allocator that solves \Cref{prb:ssinv} may generally exhibit transients in its output $\allout$, the solution to \Cref{prb:nlall_optcont} consists of a steady-state behavior repeated over the time interval $[0,\bbperiod]$, similar to the previous linear case \cite{galeani_optimal_2023}. However, there may still be transients in the overall system response of \eqref{eq:bbsys} and in the remaining signals as they converge to their steady-state, allocated behavior.\closeremark
 \end{remark}
 
-Let $\lambda_n(t),\lambda_a(t)\in\R^{\bbstatedim}$ be the costate variables, associated to the nominal (\emph{i.e.}, non-allocated) and allocated state variables, respectively. In the following, time dependencies are omitted to ease the notation. Recalling \eqref{eq:nlall_xnxa}--\eqref{eq:nlall_J}, define the Hamiltonian function
-\begin{equation}
-  \label{eq:nlall_H}
-  \begin{split}
-    &H(\bbstate_n(t),\bbstate_a(t),\lambda_n(t),\lambda_a(t),v(t)) \\
-    &\hspace{-1.5pt}=\frac{1}{2}\left\Vert \bboutmapp(\bbstate_a(t),v(t)) \right\Vert_2^2 + \alpha h_i(\bbstate_n(t),\bbstate_a(t)) +\lambda_n(t)'\bbvecf(\bbstate_n(t),\bbref(t)) \\
-    &\hspace{-1.5pt}+ \lambda_a(t)'(\bbvecf(\bbstate_a(t),\bbref(t)) + \bbinmap(\bbstate_a(t))v(t)), \quad t\in\R_{\geq 0}.
-  \end{split}
-\end{equation}
-For the sake of simplicity, define
+Let $\lambda_N(t),\lambda_A(t)\in\R^{\bbstatedim}$ be the costate variables, associated to the nominal (\emph{i.e.}, non-allocated) and allocated state variables, respectively. In the following, time dependencies are omitted to ease the notation. Recalling \eqref{eq:nlall_xnxa}--\eqref{eq:nlall_J}, define the Hamiltonian function
 \begin{multline}
-  \label{eq:nlall_dHdv}
-  H_v(\bbstate_a,\lambda_a,v) = \frac{\partial H(\bbstate_n,\bbstate_a,\lambda_n,\lambda_a,v)}{\partial v}
-  = \bboutmapp(\bbstate_a,v)'\frac{\partial \bboutmapp(\bbstate_a,v)}{\partial v} + \lambda_a'\bbinmap(\bbstate_a),
+  \label{eq:nlall_H}
+  H(\bbstate_N(t),\bbstate_A(t),\lambda_N(t),\lambda_A(t),v(t)) \\
+  =\frac{1}{2}\left\Vert \bboutmapp(\bbstate_A(t),v(t)) \right\Vert_2^2 + \alpha h_I(\bbstate_N(t),\bbstate_A(t)) + \lambda_N(t)'\bbvecf(\bbstate_N(t),\bbref(t)) \\
+  + \lambda_A(t)'(\bbvecf(\bbstate_A(t),\bbref(t)) + \bbinmap(\bbstate_A(t))v(t)), \qquad t\in\R_{\geq 0}.
 \end{multline}
+Consider (omitting, for the sake of simplicity, some dependencies)
+\begin{equation}
+  \label{eq:nlall_dHdv}
+  H_v = \bboutmapp(\bbstate_A,v)'\frac{\partial \bboutmapp}{\partial v} + \lambda_A'\bbinmap(\bbstate_A),
+\end{equation}
 and note that the costate dynamics are given by
 \begin{subequations}
   \label{eq:nlall_lambdadot}
   \begin{align}
-    \dot{\lambda}_n(t) &= -\alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_n}' - \frac{\partial \bbvecf(\bbstate_n(t),\bbref(t))}{\partial \bbstate_n}'\lambda_n(t), & t\in\R_{\geq 0},\label{eq:nlal_lambdandot}\\
-    \begin{split}
-      \dot{\lambda}_a(t) &= -\frac{\partial \bboutmapp(\bbstate_a(t),v(t))}{\partial \bbstate_a}'\bboutmapp(\bbstate_a(t),v(t))\\
-      &- \alpha\frac{\partial h_i(\bbstate_n(t),\bbstate_a(t))}{\partial \bbstate_a}' - \frac{\partial \bbvecf(\bbstate_a(t),\bbref(t))}{\partial \bbstate_a}'\lambda_a(t)\\
-      &- \sum_{\iota=1}^{\bbauxdim}v_\iota(t)\frac{\partial \bbinmap_\iota(\bbstate_a(t))}{\partial \bbstate_a}'\lambda_a(t),
-    \end{split}& t\in\R_{\geq 0},\label{eq:nlall_lambdaadot}
+    \dot{\lambda}_N(t) &= -\alpha\left.\frac{\partial h_I(\bbstate_N,\bbstate_A)}{\partial \bbstate_N}'\right|_{\bbstate_N=\bbstate_N(t),\bbstate_A=\bbstate_A(t)}\notag\\
+    &- \left.\frac{\partial \bbvecf(\bbstate_N,\bbref)}{\partial \bbstate_N}'\right|_{\bbstate_N=\bbstate_N(t),\bbref=\bbref(t)}\lambda_N(t), & t\in\R_{\geq 0},\label{eq:nlal_lambdandot}\\
+    \dot{\lambda}_A(t) &= -\frac{\partial \bboutmapp(\bbstate_A(t),v(t))}{\partial \bbstate_A}'\bboutmapp(\bbstate_A(t),v(t))\notag\\
+    &- \alpha\left.\frac{\partial h_I(\bbstate_N,\bbstate_A)}{\partial \bbstate_A}'\right|_{\bbstate_N=\bbstate_N(t),\bbstate_A=\bbstate_A(t)} - \left.\frac{\partial \bbvecf(\bbstate_A,\bbref)}{\partial \bbstate_A}'\right|_{\bbstate_A=\bbstate_A(t),\bbref=\bbref(t)}\lambda_A(t)\notag\\
+    &- \sum_{i=1}^{\bbauxdim}v_i(t)\left.\frac{\partial \bbinmap_i(\bbstate_A)}{\partial \bbstate_A}'\right|_{\bbstate_A=\bbstate_A(t)}\lambda_A(t), & t\in\R_{\geq 0},\label{eq:nlall_lambdaadot}
   \end{align}
 \end{subequations}
-where $v_\iota(t)$ and $\bbinmap_\iota(t)$ denote the $\iota$-th component and column of $v(t)$ and $\bbinmap(t)$, respectively.
+where $v_i$ and $\bbinmap_i$ denote the $i$-th entry and column of $v$ and $\bbinmap$, respectively.
 Given the function $u$ with values $u(t)\in\R^\bbauxdim$, the periodic extension of $u$ is denoted by $\hat{u} : \R \rightarrow \R^\bbauxdim$, \emph{i.e.}, $\hat{u}(t) = u(\Mod(t, \bbperiod))$.
-Let $\beta,\gamma\in\R_{>0}$, and $\bbstate_n$ be the solution of \eqref{eq:nlall_xn}. Fix a final time $t_f=a\bbperiod$ with $a\in\N$ large enough to include a ``reasonable'' number of periods, an arbitrary $v_0$ with values in $v_0(t)\in\R^\bbauxdim$, fix $(\lambda_n(t_f),\lambda_a(t_f))=(0,0)$, and define
+Let $\beta,\gamma\in\R_{>0}$, and $\bbstate_N$ be the solution of \eqref{eq:nlall_xn}. Fix a final time $t_f=a\bbperiod$ with $a\in\N$ large enough to include a ``reasonable'' number of periods, an arbitrary $v_0$ with values in $v_0(t)\in\R^\bbauxdim$, fix $(\lambda_N(t_f),\lambda_A(t_f))=(0,0)$, and define
 \begin{equation}
   \label{eq:nlall_deltadH}
-  \delta(H_v(\bbstate_a(t),\lambda_a(t),v(t))) = \left( \int_{t_f-\bbperiod}^{t_f} H_v(\bbstate_a(t),\lambda_a(t),v(t)) H_v(\bbstate_a(t),\lambda_a(t),v(t))'\,dt \right)^{1/2}.
+  H_v^\delta(\bbstate_A,\lambda_A,v) = \left( \int_{t_f-\bbperiod}^{t_f} H_v(\bbstate_A(t),\lambda_A(t),v(t)) H_v(\bbstate_A(t),\lambda_A(t),v(t))'\,dt \right)^{1/2}.
 \end{equation}
 The proposed method is stated in \Cref{alg:nlall_sweep}, and its properties are characterized by the following theorem.
 
-\begin{algorithm}[h!]
+\begin{algorithm}[!t]
   \caption{Steady-state steepest descent algorithm \cite{masocco_dynamic_2024}.}
   \label{alg:nlall_sweep}
   \begin{algorithmic}[1]
-    \Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0,\,\bbstate_n$
+    \Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,[0,t_f],\,v_0,\,\bbstate_N,\,(\lambda_N(t_f),\lambda_A(t_f)),\,\bbstate_A(0)$
     \Ensure $\tilde{v}$
-    \State Let $t\in[0,t_f]$.
-    \State $\tilde{v}^{(0)}(t) \gets v_0(t)$
+    \State $\tilde{v}_0 \gets v_0$
     \For{$k=1,\dotsc$}
-      \State $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$
-      \State $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
-      \Statex \hspace{3.72cm}$(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
-      \If{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
-        \Return $\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$
+      \State $\bbstate_{A,k} \gets$ the solution of \eqref{eq:nlall_xa} with $\bbaux=\tilde{v}_{k-1}$, ${\bbstate_A}_0=\bbstate_A(0)$
+      \State $(\lambda_{N,k},\lambda_{A,k}) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
+      \Statex \hspace{3.05cm}$(\bbstate_A,v)=(\bbstate_{A,k},\tilde{v}_{k-1})$, $(\lambda_N(t_f),\lambda_A(t_f))$ given
+      \If{$H_v^\delta(\bbstate_{A,k},\lambda_{A,k},\tilde{v}_{k-1}) < \beta$}
+        \Return $\tilde{v} \gets \tilde{v}_{k-1}$
       \Else
-        \State $u^{(k)}(t) \gets \tilde{v}^{(k-1)}(t) - \gamma\,H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
-        \State $u_p^{(k)}(\tau) \gets u^{(k)}(t_f - \bbperiod + \tau)$, with $\tau\in[0,\bbperiod]$
-        \State $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ \Comment{Periodic extension.}
+        \State $u_k \gets \tilde{v}_{k-1} - \gamma\,H_v(\bbstate_{A,k},\lambda_{A,k},\tilde{v}_{k-1})$
+        \State $\tilde{v}_k \gets \hat{\tilde{u}}_k$ \Comment{Periodic extension of the steady-state.}
       \EndIf
     \EndFor
   \end{algorithmic}
@@ -132,35 +126,32 @@ The proposed method is stated in \Cref{alg:nlall_sweep}, and its properties are 
 
 The choice of the update step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}.
 
-The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an abuse of notation, the variables $s$ and $r$ store at each iteration, respectively, $H_v$ and $H_v \odot H_v$ of the current and of the previous iterations. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}$, as well as the operation $(\cdot)^{-1}$ on $(\hat{r}^{1/2}+\delta)$, reported on line 16 of \Cref{alg:nlall_adam}, are both performed component-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the update step. In particular, an appropriate choice of these parameters allows one to discard all the information related to previous iterations, thus improving the update step by relying only on the most recent information. It is worth mentioning that this scheme adjusts the update step dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
+The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an abuse of notation, the variables $s$ and $r$ store at each iteration, respectively, $H_v$ and $H_v \odot H_v$ of the current and of the previous iterations. Note also that the operation $(\cdot)^{1/2}$ on $\hat{r}$, as well as the operation $(\cdot)^{-1}$ on $(\hat{r}^{1/2}+\delta)$, reported on line 14 of \Cref{alg:nlall_adam}, are both performed component-wise. The values $\rho_1$ for $s$, and $\rho_2$ for $r$, constitute a measure of the importance of the past history, which is then used for the proper evaluation of the update step. In particular, an appropriate choice of these parameters allows one to discard all the information related to previous iterations, thus improving the update step by relying only on the most recent information. It is worth mentioning that this scheme adjusts the update step dynamically during the iterations, differently from the scheme provided by \Cref{alg:nlall_sweep}.
 
-\begin{algorithm}[h!]
+\begin{algorithm}[!t]
 	\caption{Steady-state ADAM algorithm \cite{masocco_dynamic_2024}.}
 	\label{alg:nlall_adam}
 	\begin{algorithmic}[1]
-		\Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,v_0(t),\,\bbstate_n(t),\,\rho_1,\,\rho_2,\,\delta$
-		\Ensure $\tilde{v}(t)$
-		\State let $t\in[0,t_f]$
-		\State $\tilde{v}^{(0)}(t) \gets v_0(t)$
-		\State $s^{(0)}(t)\gets0$
-		\State $r^{(0)}(t)\gets0$
+		\Require $\beta,\,\gamma,\,\bbperiod,\,t_f,\,[0,t_f],\,v_0,\,\bbstate_N,\,(\lambda_N(t_f),\lambda_A(t_f)),\,\bbstate_A(0),\,\rho_1,\,\rho_2,\,\delta$
+		\Ensure $\tilde{v}$
+		\State $\tilde{v}_0 \gets v_0$
+		\State $s_0\gets0$
+		\State $r_0\gets0$
 		\For{$k=1,\dotsc$}
-			\State $\bbstate_a^{(k)}(t) \gets$ solution of \eqref{eq:nlall_xa} with $\bbaux(t)=\tilde{v}^{(k-1)}(t)$
-			\State $(\lambda_n^{(k)}(t),\lambda_a^{(k)}(t)) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
-      \Statex \hspace{3.72cm}$(\bbstate_a(t),v(t))=(\bbstate_a^{(k)}(t),\tilde{v}^{(k-1)}(t))$
-			\If{$\delta(H_v(\bbstate_a^{(k)}(t),\lambda_a^{(k)}(t),\tilde{v}^{(k-1)}(t))) < \beta$}
-				\Return $\tilde{v}(t) \gets \tilde{v}^{(k-1)}(t)$
+			\State $\bbstate_{A,k} \gets$ the solution of \eqref{eq:nlall_xa} with $\bbaux=\tilde{v}_{k-1}$, ${\bbstate_A}_0=\bbstate_A(0)$
+			\State $(\lambda_{N,k},\lambda_{A,k}) \gets$ backward integration of \eqref{eq:nlall_lambdadot} with
+      \Statex \hspace{3.05cm}$(\bbstate_A,v)=(\bbstate_{A,k},\tilde{v}_{k-1})$, $(\lambda_N(t_f),\lambda_A(t_f))$ given
+      \If{$H_v^\delta(\bbstate_{A,k},\lambda_{A,k},\tilde{v}_{k-1}) < \beta$}
+        \Return $\tilde{v} \gets \tilde{v}_{k-1}$
 			\Else
-				\State let $\tau \in [0, \bbperiod]$, $\Bar{\tau} = t_f - \bbperiod + \tau$
-				\State $H_v(\Bar{\tau}) \gets H_v(\bbstate_a^{(k)}(\Bar{\tau}),\lambda_a^{(k)}(\Bar{\tau}),\tilde{v}^{(k-1)}(\Bar{\tau}))$
-				\State $s^{(k)}(\Bar{\tau})\gets\rho_1s^{(k-1)}(\Bar{\tau})+(1-\rho_1)H_v(\Bar{\tau})$
-				\State $r^{(k)}(\Bar{\tau})\gets\rho_2r^{(k-1)}(\Bar{\tau})+(1-\rho_2)H_v(\Bar{\tau}) \odot H_v(\Bar{\tau})$
-				\State $\hat{s}(\Bar{\tau}) \gets s(\Bar{\tau})/(1-\rho_1^k)$
-				\State $\hat{r}(\Bar{\tau}) \gets r(\Bar{\tau})/(1-\rho_2^k)$
-				\State $\Delta u^{(k)}(\Bar{\tau})\gets-\gamma\,\hat{s}(\Bar{\tau})\odot((\hat{r}(\Bar{\tau}))^{1/2}+\delta)^{-1}$
-				\State $u^{(k)}(\Bar{\tau}) \gets \tilde{v}^{(k-1)}(\Bar{\tau}) + \Delta u^{(k)}(\Bar{\tau}) $
-				\State $u_p^{(k)}(\tau) \gets u^{(k)}(\Bar{\tau})$
-				\State $\tilde{v}^{(k)}(t) \gets \hat{u}^{(k)}_{p}(t)$ \Comment{Periodic extension.}
+				\State $H_v \gets H_v(\bbstate_{A,k},\lambda_{A,k},\tilde{v}_{k-1})$
+				\State $s_k\gets\rho_1s_{k-1}+(1-\rho_1)H_v$
+				\State $r_k\gets\rho_2r_{k-1}+(1-\rho_2)H_v \odot H_v$
+				\State $\hat{s} \gets s/(1-\rho_{1,k})$
+				\State $\hat{r} \gets r/(1-\rho_{2,k})$
+				\State $\Delta u_k\gets-\gamma\,\hat{s}\odot((\hat{r})^{1/2}+\delta)^{-1}$
+				\State $u_k \gets \tilde{v}_{k-1} + \Delta u_{k} $
+				\State $\tilde{v}_{k} \gets \hat{\tilde{u}}_k$ \Comment{Periodic extension of the steady-state.}
 			\EndIf
 		\EndFor
 	\end{algorithmic}
