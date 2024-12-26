@@ -43,7 +43,7 @@ with $\bbexostate(0) = \bbexostate_0\in\R^{\bbexostatedim}$. The angular frequen
 The feedback controller \eqref{eq:lincontroller}, together with exosystem \eqref{eq:linexoblocks}, ensure that \Cref{ass:bbiss,ass:bbssresp} hold. The complete block diagram of the closed loop is shown in \Cref{fig:lqrall}.
 \begin{figure}[t!]
   \centering
-  \includesvg[width=.9\textwidth]{images/ch7/lqrall/lqrall.svg}
+  \includesvg[width=.9\linewidth]{images/ch7/lqrall/lqrall.svg}
   \caption{Block diagram of the feedback control system \eqref{eq:linplant}-\eqref{eq:lincontroller} interconnected to the exosystem \eqref{eq:linexosystem}; the input allocation device is enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:lqrall}
 \end{figure}
@@ -135,7 +135,7 @@ By standard results about Fourier series expansion of functions in $\mathcal{L}_
 		v^{\star}(t) & = v^{\star}_0 + \sum_{k=1}^{+\infty} (\alpha_k \sin(k \omega t) + \beta_k \cos(k \omega t)), & t\in\R_{\geq 0},\label{eq:lqrall_vstarf}
 	\end{align}
 \end{subequations}
-where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, by the properties of \eqref{eq:bbexosys} and \eqref{eq:linexosystem}, only a finite number of coefficients $a_k$, $b_k$ are non-zero in \eqref{eq:lqrall_zetaf}; the same property holds for \eqref{eq:lqrall_vstarf} as shown in the following. The following \Cref{lem:lqrall_solstruct}, considering a single frequency component (briefly, an \emph{harmonic}) of \eqref{eq:lqrall_vstarf}, characterizes the relation imposed by the constraint \eqref{eq:lqrall_invint} on its coefficients.
+where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, by the properties of \eqref{eq:bbexosys} and \eqref{eq:linexosystem}, only a finite number of coefficients $a_k$, $b_k$ are non-zero in \eqref{eq:lqrall_zetaf}; the same property holds for \eqref{eq:lqrall_vstarf} as shown in the following. The following lemma, considering a single frequency component (briefly, an \emph{harmonic}) of \eqref{eq:lqrall_vstarf}, characterizes the relation imposed by the constraint \eqref{eq:lqrall_invint} on its coefficients.
 
 \begin{lemma}
 	\label{lem:lqrall_solconstr}
@@ -149,7 +149,7 @@ where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, b
 		\label{eq:lqrall_psi}
 		\Psi(\bar{\omega}) = \left[\begin{array}{rr} \Im(\plantalllcfn(j\bar{\omega})) & \Re(\plantalllcfn(j\bar{\omega})) \\ -\Re(\plantalllcfn(j\bar{\omega})) & \Im(\plantalllcfn(j\bar{\omega})) \end{array}\right].
 	\end{equation}
-	Then, \eqref{eq:lqrall_invint} holds for $v(\cdot)$ in \eqref{eq:lqrall_singlefdec} if and only if either one of the following conditions holds:
+	Then, \eqref{eq:lqrall_invint} holds for $v$ in \eqref{eq:lqrall_singlefdec} if and only if either one of the following conditions holds:
 	\begin{subequations}
 		\begin{align}
 			\label{eq:lqrall_psisys}
@@ -181,7 +181,7 @@ where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, b
 	Imposing that both the imaginary part and the real part of $(\beta - j\alpha)\plantalllcfn(j\bar{\omega})$ must be zero, \eqref{eq:lqrall_psisys} follows.	It is worth to point out that the case $\bar{k}=0$, \emph{i.e.}, $\bar{\omega}=0$, is also included by \eqref{eq:lqrall_psisys} since in this case $\alpha = 0$, $\beta=v_0^\star$, $\Im(\plantalllcfn(0))=0$, $\Re(\plantalllcfn(0))=\plantalllcfn(0)$, thus \eqref{eq:lqrall_psisys} is an identity with the condition $\plantalllcfn(0)v_0^\star=0$.
 \end{proof}
 
-The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\hat{v}^\star$ satisfying \eqref{eq:lqrall_invint}, thus allowing one to translate the problem of optimizing \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} into an unconstrained optimization problem on a properly-defined, smaller domain. The next \Cref{lem:lqrall_solstruct} shows how the coefficients of $\zeta$ and $v^\star$ are related when the cost \eqref{eq:lqrall_optcontcost} is also minimized.
+The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\hat{v}^\star$ satisfying \eqref{eq:lqrall_invint}, thus allowing one to translate the problem of optimizing \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} into an unconstrained optimization problem on a properly-defined, smaller domain. The next lemma shows how the coefficients of $\zeta$ and $v^\star$ are related when the cost \eqref{eq:lqrall_optcontcost} is also minimized.
 
 \begin{lemma}
 	\label{lem:lqrall_solstruct}
@@ -262,7 +262,15 @@ The following result exploits the previous lemmas and corollary to describe the 
 
 \begin{lemma}
   \label{lem:lqrall_freqs}
-  Let \eqref{eq:lqrall_zw}, \eqref{eq:lqrall_fseries} hold. Assume that $v^\star$ is the minimizer of \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} and the excitation $\zeta$. Then, $v^{\star}$ contains all and only the frequency components present, with nonzero coefficients, in $\zeta$, and the coefficients $\theta_k = [a_k' \; b_k']'$, $\vartheta_k = [\alpha_k' \; \beta_k']'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega} = k\omega$.\closestatement
+  Let \eqref{eq:lqrall_zw}, \eqref{eq:lqrall_fseries} hold. Assume that $v^\star$ is the minimizer of \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} and the excitation $\zeta$. Then, $v^{\star}$ contains all and only the frequency components present, with nonzero coefficients, in $\zeta$, \emph{i.e.}
+  \begin{subequations}
+    \label{eq:lqrall_vstarfreqs}
+    \begin{align}
+      \zeta(t) &= \zeta_0 + \sum_{k=1}^{h} a_k \sin(\omega_k t) + b_k \cos(\omega_k t), & t\in\R_{\geq 0},\\
+      v^{\star}(t) &= v^{\star}_0 + \sum_{k=1}^{h} \alpha_k \sin(\omega_k t) + \beta_k \cos(\omega_k t), & t\in\R_{\geq 0},
+    \end{align}
+  \end{subequations}
+  and the coefficients $\theta_k = [a_k' \; b_k']'$, $\vartheta_k = [\alpha_k' \; \beta_k']'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega} = k\omega$.\closestatement
 \end{lemma}
 
 \begin{proof}
@@ -347,24 +355,24 @@ The following result is thus obtained collecting the ones provided by the previo
   The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of angular frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/lqrall/sscosts}
-    \caption{Cost in the presence of input allocation by means of a hybrid allocator (red), and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
+    \includegraphics[width=\linewidth]{images/ch7/lqrall/sscosts}
+    \caption{Cost in the presence of input allocation by means of a hybrid allocator (red), and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue). The last value is the relevant one.}
     \label{fig:lqrall_sscosts}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/lqrall/ydiffs}
-    \caption{Differences between the outputs of the non-allocated and allocated closed loops, in the presence of a hybrid allocator (red) and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
+    \includegraphics[width=.9\linewidth]{images/ch7/lqrall/ydiffs}
+    \caption{Difference $\bbouto - \bboutoa$ between the regulated outputs of the closed loop in absence and presence of the allocator, respectively, for the hybrid allocator (red) and for the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
     \label{fig:lqrall_ydiffs}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/lqrall/ya}
+    \includegraphics[width=.9\linewidth]{images/ch7/lqrall/ya}
     \caption{Outputs of a hybrid allocator (red) versus the components of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
     \label{fig:lqrall_ya}
   \end{figure}
 
-  The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against the one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases, showing that both solutions converge to the same steady-state cost, which is equal to $J(v^{\star})=155.836$. The time histories of the differences between the outputs of the non-allocated and allocated closed loops for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}, where the convergence to zero of the signals proves the satisfaction of the steady-state output invisibility requirement. The outputs of the state-of-the-art hybrid allocator are shown in \Cref{fig:lqrall_ya} against the components of $v^{\star}(t)$, showing that both signals become coincident after a transient phase.
+  The purpose of the proposed simulations is to compare the performance of a state-of-the-art hybrid allocator, designed as in \cite{galeani_dynamic_2014}, against the one that is implemented by applying the results presented above. The hybrid allocator is based on a gradient descent algorithm with the gradient decay rate $\gamma$ selected as $\gamma=2$. The implementation of the proposed allocator, based on the previous results, is based on the approach described in \Cref{rem:lqrall_apply}, namely applying a periodic extension of the optimal solution $v^{\star}$ to \Cref{prb:lqrall_optcont}. \Cref{fig:lqrall_sscosts} reports the time histories of the costs for the considered cases. After a transient motion, which is not relevant at all given that the cost has to be evaluated at steady-state, both solutions converge to the same value of the steady-state cost, which is the relevant one and is equal to $J(v^{\star})=155.836$. Even if, again, the transients in this plot are not relevant, it is interesting to note that the proposed solution converges must faster to the steady-state value, and also with a less intense transient, with respect to the state of the art. To evaluate the achieved output invisibility, consider the difference $\bbouto - \bboutoa$ between the regulated outputs of the closed loop in absence and presence of the allocator, respectively. The time histories of these differences for the proposed approach and the state of the art are depicted in \Cref{fig:lqrall_ydiffs}: the convergence to zero of both signals proves that both solutions, including the proposed one, meet the steady-state output invisibility requirement. The outputs of the state-of-the-art hybrid allocator are shown in \Cref{fig:lqrall_ya} against the components of $v^{\star}(t)$, showing that both signals become coincident after a transient phase.
 
   This study provides a first step towards the application of optimal control theory results within dynamic control allocation settings. The proposed approach allows the designer to build a control allocation device that acts, essentially, as a periodic function generator whose model is entirely determined in terms of its frequency components by \Cref{thm:lqrall_solution}. Conversely, the previous state-of-the-art solution is described by more complex hybrid dynamics.\closeexample
 \end{example}
