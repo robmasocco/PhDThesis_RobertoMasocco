@@ -1,52 +1,112 @@
 \section*{Notation}
+The following symbols, operators, mathematical items, and conventions are defined here and used throughout the text.
+
+\subsection*{Sets}
 Given a set $\mathcal{U}$, $\setint(\mathcal{U})$ denotes its interior. The set $\N$ is defined as containing all the positive integer numbers, excluding $0$, whereas $\Z$ denotes the set of all positive and negative integer numbers, including $0$. The sets of real and complex numbers are denoted $\R$ and $\C$, respectively.
 
-The imaginary unit is denoted as $j$.
+The imaginary unit is denoted $j$.
 Given a complex number $z\in\C$, $\Re(z)$ and $\Im(z)$ denote its real and imaginary parts, respectively.
-Define the following sets:
+Consider the following sets:
+\begin{align*}
+  \Z_{\geq0} &= \{k \in \Z:k\geq0\},\\
+  \R_{\geq0} &= \{a \in \R:a\geq0\},\\
+  \R_{>0} &= \{a \in \R:a>0\},\\
+  \C_0 &= \{z \in \C:\Re(z)=0\},\\
+  \C_{<0} &= \{z \in \C:\Re(z)<0\},\\
+  \C_{\geq0} &= \{z \in \C:\Re(z)\geq0\},\\
+  \C_{<1} &= \{z \in \C:|z|<1\}.
+\end{align*}
+
+\subsection*{Vectors and matrices}
+To define the following symbols and operators, let
 \begin{itemize}
-  \item $\Z_{\geq0}=\{k \in \Z:k\geq0\}$;
-  \item $\R_{\geq0}=\{a \in \R:a\geq0\}$;
-  \item $\R_{>0}=\{a \in \R:a>0\}$;
-  \item $\C_0=\{z \in \C:\Re(z)=0\}$;
-  \item $\C_{<0}=\{z \in \C:\Re(z)<0\}$;
-  \item $\C_{\geq0}=\{z \in \C:\Re(z)\geq0\}$;
-  \item $\C_{<1}=\{z \in \C:|z|<1\}$.
+  \item $v\in\R^n$ be a vector,
+  \item $V$ be a vector space,
+  \item $A,R\in\R^{n \times n}$ be square matrices,
+  \item $B_1,B_2\in\R^{n \times m}$ be rectangular matrices,
+  \item $A_1,\dotsc,A_n\in\R^{n \times n}$ be square matrices,
+  \item $M\in\R^{n \times m}$ be a block-partitioned matrix.
 \end{itemize}
+The algebraic notation items are summarized in \Cref{tab:notation}.
 
-Given a vector $v\in\R^n$, the symbol $\left\Vert v \right\Vert_2$ denotes its Euclidean norm.
-Given a vector space $V$, $\dim(V)$ denotes its dimension.
-$e_j$ denotes the $j$-th vector of the canonical basis of	$\R^n$.
-The expression $\|v\|^{2}_R$ denotes the product $v'Rv$.
+\begin{table}[h]
+  \centering
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{|c|c|}
+    \hline
+    $\left\Vert v \right\Vert_2$ & Euclidean norm of $v$.\\
+    \hline
+    $\dim(V)$ & Dimension of $V$.\\
+    \hline
+    $e_j$ & $j$-th vector of the canonical basis of $\R^n$.\\
+    \hline
+    $\left\Vert v \right\Vert^{2}_R$ & Product $v'Rv$.\\
+    \hline
+    $\Imag(A)$ & Image of $A$.\\
+    \hline
+    $\ker(A)$ & Null space of $A$.\\
+    \hline
+    $A'$ & Transpose of $A$.\\
+    \hline
+    $A^{\dagger}$ & Moore-Penrose inverse of $A$.\\
+    \hline
+    $A^\perp$ & Basis matrix for the null space of $A$.\\
+    \hline
+    $\spec(A)$ & Spectrum of $A$.\\
+    \hline
+    $\rank(A)$ & Rank of $A$.\\
+    \hline
+    $A\succ 0$ & $A$ is positive definite.\\
+    \hline
+    $A \odot B$ & Hadamard, or entrywise, product of $A$ and $B$.\\
+    \hline
+    $A \otimes B$ & Kronecker product of $A$ and $B$.\\
+    \hline
+    $\diag(A_1,\dotsc,A_n)$ & Concatenation of $A_1,\dotsc,A_n$ on the diagonal.\\
+    \hline
+    $\row(A_1,\dotsc,A_n)$ & Concatenation of $A_1,\dotsc,A_n$ on a row.\\
+    \hline
+    $I_n$ & \makecell{Identity matrix of order $n$\\(subscript omitted when clear from context).}\\
+    \hline
+    $0_{n \times m}$ & \makecell{Matrix of zeroes of dimensions $n$ by $m$\\(subscript omitted when clear from context).}\\
+    \hline
+    $M_{[k,h]}$ & $(k,h)-$th block of $M$.\\
+    \hline
+    $M_{[:,h]}$ & $h-$th block column of $M$.\\
+    \hline
+    $M_{[:,1:h]}$ & Sub-matrix formed by the first $h$ block columns of $M$.\\
+    \hline
+  \end{tabular}
+  \renewcommand{\arraystretch}{1.0}
+  \caption{Algebraic notation items.}
+  \label{tab:notation}
+\end{table}
 
-Given a matrix $A$, $\Imag(A)$ denotes its image, $\ker(A)$ denotes its null space, $A'$ denotes its transpose,  $A^{\dagger}$ denotes its Moore-Penrose inverse, and $A^\perp$ denotes a basis matrix for its null space. $\spec(A)$ denotes the spectrum of the matrix $A$, and $\rank(A)$ denotes its rank. $\vec(A)$ denotes the vectorization of the matrix $A$.
-Given a square matrix $A$, $A\succ 0$ denotes that $A$ is positive definite.
-Given two matrices $A,B\in\R^{m \times n}$ $A \odot B$ denotes their Hadamard, or entrywise, product, while $A \otimes B$ denotes their Kronecker product.
-Given the square matrices $\{A_1,\dotsc,A_n\}$, the operator $\diag(A_1,\dotsc,A_n)$ denotes the square matrix obtained by concatenating the former matrices on its diagonal, while the operator $\row(A_1,\dotsc,A_n)$ denotes the matrix obtained by concatenating the former matrices on a row.
-
-The symbol $I_n$ denotes the identity matrix of order $n$, and $0_n$ is a matrix of zeroes of order $n$; the subscripts are omitted when clear from the context.
-For a block-partitioned matrix $M$,	$M_{[k,h]}$ is its $(k,h)-$th block, $M_{[:,h]}$ is its $h-$th block column, and $M_{[:,1:h]}$ is the sub-matrix formed by its first $h$ block columns.
-
+\subsection*{Functions}
 Given a function $f(x)$, $f : \R^n \rightarrow \R$, $\nabla f$ denotes its gradient as a column vector, whereas $\frac{\partial f}{\partial x}$ denotes its jacobian.
 $\mathcal{L}_2([a,b])$, $a,b\in\R$, denotes the set of all the functions that are square-integrable over the interval $[a,b]$.
 
 For $T\in\R_{>0}$ and $t\in\R$, the notation $\Mod(t, T)$ denotes the value of $t$ modulo $T$.
 
+\subsection*{Dynamic systems}
 Let $k\in\Z_{\geq 0}$ be the discrete time variable.
 Let $t\in\R_{\geq 0}$ be the continuous time variable.
-Given a signal $v(t)$, $v_k$ denotes its value at time $t=k\tau_s$, \emph{i.e.}, $v_k=v(k\tau_s)$, where $\tau_s\in\R_{>0}$ is the sampling time.
+Given a signal $v(t)$, $v_k$ denotes its value at time $t=k\tau_s$, \emph{i.e.}, $v_k=v(k\tau_s)$, where $\tau_s\in\R_{>0}$ is the \emph{sampling time}.
 Consider the continuous-time dynamic system $\Sigma$ defined by the equation
 \begin{align*}
   \dot{x}(t) &= f(x(t)), & t\in\R_{\geq 0},
 \end{align*}
 where $x(t)\in\R^n$ is the state vector and the function $f : \R^n \rightarrow \R^n$ is smooth. Let $x(0) = x_0$, $x_0\in\mathcal{U}$. Then, for any $x_0\in\mathcal{U}$, the solution of the system $\Sigma$ is uniquely defined for $t\in[0,T)$, where $T = T(x_0)$, and it can be expressed by a function $x(t) = \Phi_t^f(x_0)$. The function $\Phi_t^f : \mathcal{U} \rightarrow \R^n$ is termed \emph{flow} of $f$. Moreover, the system $\Sigma$ is termed \emph{complete} if and only if its solution exists for any $t\in\R_{\geq 0}$.
-Given a signal $v(t)$ generated by a dynamic system, the symbol $\tilde{(\cdot)}$ denotes the steady-state behavior of the signal, \emph{i.e.}, $\tilde{v}$, provided that the latter exists.
+Given a signal $v(t)$ generated by a dynamic system, the symbol $\tilde{(\cdot)}$ denotes the steady-state behavior of the signal, \emph{i.e.}, $\tilde{v}(\cdot)$, provided that the latter exists. Also, when the clear from the context, the notation $v(\cdot)$ is replaced by $v$ for the sake of simplicity.
 
 Consider the continuous-time, linear time-invariant system
 \begin{align*}
-  \dot{x}(t) &= Ax(t), & t\in\R_{\geq 0},\\
-  y(t) &= Cx(t), & t\in\R_{\geq 0},
+  \dot{x}(t) &= Ax(t) + Bu(t), & t\in\R_{\geq 0},\\
+  y(t) &= Cx(t) + Du(t), & t\in\R_{\geq 0},
 \end{align*}
-where $A\in\R^{n \times n}$, $C^{p \times n}$ are constant matrices. For $h\in\N$, $O_h(C,A)$ denotes the observability matrix of order $h$ of the pair $(C,A)$, and $O(C,A)$ denotes the observability matrix of the pair $(C,A)$, with $O(C,A)=O_n(C,A)$.
+where $x(t)\in\R^n$ is the state vector at time $t$, $u(t)\in\R^m$ is the input, $y(t)^p$ is the output, and $A\in\R^{n \times n}$, $B\in\R^{n \times m}$, $C\in\R^{p \times n}$, $D\in\R^{p \times m}$ are constant matrices. For $h\in\N$, $O_h(C,A)$ denotes the \emph{observability matrix of order $h$} of the pair $(C,A)$, and $O(C,A)$ denotes the \emph{observability matrix} of the pair $(C,A)$, with $O(C,A)=O_n(C,A)$. Let $s$ be a variable taking values in $\C$; the \emph{transfer function} (or also, if not scalar, the \emph{transfer matrix}) of the system from the input $u$ to the output $y$ is denoted
+\begin{align*}
+  W_{yu}(s) &= C(sI-A)^{-1}B + D.
+\end{align*}
 
-Let $s$ be a variable taking values in $\C$, and $W(s)$ be a rational function of $s$; $\zeroset(W(s))$ and $\poleset(W(s))$ denote the set of zeroes and the set of poles of $W(s)$, respectively.
+Let $W(s)$ be a rational function of $s$; $\zeroset(W(s))$ and $\poleset(W(s))$ denote the set of zeroes and the set of poles of $W(s)$, respectively.
