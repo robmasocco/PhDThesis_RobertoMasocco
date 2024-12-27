@@ -43,7 +43,7 @@ In other words, \Cref{ass:bbexopoisson} states that given $\bbexostate_0\in\bbex
   \label{fig:bbsys}
 \end{figure}
 
-The model described by the equations \eqref{eq:bbsys}-\eqref{eq:bbexosys} is further characterized by the following assumptions. The first one is instrumental to enable the formulation of the control allocation problems and the design of dynamic allocators.
+The model described by the equations \eqref{eq:bbsys}--\eqref{eq:bbexosys} is further characterized by the following assumptions. The first one is instrumental to enable the formulation of the control allocation problems and the design of dynamic allocators.
 \begin{assumption}
   \label{ass:bboveract}
   $\bbauxdim>\bboutodim$.\closestatement
@@ -73,12 +73,12 @@ Finally, the following assumption clarifies the role of the exosystem $\bbexo$ i
   \end{equation}
   \closestatement
 \end{assumption}
-It is worth to point out that \Cref{ass:bbssresp} provides, for any $\bbexostate_0\in\bbexoinitset$, a \emph{steady-state response} to the system \eqref{eq:bbsys}-\eqref{eq:bbexosys} (see \cite[Prop. 8.1.1]{isidori_nonlinear_1995}), denoted
-\begin{equation}
+It is worth to point out that \Cref{ass:bbssresp} provides, for any $\bbexostate_0\in\bbexoinitset$, a \emph{steady-state response} to the system \eqref{eq:bbsys}--\eqref{eq:bbexosys} (see \cite[Prop. 8.1.1]{isidori_nonlinear_1995}), denoted
+\begin{align}
   \label{eq:bbssresp}
-  \bbssstate(t) = \bbstate(t,\fbimap(\bbexostate_0),\bbexooutmap(\Phi_t^\bbexovecf(\bbexostate_0))), \quad t\in\R_{\geq 0}.
-\end{equation}
-The performance and regulated outputs also admit steady-state responses denoted $\bbssoutp(\cdot)$ and $\bbssouto(\cdot)$, respectively.
+  \bbssstate(t) &= \bbstate(t,\fbimap(\bbexostate_0),\bbexooutmap(\Phi_t^\bbexovecf(\bbexostate_0))), & t\in\R_{\geq 0}.
+\end{align}
+The performance and regulated outputs also admit steady-state responses denoted $\bbssoutp$ and $\bbssouto$, respectively.
 
 Let $\tau_0\in\R_{\geq 0}$. The performance criterion with respect to which the behavior of $\bbsys$ may be optimized is expressed by the following \emph{Lagrange functional} of the form
 \begin{equation}
@@ -100,13 +100,13 @@ The two dynamic control allocation problems that are of interest for this work a
   \end{subequations}
   ensures that the following requirements hold.
   \begin{itemize}
-		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a bounded steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$, where $T$ is given in \Cref{ass:bbssresp}.
-		\item[\emph{(I)}] \emph{Steady-state output invisibility:} the steady-state regulated output responses of the system \eqref{eq:bbsys}, both in presence and absence of the allocation action, namely $\bbssoutoa(\cdot)$ and $\bbssouto(\cdot)$, respectively, are such that
+		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a bounded steady-state output response, namely $\allssout$, and it is periodic of period $\bbperiod$, where $T$ is given in \Cref{ass:bbssresp}.
+		\item[\emph{(I)}] \emph{Steady-state output invisibility:} the steady-state regulated output responses of the system \eqref{eq:bbsys}, both in presence and absence of the allocation action, namely $\bbssoutoa$ and $\bbssouto$, respectively, are such that
 		  \begin{align}
 		    \label{eq:ssinv}
 		    \bbssoutoa(t) = \bbssouto(t) & t\in\R_{\geq 0}.
 		  \end{align}
-		\item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
+		\item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}--\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
     \end{itemize}
     \closestatement
 \end{problem}
@@ -122,14 +122,14 @@ The two dynamic control allocation problems that are of interest for this work a
   \end{subequations}
   ensures that the following requirements hold.
   \begin{itemize}
-		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a bounded steady-state output response, namely $\allssout(\cdot)$, and it is periodic of period $\bbperiod$, where $T$ is given in \Cref{ass:bbssresp}.
-		\item[\emph{(I)}] \emph{Full output invisibility:} the regulated output responses of the system given by \eqref{eq:bbsys}, both in presence and absence of the allocation action, namely $\bboutoa(\cdot)$ and $\bbouto(\cdot)$, respectively, are such that
+		\item[\emph{(P)}] \emph{Steady-state periodicity:} the allocator admits a bounded steady-state output response, namely $\allssout$, and it is periodic of period $\bbperiod$, where $T$ is given in \Cref{ass:bbssresp}.
+		\item[\emph{(I)}] \emph{Full output invisibility:} the regulated output responses of the system given by \eqref{eq:bbsys}, both in presence and absence of the allocation action, namely $\bboutoa$ and $\bbouto$, respectively, are such that
 		  \begin{align}
 		    \label{eq:fullinv}
 		    \bboutoa(t) = \bbouto(t)
 		  \end{align}
 		  for all $t\in\R_{\geq 0}$.
-      \item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}-\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
+      \item[\emph{(O)}] \emph{Steady-state optimality:} the interconnection of the allocator to \eqref{eq:bbsys}--\eqref{eq:bbexosys} brings the cost functional \eqref{eq:bbcost} to its minimum, if any.
   \end{itemize}
   \closestatement
 \end{problem}

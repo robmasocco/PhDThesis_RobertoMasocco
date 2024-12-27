@@ -3,7 +3,7 @@ The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys
   \label{eq:nlall_sscost}
   J(\bbaux) = \frac{1}{2} \int_0^{\bbperiod} \left\Vert\bbssoutp(\tau)\right\Vert^2_2\,d\tau.
 \end{equation}
-In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most cumbersome requirement set by \Cref{prb:ssinv} is the output invisibility statement (I), which, in the previous linear case of \Cref{prb:lqrall_optcont}, was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}-\eqref{eq:bbexosys} stems from a different reasoning: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by penalizing the steady-state output invisibility requirement in the cost functional \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
+In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most cumbersome requirement set by \Cref{prb:ssinv} is the output invisibility statement (I), which, in the previous linear case of \Cref{prb:lqrall_optcont}, was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}--\eqref{eq:bbexosys} stems from a different reasoning: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by penalizing the steady-state output invisibility requirement in the cost functional \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
 
 To substantiate this evidence few preliminary definitions are in order. Let $\bbstate_N(t)$, $\bbstate_N(t)\in\R^\bbstatedim$ denote the state vector of \eqref{eq:bbsys} at time $t$ in the absence or presence of the allocator, respectively, that is
 \begin{subequations}
@@ -35,7 +35,7 @@ A relaxed formulation of \Cref{prb:ssinv} is the following constrained optimal c
     \label{eq:nlall_J}
     J(v) = J_p(v) + \alpha J_I(v),
   \end{equation}
-  with a fixed $\alpha\in\R_{>0}$, is brought to its minimum value, satisfying the differential constraints \eqref{eq:nlall_xn}-\eqref{eq:nlall_xa} with $\bbaux=v$.\closestatement
+  with a fixed $\alpha\in\R_{>0}$, is brought to its minimum value, satisfying the differential constraints \eqref{eq:nlall_xn}--\eqref{eq:nlall_xa} with $\bbaux=v$.\closestatement
 \end{problem}
 
 \begin{remark}
@@ -53,7 +53,7 @@ Let $\lambda_N(t),\lambda_A(t)\in\R^{\bbstatedim}$ be the costate variables, ass
   \label{eq:nlall_H}
   H(\bbstate_N(t),\bbstate_A(t),\lambda_N(t),\lambda_A(t),v(t)) \\
   =\frac{1}{2}\left\Vert \bboutmapp(\bbstate_A(t),v(t)) \right\Vert_2^2 + \alpha h_I(\bbstate_N(t),\bbstate_A(t)) + \lambda_N(t)'\bbvecf(\bbstate_N(t),\bbref(t)) \\
-  + \lambda_A(t)'(\bbvecf(\bbstate_A(t),\bbref(t)) + \bbinmap(\bbstate_A(t))v(t)), \qquad t\in\R_{\geq 0}.
+  \begin{aligned}+ \lambda_A(t)'(\bbvecf(\bbstate_A(t),\bbref(t)) + \bbinmap(\bbstate_A(t))v(t)), && t\in\R_{\geq 0}.\end{aligned}
 \end{multline}
 Consider (omitting, for the sake of simplicity, some dependencies)
 \begin{equation}
@@ -214,7 +214,7 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an a
     \label{fig:nlall_hca}
   \end{figure}
 
-  \Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,\,t_f) = (10^{-4}, 15)$, $v_0 = 0$, and the initial condition of \eqref{eq:nlall_simplant} given by $\bbstate(0)=\begin{bmatrix}0.1872 & -0.0767 & 0.2599\end{bmatrix}'$. All algorithms have been implemented numerically in MATLAB following the procedure described in \Cref{rem:nlall_dt}, \emph{i.e.}, by discretizing the time interval $[0,t_f]$ with a sampling interval of $10^{-2}$, performing fixed-step numerical integration of the state and costate dynamics, and operating with sampled signals.
+  \Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,t_f) = (10^{-4}, 15)$, $v_0 = 0$, and the initial condition of \eqref{eq:nlall_simplant} given by $\bbstate(0)=\begin{bmatrix}0.1872 & -0.0767 & 0.2599\end{bmatrix}'$. All algorithms have been implemented numerically in MATLAB following the procedure described in \Cref{rem:nlall_dt}, \emph{i.e.}, by discretizing the time interval $[0,t_f]$ with a sampling interval of $10^{-2}$, performing fixed-step numerical integration of the state and costate dynamics, and operating with sampled signals.
 
   The stopping criterion has been disregarded intentionally, setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different values of $\alpha$: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a small output error.
 

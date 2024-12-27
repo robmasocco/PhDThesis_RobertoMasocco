@@ -10,7 +10,7 @@ Consider now a continuous-time, linear time-invariant model given by
 where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively, at time $t$. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
 \begin{align}
   \label{eq:ddall_exo}
-  \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), \quad t\in\R_{\geq 0},
+  \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), & t\in\R_{\geq 0},
 \end{align}
 where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector at time $t$, with initial condition $\bbexostate(0) = \bbexostate_0$. The interconnection is depicted in \Cref{fig:bbsys}.
 
@@ -49,7 +49,7 @@ be the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
 
 \begin{problem}[Dynamic allocation with robust output invisibility]
   \label{prb:ddall_main_per}
-  Consider the systems \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} and the steady-state cost functional \eqref{eq:bbcost}. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Find, if possible, a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
+  Consider the systems \eqref{eq:ddall_sys}, \eqref{eq:ddall_exo} and the steady-state cost functional \eqref{eq:bbcost}. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy} hold. Find, if possible, a \emph{dynamic control allocator} with input $\allin$ and output $\allout$, to be interconnected to $\bbsys$ and $\bbexo$ according to
   \begin{subequations}
     \label{eq:ddall_all_interc}
     \begin{align}
@@ -71,30 +71,30 @@ be the output response for output $\bbouto$ at time $t \geq t_0$ of the plant $\
 \end{problem}
 
 The construction of a solution to \Cref{prb:ddall_main_per} for any $\mu\in\mathcal{M}$ begins by identifying the data whose knowledge is necessary for the design of the allocator. This knowledge is obtained in the uncertain case by means of algorithms that are described in the following and are based on input-output measurements. Let the spectrum of the matrix $\exodynmat$ in \eqref{eq:ddall_exo} be
-\begin{equation}
+\begin{align}
   \label{eq:ddall_exo_spec}
-  \spec(\exodynmat) = \{0, j \omega_1, -j \omega_1, ..., j \omega_{\bar{n}_e}, - j \omega_{\bar{n}_e} \}, \quad \bar{n}_e = \frac{\bbexostatedim-1}{2}.
-\end{equation}
+  \spec(\exodynmat) &= \{0, j \omega_1, -j \omega_1, ..., j \omega_{\bar{n}_e}, - j \omega_{\bar{n}_e} \}, & \bar{n}_e = \frac{\bbexostatedim-1}{2}.
+\end{align}
 Recall that $\bbreddeg=\bbauxdim-\bboutodim$ (see \Cref{def:bbreddeg}). The design of the allocator requires the following information.
 \begin{definition}[Data for the dynamic control allocator \eqref{eq:ddall_control_all}]
   \label{def:ddall_data}
   The data necessary for the design of the dynamic control allocator \eqref{eq:ddall_control_all} is divided into three items.
   \begin{description}
-    \item[K1] The \emph{steady-state map} $\bar{M}_{\bboutp, \bbexostate}$ from $\bbexostate$ to $\bboutp$, \emph{i.e.}, a matrix such that, denoting by $\bbssoutp^\bbexostate(\cdot)$ the part of the steady-state response in $\bboutp$ due to $\bbexostate$,
-      \begin{equation}
+    \item[K1] The \emph{steady-state map} $\bar{M}_{\bboutp, \bbexostate}$ from $\bbexostate$ to $\bboutp$, \emph{i.e.}, a matrix such that, denoting by $\bbssoutp^\bbexostate$ the part of the steady-state response in $\bboutp$ due to $\bbexostate$,
+      \begin{align}
         \label{eq:ddall_K1mem}
-        \bbssoutp^\bbexostate(t) = \bar{M}_{\bboutp, \bbexostate}\bbexostate(t), \quad t\in\R_{\geq 0}.
-      \end{equation}
+        \bbssoutp^\bbexostate(t) &= \bar{M}_{\bboutp, \bbexostate}\bbexostate(t), & t\in\R_{\geq 0}.
+      \end{align}
     \item[K2] The \emph{moments} of the transfer matrix $W_{\bboutp\bbaux}(s)$ of \eqref{eq:ddall_sys} at $s\in\{0, j \omega_1,, ..., j \omega_{\bar{n}_e}\}\subset\spec(S)$, namely
       \begin{equation}
         \label{eq:ddall_K2mom}
         W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_1), \ldots, W_{\bboutp\bbaux}(j \omega_{\bar{n}_e}).
       \end{equation}
     \item[K3] An \emph{annihilator} for the transfer matrix $W_{\bbouto\bbaux}(s)$ of \eqref{eq:ddall_sys}, namely $W_a(s)\in\mathbb{C}^{\bbauxdim\times m_a}$, with poles with negative real part, such that
-      \begin{equation}
+      \begin{align}
         \label{eq:ddall_W_a}
-        W_{\bbouto\bbaux}(s)W_a(s)=0, \quad s\in\C\setminus(\poleset(W_{\bbouto\bbaux}(s))\cup\poleset(W_a(s))).
-      \end{equation}
+        W_{\bbouto\bbaux}(s)W_a(s) &= 0, & s\in\C\setminus(\poleset(W_{\bbouto\bbaux}(s))\cup\poleset(W_a(s))).
+      \end{align}
   \end{description}\closestatement
 \end{definition}
 
@@ -102,7 +102,7 @@ If the data \textbf{K1}, \textbf{K2}, and \textbf{K3} are available, the propose
 \begin{subequations}
   \label{eq:ddall_Omega_Lambda}
 	\begin{align}
-		\Omega & = \diag \left(0, \begin{bmatrix}0 & \omega_{1} \\ - \omega_1 & 0\end{bmatrix},\ldots,\begin{bmatrix}0 & \omega_{\bar{n}_e} \\ - \omega_{\bar{n}_e} & 0\end{bmatrix}\right), \label{eq:ddall_Omega} \\
+		\Omega & = \diag \left\{0, \begin{bmatrix}0 & \omega_{1} \\ - \omega_1 & 0\end{bmatrix},\ldots,\begin{bmatrix}0 & \omega_{\bar{n}_e} \\ - \omega_{\bar{n}_e} & 0\end{bmatrix}\right\}, \label{eq:ddall_Omega} \\
 		\Lambda & = \bbmat{c:cc:c:cc}{c}{1 & 1 & 0 & \cdots & 1 & 0}, \label{eq:ddall_Lambda}
 	\end{align}
 \end{subequations}
@@ -115,16 +115,15 @@ yielding the matrices $(A_{IM}, C_{IM})$:
   \end{align}
 \end{subequations}
 Furthermore, using the data \textbf{K2}, define
-\begin{equation}
+\begin{align}
   \label{eq:ddall_Woutpallin}
-  W_{\bboutp\allin}(j\omega)=W_{\bboutp\bbaux}(j\omega)W_{a}(j\omega), \quad \omega\in\{0, \omega_1, ..., \omega_{\bar{n}_e}\},
-\end{equation}
+  W_{\bboutp\allin}(j\omega) &= W_{\bboutp\bbaux}(j\omega)W_{a}(j\omega), & \omega\in\{0, \omega_1, ..., \omega_{\bar{n}_e}\},
+\end{align}
 and build the matrix $\bar{N}_{\mu}$ as
-\begin{equation}
+\begin{multline}
   \label{eq:ddall_Nbar_mu}
-  \begin{split}
-  &\bar{N}_{\mu} =\\
-  &\hspace{-1.5pt}\bbmat{c|cc|c|cc}{c}{
+  \bar{N}_{\mu} =\\
+  \bbmat{c|cc|c|cc}{c}{
     W_{\bboutp\allin}(0)\,
     & \,\re(W_{\bboutp\allin}(j\omega_1))\;
     & \im(W_{\bboutp\allin}(j\omega_1))\,
@@ -132,8 +131,7 @@ and build the matrix $\bar{N}_{\mu}$ as
     & \,\re(W_{\bboutp\allin}(j\omega_{\bar{n}_e}))\;
     & \im(W_{\bboutp\allin}(j\omega_{\bar{n}_e}))
   }.
-  \end{split}
-\end{equation}
+\end{multline}
 Define the functions $\xi(t)$ and $L(\bbexostate(t),x_{IM}(t))$ as
 \begin{subequations}
   \label{eq:ddall_G_xi}
@@ -154,12 +152,12 @@ The proposed dynamic allocator is given by
 
 \begin{remark}
   \label{rem:ddall_structure}
-  The equations \eqref{eq:ddall_G_xi}-\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator at time $t$, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}-\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state, at time $t$, of the annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
+  The equations \eqref{eq:ddall_G_xi}--\eqref{eq:ddall_control_all} allow the designer to directly implement the proposed allocation scheme (more insights on how to do this in software routines as well as on devices such as, \emph{e.g.}, digital microcontrollers, are given in the following). Nonetheless, a deeper understanding of \eqref{eq:ddall_control_all} is necessary to clarify its construction with respect to the architecture introduced in \cite{cristofaro_output_2014}, anticipating the following results. The optimizer unit is given by \eqref{eq:ddall_G_xi} and it embeds, in essence, a gradient descent scheme as shown in the following. The state vector $x_{IM}(t)$ is the state of the steady-state generator at time $t$, whose dynamics are defined by \eqref{eq:ddall_Omega_Lambda}--\eqref{eq:ddall_Aim}. The state vector $x_a(t)$ is the state, at time $t$, of the annihilator given by $W_a(s)$ and the matrices $(A_a,B_a,C_a)$ are a minimal realization of it.\closeremark
 \end{remark}
 
 \begin{remark}
   \label{rem:ddall_Aim}
-	The definition of $A_{IM}$ given in \eqref{eq:ddall_Aim_Aim}, together with its eigenvalues selected by \eqref{eq:ddall_Omega}, define the \emph{prescribed} function space mentioned in item (iii) of \Cref{prb:ddall_main_per}: it consists of the functions of time generated as combinations of the modes of \eqref{eq:ddall_exo}, \emph{i.e.}, any function	$v(t)$ such that there exist constants $c_0$, $c_i$, $\phi_i$, $i = 1, \dotsc, \bar{n}_e$, with the property that $v(t) = c_0+\sum_{i = 1}^{\bar{n}_e}c_i \sin(\omega_i t + \phi_i)$.\closeremark
+	The definition of $A_{IM}$ given in \eqref{eq:ddall_Aim_Aim}, together with its eigenvalues selected by \eqref{eq:ddall_Omega}, define the \emph{prescribed} function space mentioned in statement (iii) of \Cref{prb:ddall_main_per}: it consists of the functions of time generated as combinations of the modes of \eqref{eq:ddall_exo}, \emph{i.e.}, any function	$v(t)$ such that there exist constants $c_0$, $c_i$, $\phi_i$, $i = 1, \dotsc, \bar{n}_e$, with the property that $v(t) = c_0+\sum_{i = 1}^{\bar{n}_e}c_i \sin(\omega_i t + \phi_i)$.\closeremark
 \end{remark}
 
 \begin{remark}
@@ -182,9 +180,9 @@ The equations \eqref{eq:ddall_control_all} allow the designer to directly implem
         \end{align}
       \end{subequations}
     \item[K2] $\{W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j\omega_1), \dotsc, W_{\bboutp\bbaux}(j\omega_{\bar{n}_e})\}$ are given by
-      \begin{equation}
-        W_{\bboutp\bbaux}(s), \quad s\in\{0,j\omega_1,\ldots,j\omega_{\bar{n}_e}\}.
-      \end{equation}
+      \begin{align}
+        W_{\bboutp\bbaux}(s), && s\in\{0,j\omega_1,\ldots,j\omega_{\bar{n}_e}\}.
+      \end{align}
     \item[K3] Find $N_a(s)$ whose columns are a minimal polynomial basis for the null space of $W_{\bbouto\bbaux}(s)$. Choose a Hurwitz monic polynomial $d_a(s)$ of degree larger than each element of $N_a(s)$. Define
     \begin{equation}
       \label{eq:ddall_Wa}
@@ -203,14 +201,14 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
 \begin{proof}
   \label{pf:ddall_nominal}
   Item (i) of \Cref{prb:ddall_main_per} with $\mu=0$ follows immediately by knowledge of \textbf{K3} computed as in \Cref{rem:ddall_nominalK123}; this guarantees full output invisibility of the allocator unit as requested. Therefore, the optimality requirement remains to be addressed. To this end, it must be shown that the behavior of the proposed allocator \eqref{eq:ddall_control_all} leads to the minimization of the cost functional \eqref{eq:bbcost}. This is achieved by showing that \eqref{eq:ddall_control_all_xim}, \eqref{eq:ddall_delta_def} define a gradient descent algorithm for the cost functional \eqref{eq:bbcost}. Define the \emph{moving-horizon cost} over a period as
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_cost_moving}
-    J_{t} = \int_{t}^{t+\bbperiod}\ell(\bbssoutp(\sigma))\,d\sigma, \quad t\in\R_{\geq 0},
-  \end{equation}
+    J_{t} &= \int_{t}^{t+\bbperiod}\ell(\bbssoutp(\sigma))\,d\sigma, & t\in\R_{\geq 0},
+  \end{align}
   and consider \eqref{eq:ddall_control_all_xim} with an input $u_{IM}(t)$ to be determined, \emph{i.e.},
   \begin{align}
     \label{eq:ddall_control_all_xim_mod}
-    \dot{x}_{IM}(t) & = A_{IM}x_{IM}(t) + u_{IM}(t), \quad t\in\R_{\geq 0}.
+    \dot{x}_{IM}(t) &= A_{IM}x_{IM}(t) + u_{IM}(t), & t\in\R_{\geq 0}.
   \end{align}
   To evaluate the effect of a change in the cost $J$ due to a change in $x_{IM}$, consider the following selections of $u_{IM}$.
   \begin{subequations}
@@ -221,7 +219,7 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
   			\delta, & \text{ if } \sigma \in [t,t+\Delta],\,\Delta>0,\,t\in\R_{\geq 0}, \\
   			0,      & \text{ otherwise. }
   		\end{cases}\label{eq:ddall_u_IM_delta} \\
-  		u^\circ_{IM}(\sigma) &= 0, \quad \forall \sigma\geq t,\,t\in\R_{\geq 0}.\label{eq:ddall_u_IM_circ}
+  		u^\circ_{IM}(\sigma) &= 0, & \forall \sigma\geq t,\,t\in\R_{\geq 0}.\label{eq:ddall_u_IM_circ}
   	\end{align}
   \end{subequations}
   Denote the respective evolutions of $\bbssoutp$, $x_{IM}$, and $J_t$ by the superscripts $\delta$ or $\circ$, \emph{e.g.}, $\bbssoutp^\delta$ and $\bbssoutp^\circ$. Integrating \eqref{eq:ddall_control_all_xim_mod}, \eqref{eq:ddall_u_IM} from the
@@ -229,72 +227,63 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
   \begin{subequations}
     \begin{align}
       x_{IM}^{\circ}(t+\Delta) & = e^{A_{IM}\Delta}x_{IM}^{\circ}(t),\\
-      \begin{split}
-        x_{IM}^\delta(t+\Delta)  & = e^{A_{IM}\Delta}x_{IM}^{\circ}(t) + \int_{0}^{\Delta} e^{A_{IM}\tau}u_{IM}(t+\Delta-\tau)\,d\tau \\
-        &= x_{IM}^{\circ}(t+\Delta) + \int_{0}^{\Delta}e^{A_{IM}\tau}\,d\tau\delta = x_{IM}^{\circ}(t+\Delta)+\Delta\bar{B}\delta.
-      \end{split}
+      x_{IM}^\delta(t+\Delta)  & = e^{A_{IM}\Delta}x_{IM}^{\circ}(t) + \int_{0}^{\Delta} e^{A_{IM}\tau}u_{IM}(t+\Delta-\tau)\,d\tau\notag\\
+      &= x_{IM}^{\circ}(t+\Delta) + \int_{0}^{\Delta}e^{A_{IM}\tau}\,d\tau\delta = x_{IM}^{\circ}(t+\Delta)+\Delta\bar{B}\delta.
     \end{align}
   \end{subequations}
   The matrix $\bar{B}$ is such that
   \begin{align}
     \label{eq:ddall_norm_Bbar}
-    \|\bar{B}\| & \leq1, \qquad \lim_{\Delta\rightarrow0^{+}}\bar{B}=I,
+    \|\bar{B}\| &\leq 1, & \lim_{\Delta\rightarrow0^{+}}\bar{B}=I,
   \end{align}
   which follow from the fact that $\|e^{A_{IM}\tau}\|=1$ (since $(e^{A_{IM}\tau})'e^{A_{IM}\tau}=I$) and from integration of the series expansion of $e^{A_{IM}\tau}$, respectively. Since $u_{IM}^\circ$ and $u_{IM}^\delta$ are zero after $t+\Delta$, it holds that
-  \begin{equation}
-    x_{IM}^{\delta}(\tau)-x_{IM}^{\circ}(\tau) = e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta, \quad \tau\geq t+\Delta,
-  \end{equation}
+  \begin{align}
+    x_{IM}^{\delta}(\tau)-x_{IM}^{\circ}(\tau) &= e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta, & \tau\geq t+\Delta,
+  \end{align}
   and the corresponding steady-state responses of $\bboutp$ are
   \begin{subequations}
     \begin{align}
-      \bbssoutp^{\circ}(\tau)  & = \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\circ}(\tau),\\
-      \bbssoutp^{\delta}(\tau) & = \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\delta}(\tau),\\
-        \hat{\tilde{\eta}}_p(\tau)  & = \bbssoutp^{\delta}(\tau)-\bbssoutp^{\circ}(\tau) = \bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta.\label{eq:ddall_ztilde}
+      \bbssoutp^{\circ}(\tau)  &= \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\circ}(\tau),\\
+      \bbssoutp^{\delta}(\tau) &= \bar{M}_{\bboutp,\bbexostate}\bbexostate(\tau) + \bar{N}_\mu x_{IM}^{\delta}(\tau),\\
+      \hat{\tilde{\eta}}_p(\tau)  &= \bbssoutp^{\delta}(\tau)-\bbssoutp^{\circ}(\tau) = \bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta.\label{eq:ddall_ztilde}
     \end{align}
   \end{subequations}
   If $\Delta$ is sufficiently small, the difference between the two cost integrand functions along the two solutions satisfy
-  \begin{align}
-    \begin{split}
-	    \ell(\bbssoutp^{\delta}(\tau)) - \ell(\bbssoutp^{\circ}(\tau)) & = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)} \hat{\tilde{\eta}}_p(\tau) + o(\|\hat{\tilde{\eta}}_p(\tau)\|)\\
-	    & = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta + o(\|\Delta\|),
-    \end{split}
-  \end{align}
+  \begin{multline}
+	  \ell(\bbssoutp^{\delta}(\tau)) - \ell(\bbssoutp^{\circ}(\tau)) = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)} \hat{\tilde{\eta}}_p(\tau) + o(\|\hat{\tilde{\eta}}_p(\tau)\|)\\
+	  = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta + o(\|\Delta\|),
+  \end{multline}
   where the equality $o(\|\hat{\tilde{\eta}}_p(\tau)\|)=o(\|\Delta\|)$ follows from \eqref{eq:ddall_ztilde}, \eqref{eq:ddall_norm_Bbar}, implying in turn that
   \begin{equation}
     \label{eq:ddall_mario}
-	  \|\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta\|\leq
-	  \|\bar{N}_\mu\| \|\Delta\| \|\delta\|,
+	  \|\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta\| \leq \|\bar{N}_\mu\| \cdot \|\Delta\| \cdot \|\delta\|,
   \end{equation}
   provided that $||\delta||$ is bounded by a quantity independent of $\Delta$, which is shown in the following.
   Periodicity of $\bbssoutp^{\circ}$ yields
-  \begin{equation}
-    J^\circ_{t} = J^\circ_{t+\Delta}, \quad t\in\R_{\geq 0},
-  \end{equation}
+  \begin{align}
+    J^\circ_{t} &= J^\circ_{t+\Delta}, & t\in\R_{\geq 0},
+  \end{align}
   hence, for small $\Delta$:
-  \begin{align}
-    \begin{split}
-	    J^\delta_{t+\Delta} - J^\circ_{t} & = J^\delta_{t+\Delta} - J^\circ_{t+\Delta} \\
-                                        & =	\int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\ell(\bbssoutp^{\delta}(\tau))-\ell(\bbssoutp^{\circ}(\tau))\right)\,d\tau\\
-	                                      & = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)+o(\|\Delta\|)\right)\,d\tau\\
-                                        & = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau+o(\|\Delta\|).
-    \end{split}
-  \end{align}
+  \begin{multline}
+	  J^\delta_{t+\Delta} - J^\circ_{t} = J^\delta_{t+\Delta} - J^\circ_{t+\Delta}\\
+                                      =	\int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\ell(\bbssoutp^{\delta}(\tau))-\ell(\bbssoutp^{\circ}(\tau))\right)\,d\tau\\
+	                                    = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left(\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)+o(\|\Delta\|)\right)\,d\tau\\
+                                      = \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau+o(\|\Delta\|).
+  \end{multline}
   Hence, recalling that $\displaystyle \lim_{\Delta \rightarrow0^{+}}\frac{1}{\Delta}o(\|\Delta\|)=0$ by definition of $o(\cdot)$, and \eqref{eq:ddall_ztilde}, it follows that
-  \begin{align}
-    \begin{split}
-	    \dot{J}_t & = \lim_{\Delta \rightarrow 0^{+}} \dfrac{J^\delta_{t+\Delta}-J^\circ_{t}}{\Delta}\\
-	              & = \lim_{\Delta \rightarrow 0^{+}} \frac{1}{\Delta} \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau\\
-	              & = \int_{t}^{t+\bbperiod} \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-t)}\,d\tau\delta\\
-	              & = F(t) \delta, \quad t\in\R_{\geq 0}.
-    \end{split}
-  \end{align}
+  \begin{multline}
+	  \dot{J}_t = \lim_{\Delta \rightarrow 0^{+}} \dfrac{J^\delta_{t+\Delta}-J^\circ_{t}}{\Delta}\\
+	            = \lim_{\Delta \rightarrow 0^{+}} \frac{1}{\Delta} \int_{t+\Delta}^{t+\Delta+\bbperiod}\left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\hat{\tilde{\eta}}_p(\tau)\,d\tau\\
+	            = \int_{t}^{t+\bbperiod} \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-t)}\,d\tau\delta\\
+              \begin{aligned}= F(t) \delta, && t\in\R_{\geq 0}.\end{aligned}
+  \end{multline}
   Selecting $\delta = -\gamma F(t)$ for any $\gamma\in\R_{\geq 0}$ yields
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_Jdot_gamma}
-    \dot{J}_t = -\gamma\|F(t)\|^2, \quad t\in\R_{\geq 0}.
-  \end{equation}
+    \dot{J}_t &= -\gamma\|F(t)\|^2, & t\in\R_{\geq 0}.
+  \end{align}
   Note that $F(t)$ only depends on the nominal $\bbssoutp^{\circ}$ trajectory and is independent of $\Delta$, as required after \eqref{eq:ddall_mario}.
-	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that	$F(t)' = L(\bbexostate(t), x_{IM}(t))$ with the latter defined in \eqref{eq:ddall_G_xi}.
+	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that	$F(t)' = \left.L(\bbexostate,x_{IM})\right|_{\bbexostate=\bbexostate(t),x_{IM}=x_{IM}(t)}$ with the latter defined in \eqref{eq:ddall_G_xi}.
 	The latter equation	\eqref{eq:ddall_Jdot_gamma}, in turn, together with boundedness of $\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for any time as in \eqref{eq:ddall_K1mem}, implies that $x_{IM}$ in \eqref{eq:ddall_control_all_xim} is bounded and that, at steady-state, it is described by the differential equation $\dot{\tilde{x}}_{IM}(t) = A_{IM}\tilde{x}_{IM}(t)$, the solution of which is, by construction, periodic of period $\bbperiod$.
   Finally, the annihilator is asymptotically stable since the matrix $A_a$ in \eqref{eq:ddall_control_all_xa} is Hurwitz; hence, the condition on $\dot{J}_{t}$ implies	that items (ii) and (iii) of \Cref{prb:ddall_main_per} hold, concluding the proof.
 \end{proof}
@@ -312,15 +301,15 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
   which is a nonlinear function of the measurements of $x_{IM}(t)$ and $\bbexostate(t)$. The core difficulties in the implementation of \eqref{eq:ddall_control_all} arise in the nonlinear terms of \eqref{eq:ddall_approx_G} and fall within the wide spectrum of problems concerning function approximation with digital devices. In this specific case, assuming that the quantities $\bbexostate(t)$ and $x_{IM}(t)$ remain constant during sampling intervals, a digital device with a sampling time equal to $\tau_s$ in \eqref{eq:ddall_approx_G} can be used to implement the control allocator \eqref{eq:ddall_control_all}.\closeremark
 \end{remark}
 
-The following result reveals that the structure of the control allocator \eqref{eq:ddall_control_all} is simplified significantly when the cost funcional \eqref{eq:bbcost} is quadratic: the correction term \eqref{eq:ddall_delta_def}-\eqref{eq:ddall_xi} becomes a \emph{static linear feedback} from the state vector in \eqref{eq:ddall_control_all_xim} and a \emph{feedforward} from the state of the exosystem \eqref{eq:ddall_exo}.
+The following result reveals that the structure of the control allocator \eqref{eq:ddall_control_all} is simplified significantly when the cost functional \eqref{eq:bbcost} is quadratic: the correction term \eqref{eq:ddall_xi}--\eqref{eq:ddall_delta_def} becomes a \emph{static linear feedback} from the state vector in \eqref{eq:ddall_control_all_xim} and a \emph{feedforward} from the state of the exosystem \eqref{eq:ddall_exo}.
 
 \begin{proposition}
   \label{prop:ddall_delay_quadratic}
-  Consider the control allocator \eqref{eq:ddall_control_all} and suppose that $\ell(\bbssoutp(t)) = \frac{1}{2}\|\bbssoutp(t)\|^{2}_R$, with $R = R' \succ 0$. Then, $L(\bbexostate(t),x_{IM}(t))$ in \eqref{eq:ddall_xi}-\eqref{eq:ddall_delta_def} becomes
-	\begin{equation}
+  Consider the control allocator \eqref{eq:ddall_control_all} and suppose that $\ell(\bbssoutp(t)) = \frac{1}{2}\|\bbssoutp(t)\|^{2}_R$, with $R = R' \succ 0$. Then, $L(\bbexostate(t),x_{IM}(t))$ in \eqref{eq:ddall_xi}--\eqref{eq:ddall_delta_def} becomes
+	\begin{align}
     \label{eq:ddall_delta_quadratic}
-		L(\bbexostate,x_{IM}) = H_1 x_{IM}(t) +	H_2 \bbexostate(t), \quad t\in\R_{\geq 0},
-  \end{equation}
+		L(\bbexostate,x_{IM}) &= H_1 x_{IM}(t) +	H_2 \bbexostate(t), & t\in\R_{\geq 0},
+  \end{align}
   with
 	\begin{subequations}
     \label{eq:ddall_H}
@@ -330,24 +319,23 @@ The following result reveals that the structure of the control allocator \eqref{
     \end{align}
 	\end{subequations}
   Hence, for any $\gamma\in\R_{> 0}$, \eqref{eq:ddall_control_all_xim} becomes
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_ss_opt_quadratic}
-    \dot{x}_{IM}(t) =	(A_{IM}-\gamma H_1) x_{IM}(t) - \gamma H_2 \bbexostate(t), \quad t\in\R_{\geq 0}.
-  \end{equation}
+    \dot{x}_{IM}(t) &=	(A_{IM}-\gamma H_1) x_{IM}(t) - \gamma H_2 \bbexostate(t), & t\in\R_{\geq 0}.
+  \end{align}
 	Moreover, if the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$ is observable, then the matrix $(A_{IM}-\gamma H_1)$ is Hurwitz for any $\gamma\in\R_{> 0}$.\closestatement
 \end{proposition}
 \begin{proof}
   In this case, the gradient of the cost function $\ell$ in \eqref{eq:bbcost} is linear:
-  \begin{equation}
-    \nabla\ell(\bbssoutp(t)) = R\bbssoutp(t), \quad t\in\R_{\geq 0}.
-  \end{equation}
+  \begin{align}
+    \nabla\ell(\bbssoutp(t)) &= R\bbssoutp(t), & t\in\R_{\geq 0}.
+  \end{align}
   Applying standard properties of integrals, \eqref{eq:ddall_delta_def} reduces to
-  \begin{equation}
-    \begin{split}
-      L(\bbexostate,x_{IM}) & = \int_{0}^{\bbperiod}  e^{A_{IM}'\sigma}\bar{N}_{\mu}'R\bar{N}_{\mu}e^{A_{IM}\sigma}\,d\sigma x_{IM} + \int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}R\bar{M}_{\bboutp,\bbexostate}e^{S\sigma}\,d\sigma \bbexostate(t)\\
-                                  & = H_1 x_{IM}(t) + H_2 \bbexostate(t), \quad t\in\R_{\geq 0}.
-    \end{split}
-  \end{equation}
+  \begin{multline}
+    \left.L(\bbexostate,x_{IM})\right|_{\bbexostate=\bbexostate(t),x_{IM}=x_{IM}(t)}\\
+    =\int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}'R\bar{N}_{\mu}e^{A_{IM}\sigma}\,d\sigma x_{IM} + \int_{0}^{\bbperiod} e^{A_{IM}'\sigma}\bar{N}_{\mu}R\bar{M}_{\bboutp,\bbexostate}e^{S\sigma}\,d\sigma \bbexostate(t)\\
+    \begin{aligned}= H_1 x_{IM}(t) + H_2 \bbexostate(t), && t\in\R_{\geq 0}.\end{aligned}
+  \end{multline}
   The last claim of \Cref{prop:ddall_delay_quadratic} follows from two facts: first, $H_1$ is the observability Gramian matrix of the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$, and secondly, the matrix $A_{IM}$ is such that $\spec(A_{IM})\subset\C_{0}$.
 \end{proof}
 
@@ -364,14 +352,14 @@ The following result reveals that the structure of the control allocator \eqref{
     \end{align}
   \end{subequations}
   and compute the matrix exponentials
-  \begin{equation}
-    H_i = \left[\begin{array}{cc} I & 0 \end{array}\right] \exp	\left(\bbm{-A_{IM}' & A_{12}^{i} \\ 0 & A_{22}^{i}}\bbperiod\right)	\left[\begin{array}{c} 0 \\ I \end{array}\right], \quad i\in\{1,2\}.
-  \end{equation}
+  \begin{align}
+    H_i &= \begin{bmatrix} I & 0 \end{bmatrix} \exp \left(\bbm{-A_{IM}' & A_{12}^{i} \\ 0 & A_{22}^{i}}\bbperiod\right)	\begin{bmatrix} 0 \\ I \end{bmatrix}, & i\in\{1,2\}.
+  \end{align}
   Furthermore, denoting by $x^\star_{IM}(t)$ the optimal steady-state evolution of $x_{IM}(t)$, the fact that the gradient $L(\bbexostate(t),x^\star_{IM}(t))$ is equal to zero for any $t\in\R_{\geq 0}$ yields
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_xim_opt_quadratic}
-    x^\star_{IM}(t) = -H^{-1}_1H_2\bbexostate(t), \quad t\in\R_{\geq 0}.
-  \end{equation}
+    x^\star_{IM}(t) &= -H^{-1}_1H_2\bbexostate(t), & t\in\R_{\geq 0}.
+  \end{align}
   The first consequence of \eqref{eq:ddall_xim_opt_quadratic} is that the correct initialization for the steady-state generator is $x_{IM}(0) = -H^{-1}_1H_2\bbexostate(0)$. Secondly, one may \emph{bypass} the steady-state generator entirely by redefining the control allocator \eqref{eq:ddall_control_all} as
   \begin{subequations}
     \label{eq:ddall_control_all_quadratic}
@@ -387,7 +375,7 @@ The following result reveals that the structure of the control allocator \eqref{
   The observability property in the last sentence of \Cref{prop:ddall_delay_quadratic} is always satisfied if the columns of the numerator of the annihilator $W_a(s)$, namely $N_{a}(s)$, are chosen as a minimal basis,	as it can be inferred from \cite[Thm. 6.5.10]{kailath_linear_1980}.\closeremark
 \end{remark}
 
-Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}. Starting from \textbf{K1}, the first item to be estimated is the steady-state map $\bar{M}_{\bboutp,\bbexostate}$. Usually, this implies disconnecting the exosystem \eqref{eq:ddall_sys} from the system \eqref{eq:ddall_sys}; in the current context this procedure is not permitted, since one of the main goals of the allocation approach is to not alter or reconfigure in any way the preexisting control system. Thus, a data-driven algorithm for the online estimation of $\bar{M}_{\bboutp,\bbexostate}$ with $\bbaux=0$ is proposed. Since it is based on sampled measurements of $\bbssoutp(t)$ and $\bbexostate(t)$, the first step consists in defining the characteristics of the sampling procedure. Let $\tau_s\in\R_{>0}$ be the sampling time, characterized by the following statements.
+Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algorithms for the estimation of the data in \Cref{def:ddall_data}. To this end, the steady-state behavior of the uncertain system \eqref{eq:ddall_sys}--\eqref{eq:ddall_exo} must first be estimated. The following results and algorithms provide a solution to this problem based on the concept of \emph{moment matching} for a linear system; the basic definitions and results required in the following are given in \Cref{app:moments}. Starting from \textbf{K1}, the first item to be estimated is the steady-state map $\bar{M}_{\bboutp,\bbexostate}$. Usually, this implies disconnecting the exosystem \eqref{eq:ddall_sys} from the system \eqref{eq:ddall_sys}; in the current context this procedure is not permitted, since one of the main goals of the allocation approach is to not alter or reconfigure in any way the preexisting control system. Thus, a data-driven algorithm for the online estimation of $\bar{M}_{\bboutp,\bbexostate}$ with $\bbaux=0$ is proposed. Since it is based on sampled measurements of $\bbssoutp(t)$ and $\bbexostate(t)$, the first step consists in defining the characteristics of the sampling procedure. Let $\tau_s\in\R_{>0}$ be the sampling time, characterized by the following statements.
 \begin{definition}[Non-pathological sampling time]
   \label{def:ddall_nonpatho}
   The sampling time $\tau_s>0$ is \emph{non-pathological} if, for any $\lambda_1,\lambda_2\in\spec(\exodynmat)\cup\spec(A)$, there is no $h\in\Z$ such that
@@ -400,7 +388,7 @@ Dealing with the general case of $\mu\in\mathcal{M}$ requires data-driven algori
   \label{ass:ddall_nonpatho}
   $\tau_s$ is non-pathological.\closestatement
 \end{assumption}
-Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonpatho} implies that all distinct eigenvalues of $\exodynmat$ and $A$ are mapped to distinct eigenvalues of $\exodynmat_d$ and $A_d$; moreover all structural properties (\emph{e.g.}, observability and reachability) of \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} are preserved in their sampled data equivalents. More details about this topic are found in \cite[Sec. 3.2]{chen_optimal_1995}.
+Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonpatho} implies that all distinct eigenvalues of $\exodynmat$ and $A$ are mapped to distinct eigenvalues of $\exodynmat_d$ and $A_d$; moreover all structural properties (\emph{e.g.}, observability and reachability) of \eqref{eq:ddall_sys}--\eqref{eq:ddall_exo} are preserved in their sampled data equivalents. More details about this topic are found in \cite[Sec. 3.2]{chen_optimal_1995}.
 
 \begin{algorithm}[h!]
   \caption{Data-driven pseudo-steady-state output map estimation.}
@@ -461,7 +449,7 @@ Let $\exodynmat_d=e^{\exodynmat\tau_s}$, $A_d=e^{A\tau_s}$. \Cref{ass:ddall_nonp
 \end{proposition}
 Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix $\bar{M}_{\bboutp,\bbexostate}$ computed by \Cref{alg:ddall_algo1} always ensures a correct prediction of the steady-state evolution \emph{for the trajectory used in the computation}, even if such matrix does not coincide with the unique solution of \eqref{eq:ddall_Mbar}. Further conditions, concerning the quantity of information that the data provides, are required to ensure the coincidence of the two matrices; this is specified in statement (ii) of \Cref{prop:ddall_est_mom}. Since the algorithm is intended to be used for data-driven, online estimation, the trajectory used in the computation (arising from the fixed $\bbexostate_0$) is exactly the one of interest for correctly controlling the plant, hence statement (ii) is the one actually useful in practice. The issue at hand is the same as the one in classic adaptive regulation, where the control objective is achieved even without fully identifying the parameters of the plant. Statement (iii) is given to complete the analysis and provide a full understanding of the issues at play.
 \begin{proof}
-  To prove item (i) of \Cref{prop:ddall_est_mom}, notice that all steps in \Cref{alg:ddall_algo1} can be performed, provided that \eqref{eq:ddall_aM_hat} is solvable and the matrix inverse in \eqref{eq:ddall_Minv} exists; both facts are shown in the following.
+  To prove statement (i) of \Cref{prop:ddall_est_mom}, notice that all steps in \Cref{alg:ddall_algo1} can be performed, provided that \eqref{eq:ddall_aM_hat} is solvable and the matrix inverse in \eqref{eq:ddall_Minv} exists; both facts are shown in the following.
   In the following, given a signal $x(t)$, $x^{\circ}(t)$ denotes its transient response, provided that the latter exists.
   For all $k\in\N$, the following holds:
   \begin{equation}
@@ -470,9 +458,9 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   \end{equation}
   Recall \cite[App. A.8]{kailath_linear_1980} that a matrix satisfies the equation defined by its \emph{minimal polynomial} (\emph{i.e.}, the smallest degree polynomial which enjoys this property), and that the minimal polynomial has the same roots, with lower or equal multiplicity, of the \emph{characteristic polynomial}.
   Define $\hat{a}_\nu=1$ and let the minimal (monic) polynomial of $A_d$ be:
-  \begin{equation}
-    \rho_{A_d}(z) = \sum_{h=0}^{\nu}\hat{a}_h z^h, \quad z\in\C.
-  \end{equation}
+  \begin{align}
+    \rho_{A_d}(z) &= \sum_{h=0}^{\nu}\hat{a}_h z^h, & z\in\C.
+  \end{align}
   Since $\rho_{A_d}(A_d)=0$ by definition and
   \begin{subequations}
     \begin{align}
@@ -481,14 +469,13 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
     \end{align}
   \end{subequations}
   it is possible to define a linear combination of the measurements \eqref{eq:ddall_mista} that is independent of $\bbstate^{\circ}_0=\bbstate^{\circ}(0)$ as
-  \begin{equation}
+  \begin{multline}
     \label{eq:ddall_menomista}
-    \begin{split}
-      \sum_{h=0}^{\nu} \hat{a}_h \bboutp((k+h)\tau_s) &= \sum_{h=0}^{\nu} \hat{a}_h C_2 \bbstate^{\circ}((k+h)\tau_s) + \sum_{h=0}^{\nu} \hat{a}_h \bar{M}_{\bboutp,\bbexostate}\bbexostate((k+h)\tau_s) \\
-                                                      &= C_2 \rho_{A_d}(A_d) \bbstate^{\circ}(k\tau_s) + \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s) \\
-                                                      &= \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s).
-    \end{split}
-  \end{equation}
+    \sum_{h=0}^{\nu} \hat{a}_h \bboutp((k+h)\tau_s)\\
+    = \sum_{h=0}^{\nu} \hat{a}_h C_2 \bbstate^{\circ}((k+h)\tau_s) + \sum_{h=0}^{\nu} \hat{a}_h \bar{M}_{\bboutp,\bbexostate}\bbexostate((k+h)\tau_s)\\
+    = C_2 \rho_{A_d}(A_d) \bbstate^{\circ}(k\tau_s) + \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s)\\
+    \begin{aligned}= \bar{M}_{\bboutp,\bbexostate} \rho_{A_d}(\exodynmat_d)\bbexostate(k\tau_s), && k\in\Z_{\geq 0}.\end{aligned}
+  \end{multline}
   Defining
   \begin{subequations}
     \begin{align}
@@ -500,12 +487,12 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   yields
   \begin{align}
     \label{eq:ddall_menomista2}
-    H(k\tau_s)\hat{a}=\tilde{M}\bbstate(k\tau_s).
+    H(k\tau_s)\hat{a} &= \tilde{M}\bbstate(k\tau_s), & k\in\Z_{\geq 0}.
   \end{align}
   In turn, \eqref{eq:ddall_menomista2} can be vectorized \cite[Sec. 2.5]{zhou_robust_1996} introducing $\hat{M}=\ve{\tilde{M}}$, yielding:
   \begin{align}
     \label{eq:ddall_menomista3}
-    H(k\tau_s)\hat{a}=(\bbexostate(k\tau_s)'\otimes I_{\bboutpdim})\hat{M},
+    H(k\tau_s)\hat{a} &= (\bbexostate(k\tau_s)'\otimes I_{\bboutpdim})\hat{M}, & k\in\Z_{\geq 0},
   \end{align}
   and collecting \eqref{eq:ddall_menomista3} for $k=0,1,\ldots,K-1$ yields \eqref{eq:ddall_aM_hat}.
 
@@ -517,9 +504,9 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
   \end{equation}
   and considering that $\rho_{A_d}(\Lambda_{\exodynmat_d})$ is diagonal, it is clear that $\rho_{A_d}(\exodynmat_d)$ is not invertible if and only if one of the elements on its diagonal is zero; but this would imply that $\exodynmat_d$ and $A_d$ have at least one eigenvalue in common, which is impossible since by hypothesis $\tau_s$ is non-pathological and $\spec(\exodynmat)\cap\spec(A)=\emptyset$ due to \Cref{ass:ddall_plant_exo}.
 
-  To prove item (ii), note that $\bbssoutp$ is a $\bboutpdim-$dimensional vector function whose scalar components are linear combinations of the $\bbexostatedim$ linearly independent functions generated by the exosystem; hence, for any fixed $\bbexostate_0\in\bbexoinitset$, the ensuing $\bbssoutp$ is uniquely associated to a set of $\bboutpdim \bbexostatedim$ scalars. Consequently, if \Cref{alg:ddall_algo1} is able to determine a matrix $\bar{M}$ (possibly different from the \emph{true} $\bar{M}_{\bboutp,\bbexostate}$ solving \eqref{eq:ddall_Mbar}) which ensures that $\bar{M}\bbexostate$ interpolates $\bbssoutp$ at $\bboutpdim \bbexostatedim$ (or more) points in time, then for the fixed $\bbexostate_0$ the same $\bar{M}$ interpolates $\bbssoutp$ at any time, since it matched all the $\bboutpdim \bbexostatedim$ degrees of freedom in $\bboutpdim$. Since \Cref{alg:ddall_algo1} is based on satisfying \eqref{eq:ddall_menomista2} at $K\geq \bbstatedim+1+\bboutpdim \bbexostatedim>\bboutpdim \bbexostatedim$ sample points, the claim in item (ii) is proved once it is clear that \eqref{eq:ddall_menomista2} expresses a matching condition for the relation $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ at time $t=k\tau_s$. To cancel out the transient terms in \eqref{eq:ddall_mista}, a linear combination of responses has been performed in \eqref{eq:ddall_menomista}, hence \eqref{eq:ddall_menomista2} describes the steady-state response due to the initial state $\bar{\bbexostate}_0=\rho_{A_d}(\bbexostate_d)\bbexostate_0$ (see \eqref{eq:ddall_menomista}). Note that $\bar{\bbexostate}_0$ excites in $\exodynmat_d$ all and only the natural modes excited by $\bbexostate_0$ in $\exodynmat_d$, which implies that the coefficients of such modes are exactly estimated.
+  To prove statement (ii), note that $\bbssoutp$ is a $\bboutpdim-$dimensional vector function whose scalar components are linear combinations of the $\bbexostatedim$ linearly independent functions generated by the exosystem; hence, for any fixed $\bbexostate_0\in\bbexoinitset$, the ensuing $\bbssoutp$ is uniquely associated to a set of $\bboutpdim \bbexostatedim$ scalars. Consequently, if \Cref{alg:ddall_algo1} is able to determine a matrix $\bar{M}$ (possibly different from the \emph{true} $\bar{M}_{\bboutp,\bbexostate}$ solving \eqref{eq:ddall_Mbar}) which ensures that $\bar{M}\bbexostate$ interpolates $\bbssoutp$ at $\bboutpdim \bbexostatedim$ (or more) points in time, then for the fixed $\bbexostate_0$ the same $\bar{M}$ interpolates $\bbssoutp$ at any time, since it matched all the $\bboutpdim \bbexostatedim$ degrees of freedom in $\bboutpdim$. Since \Cref{alg:ddall_algo1} is based on satisfying \eqref{eq:ddall_menomista2} at $K\geq \bbstatedim+1+\bboutpdim \bbexostatedim>\bboutpdim \bbexostatedim$ sample points, the claim in statement (ii) is proved once it is clear that \eqref{eq:ddall_menomista2} expresses a matching condition for the relation $\bbssoutp(t)=\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ at time $t=k\tau_s$. To cancel out the transient terms in \eqref{eq:ddall_mista}, a linear combination of responses has been performed in \eqref{eq:ddall_menomista}, hence \eqref{eq:ddall_menomista2} describes the steady-state response due to the initial state $\bar{\bbexostate}_0=\rho_{A_d}(\bbexostate_d)\bbexostate_0$ (see \eqref{eq:ddall_menomista}). Note that $\bar{\bbexostate}_0$ excites in $\exodynmat_d$ all and only the natural modes excited by $\bbexostate_0$ in $\exodynmat_d$, which implies that the coefficients of such modes are exactly estimated.
 
-  To prove item (iii), denote by $T_\bbexostate$ the block depending on $\bbexostate$ in \eqref{eq:ddall_Toeplitz}. Note that $T_\bbexostate$ is full column rank if and only if
+  To prove statement (iii), denote by $T_\bbexostate$ the block depending on $\bbexostate$ in \eqref{eq:ddall_Toeplitz}. Note that $T_\bbexostate$ is full column rank if and only if
   \begin{align}
     \label{eq:ddall_exciting0}
 	  \rank\left(\bbm{\bbexostate(0) & \bbexostate(\tau_s) & \cdots & \bbexostate((K-1)\tau_s)}\right) = \bbexostatedim.
@@ -529,13 +516,13 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
     \label{eq:ddall_exciting1}
 	  \rank\left(\bbm{\bbexostate_0 & \exodynmat_d \bbexostate_0 & \cdots & \exodynmat_d^{\bbexostatedim-1} \bbexostate_0}\right)=\bbexostatedim.
   \end{align}
-  The condition in \eqref{eq:ddall_exciting1} has the form of a reachability matrix test for the pair $(\exodynmat_d,\bbexostate_0)$, which is equivalent to $\bbexostate_0$ exciting all natural modes of $\exodynmat_d$ if $\exodynmat_d$ has all distinct eigenvalues. By \Cref{ass:ddall_nonpatho}, $\exodynmat_d$ has all distinct eigenvalues since, by \Cref{ass:ddall_plant_exo}, $\exodynmat$ has all distinct eigenvalues; this implies, in turn, that $\exodynmat$ and $\exodynmat_d$ have the same eigenvectors, so that $\bbexostate_0$ excites all natural modes of $\exodynmat_d$ if and only if it excites all natural modes of $\exodynmat$. Hence, $T_\bbexostate$ is full column rank by the condition in item (iii).
+  The condition in \eqref{eq:ddall_exciting1} has the form of a reachability matrix test for the pair $(\exodynmat_d,\bbexostate_0)$, which is equivalent to $\bbexostate_0$ exciting all natural modes of $\exodynmat_d$ if $\exodynmat_d$ has all distinct eigenvalues. By \Cref{ass:ddall_nonpatho}, $\exodynmat_d$ has all distinct eigenvalues since, by \Cref{ass:ddall_plant_exo}, $\exodynmat$ has all distinct eigenvalues; this implies, in turn, that $\exodynmat$ and $\exodynmat_d$ have the same eigenvectors, so that $\bbexostate_0$ excites all natural modes of $\exodynmat_d$ if and only if it excites all natural modes of $\exodynmat$. Hence, $T_\bbexostate$ is full column rank by the condition in statement (iii).
 
-  Let  $T_{\bboutp}$ denote the block depending on $\bboutp$ in \eqref{eq:ddall_Toeplitz}, and by $T_{\bboutp}^h$ the submatrix containing its rightmost $h$ columns. Since the columns of $T_\bbexostate$ are a linearly independent set, the algorithm starts to consider matrices $[T_{\bboutp}^h \;\; T_\bbexostate]$ increasing $h$ until for $h=\nu$, it happens that $[T_{\bboutp}^{\nu-1} \;\; T_\bbexostate]$ is still full column rank, whereas $[T_{\bboutp}^{\nu} \;\; T_\bbexostate]$ has a non-trivial kernel, which has necessarily dimension one since $[T_{\bboutp}^{\nu} \;\; T_\bbexostate]$ has exactly one column more than $[T_{\bboutp}^{\nu-1} \;\; T_\bbexostate]$. Thus, there is a unique solution $v$ to \eqref{eq:ddall_aM_hat} with the structure in \eqref{eq:ddall_structure_v} and minimal value of $\nu$. Since a solution \eqref{eq:ddall_Minv} is found in item (i) on the basis of \eqref{eq:ddall_structure_v} and since the latter is shown to be uniquely defined, under the stated hypotheses the unique solution found by \Cref{alg:ddall_algo1} must result in the same $\bar{M}$ arising from \eqref{eq:ddall_Mbar}.
+  Let  $T_{\bboutp}$ denote the block depending on $\bboutp$ in \eqref{eq:ddall_Toeplitz}, and by $T_{\bboutp}^h$ the submatrix containing its rightmost $h$ columns. Since the columns of $T_\bbexostate$ are a linearly independent set, the algorithm starts to consider matrices $\begin{bmatrix}T_{\bboutp}^h & T_\bbexostate\end{bmatrix}$ increasing $h$ until for $h=\nu$, it happens that $\begin{bmatrix}T_{\bboutp}^{\nu-1} & T_\bbexostate\end{bmatrix}$ is still full column rank, whereas $\begin{bmatrix}T_{\bboutp}^{\nu} & T_\bbexostate\end{bmatrix}$ has a non-trivial kernel, which has necessarily dimension one since $\begin{bmatrix}T_{\bboutp}^{\nu} & T_\bbexostate\end{bmatrix}$ has exactly one column more than $\begin{bmatrix}T_{\bboutp}^{\nu-1} & T_\bbexostate\end{bmatrix}$. Thus, there is a unique solution $v$ to \eqref{eq:ddall_aM_hat} with the structure in \eqref{eq:ddall_structure_v} and minimal value of $\nu$. Since a solution \eqref{eq:ddall_Minv} is found in statement (i) on the basis of \eqref{eq:ddall_structure_v} and since the latter is shown to be uniquely defined, under the stated hypotheses the unique solution found by \Cref{alg:ddall_algo1} must result in the same $\bar{M}$ arising from \eqref{eq:ddall_Mbar}.
 \end{proof}
 
 \begin{remark}
-  Although \Cref{alg:ddall_algo1} is provided in this context with the specific purpose of estimating $\bar{M}_{\bboutp,\bbexostate}$ to compute the dynamic allocator \eqref{eq:ddall_control_all}, it is a general-purpose algorithm for the estimation of the pseudo-steady-state output map of a linear system such as, \emph{e.g.}, system \eqref{eq:moments_my_sys}-\eqref{eq:moments_my_sys_exosys} in \Cref{app:moments}. Thus, its interest falls within the broader context of online data-driven moment estimation for linear systems, as do the statements of \Cref{prop:ddall_est_mom} and its proof requiring only an adapted notation.\closeremark
+  Although \Cref{alg:ddall_algo1} is provided in this context with the specific purpose of estimating $\bar{M}_{\bboutp,\bbexostate}$ to compute the dynamic allocator \eqref{eq:ddall_control_all}, it is a general-purpose algorithm for the estimation of the pseudo-steady-state output map of a linear system such as, \emph{e.g.}, system \eqref{eq:moments_my_sys_exosys} in \Cref{app:moments}. Thus, its interest falls within the broader context of online data-driven moment estimation for linear systems, as do the statements of \Cref{prop:ddall_est_mom} and its proof requiring only an adapted notation.\closeremark
 \end{remark}
 
 \Cref{alg:ddall_algo1} provides a procedure to compute in finite time the information summarized in the item \textbf{K1}, for any $\mu\in\mathcal{M}$. Conversely, computing \textbf{K2} entails estimating the moments $W_{\bboutp\bbaux}(0), W_{\bboutp\bbaux}(j \omega_i)$, $\omega_i\in\spec(\exodynmat)$ , $i = 1, ..., \bar{n}_e$. In this case, however, the measurements of $\bboutp(t)$ are not influenced only by $\bbaux(t)$ but also by $\bbexostate(t)$ (since the exosystem cannot be disconnected at any given time). Thanks to the computation of \textbf{K1}, $\bar{M}_{\bboutp,\bbexostate}$ is now available. The next statement follows trivially from the previous results.
@@ -554,7 +541,7 @@ Note that statement (ii) of \Cref{prop:ddall_est_mom} highlights that the matrix
     \State Define
     \Statex
       \begin{align}
-        \bboutp^{\delta}(t) = \bboutp(t) - \bar{M}_{\bboutp,\bbexostate}\bbexostate(t), \quad t\in\R_{\geq 0}.
+        \bboutp^{\delta}(t) &= \bboutp(t) - \bar{M}_{\bboutp,\bbexostate}\bbexostate(t), & t\in\R_{\geq 0}.
       \end{align}
 
     \State Define the \emph{virtual dynamics}
@@ -593,14 +580,14 @@ Define
   \end{align}
 \end{subequations}
 For a set of frequencies $\{\bar{\omega}_1, ..., \bar{\omega}_{n_r}\}$, define the block matrix $H$ with the $(k,h)$-th block of size $2\bboutodim\times\bbauxdim$ as
-\begin{equation}
+\begin{align}
   \label{eq:ddall_H_hk}
-  H_{[k,h]} =
+  H_{[k,h]} &=
 		\bbm{
 		\re\left((j\bar{\omega}_k)^{h-1}W_{\bbouto\bbaux}(j\bar{\omega}_k)\right) \\
 		\im\left((j\bar{\omega}_k)^{h-1}W_{\bbouto\bbaux}(j\bar{\omega}_k)\right)
-		}, \quad k=1,\dotsc,n_r, \; h=1,\dotsc,n_c,
-\end{equation}
+		}, & k=1,\dotsc,n_r, \; h=1,\dotsc,n_c,
+\end{align}
 where $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_k)) = \bboutodim$ provided that $s=j\bar{\omega}_k$ is not a pole or a zero of the transfer matrix $W_{\bbouto\bbaux}(s)$.
 
 The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be translated into the computation of the null space of the real matrix $H$. The key issue is that, while every polynomial vector in a minimal basis of the null space of $W_{\bbouto\bbaux}(s)$ is associated to a single real vector in the kernel of $H$, the opposite transformation maps a basis of $\ker(H)$ to a linearly dependent set of polynomial vectors in the null space of $W_{\bbouto\bbaux}(s)$. This problem is avoided by computing a \emph{minimal coefficient basis} for the null space of $H$, whose columns, when translated back into their polynomial form, yield a \emph{minimal polynomial basis} for the null space of $W_{\bbouto\bbaux}(s)$ with dimension $\rho=\bbauxdim-\bboutodim$. The following \Cref{alg:ddall_mincoeffbasis} is adapted from \cite{zuniga_anaya_improved_2009}, where several possible optimized computations are also proposed. A minimal \emph{polynomial} basis matrix of order $h-1$ is computed from a minimal \emph{coefficient} basis matrix $N\in\R^{\bbauxdim h\times\rho}$ as
@@ -654,9 +641,9 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
 \begin{proposition}
   \label{prop:ddall_annih_computation}
   Recall \eqref{eq:ddall_ncnr}. Consider the transfer matrix $W_{\bbouto\bbaux}(s)\in\C^{\bboutodim\times\bbauxdim}$ and an arbitrary collection of frequencies $\{\bar{\omega}_1,\dotsc,\bar{\omega}_\bbstatedim\}$ such that $\rank(W_{\bbouto\bbaux}(j\bar{\omega}_i))=\bboutodim$, $i=1,\dotsc,\bbstatedim$. Let the matrix $H\in\R^{\bboutodim n_r \times \bbauxdim n_c}$ be defined as in \eqref{eq:ddall_H_hk}. Let $N\in\R^{\bbauxdim h\times(\bbauxdim - \bboutodim)}$ be a \emph{minimal coefficient basis} matrix computed by \Cref{alg:ddall_mincoeffbasis} and partitioned as
-  \begin{equation}
-    N = \bbm{N_0 \\ N_1 \\ \vdots \\ N_{h-1}}, \quad N_i\in\R^{\bbauxdim\times(\bbauxdim - \bboutodim)}, \; i=0,\dotsc,h-1.
-  \end{equation}
+  \begin{align}
+    N &= \bbm{N_0 \\ N_1 \\ \vdots \\ N_{h-1}}, & N_i\in\R^{\bbauxdim\times(\bbauxdim - \bboutodim)}, \; i=0,\dotsc,h-1.
+  \end{align}
   Then, the matrix function
   \begin{equation}
     \label{eq:ddall_Na}
@@ -666,9 +653,9 @@ The computation of a polynomial annihilator for $W_{\bbouto\bbaux}(s)$ can be tr
 \end{proposition}
 \begin{proof}
   Since each element in the polynomial matrix $\det(sI-A)W_{\bbouto\bbaux}(s)$ has degree not larger than $\bbstatedim$ and $\rank(\det(sI-A)W_{\bbouto\bbaux}(s))=\bbouto$ by \Cref{ass:ddall_plant_exo}, it follows from \cite[Prop. 1]{zuniga_anaya_improved_2009} that a polynomial annihilator $N_a(s)$ with entries having maximum degree not larger than $\bbstatedim\bboutodim$ exists. Then, the equation $W_{\bbouto\bbaux}(s)N_a(s) = 0$ has a solution of the form
-  \begin{equation}
-    N_a(s) = N_0 + sN_1 + \dotsc + s^{\bar{n}}N_{\bar{n}}, \quad \bar{n} < n_c.
-  \end{equation}
+  \begin{align}
+    N_a(s) &= N_0 + sN_1 + \dotsc + s^{\bar{n}}N_{\bar{n}}, & \bar{n} < n_c.
+  \end{align}
 	Let
   \begin{equation}
     N_{\bar{n}} = \bbm{N_0 \\ N_1 \\ \vdots \\ N_{\bar{n}}}
@@ -709,7 +696,7 @@ Recalling the definition of matrix $H$ in \eqref{eq:ddall_H_hk}, it appears evid
       \begin{subequations}
         \label{eq:ddall_OmegaLambdaEv_bar}
         \begin{align}
-          \bar{\Omega} &= \diag\left(\bbm{0 & \bar{\omega}_{1} \\ -\bar{\omega}_1 & 0}, \dotsc, \bbm{0 & \bar{\omega}_n \\ -\bar{\omega}_n & 0}\right),\label{eq:ddall_Omega_bar} \\
+          \bar{\Omega} &= \diag\left\{\bbm{0 & \bar{\omega}_{1} \\ -\bar{\omega}_1 & 0}, \dotsc, \bbm{0 & \bar{\omega}_n \\ -\bar{\omega}_n & 0}\right\},\label{eq:ddall_Omega_bar} \\
           \bar{\Lambda} &= \bbmat{cc:c:cc}{c}{1 & 0 & \cdots & 1 & 0},\label{eq:Lambda_bar} \\
           \dot{\zeta}(t) &= \bar{\Omega}\zeta(t), & t\in\R_{\geq 0},\label{eq:ddall_virtual_exo2} \\
           \psi(t) &= \bar{\Lambda}\zeta(t), & t\in\R_{\geq 0},\label{eq:ddall_virtual_exo2_out}
@@ -749,7 +736,7 @@ The following result summarizes all the previous claims, and proves that the pro
 
 \begin{theorem}
   \label{thm:ddall_main}
-  Consider the system \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} with $\mu\in\mathcal{M}$. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy,ass:ddall_nonpatho} hold. Then, the dynamic control allocator \eqref{eq:ddall_control_all} interconnected to \eqref{eq:ddall_sys}-\eqref{eq:ddall_exo} as in \eqref{eq:ddall_all_interc} solves \Cref{prb:ddall_main_per} for any $\gamma\in\R_{>0}$.\closestatement
+  Consider the system \eqref{eq:ddall_sys}--\eqref{eq:ddall_exo} with $\mu\in\mathcal{M}$. Suppose that \Cref{ass:bbiss,ass:ddall_plant_exo,ass:ddall_redundancy,ass:ddall_nonpatho} hold. Then, the dynamic control allocator \eqref{eq:ddall_control_all} interconnected to \eqref{eq:ddall_sys}--\eqref{eq:ddall_exo} as in \eqref{eq:ddall_all_interc} solves \Cref{prb:ddall_main_per} for any $\gamma\in\R_{>0}$.\closestatement
 \end{theorem}
 \begin{proof}
   The validity of \Cref{thm:ddall_main} follows from the combination of all the previous results. Indeed, the full design procedure for any $\mu\in\mathcal{M}$ can now be illustrated, providing a constructive proof.
@@ -765,40 +752,40 @@ The following result summarizes all the previous claims, and proves that the pro
 \end{proof}
 
 \begin{example}
-  The results described above are now corroborated by a numerical example. The dynamics \eqref{eq:ddall_sys} are now interpreted as the output feedback interconnection of a plant and a controller, whose state vectors are denoted by $\plantstate(t)\in\R^{\plantstatedim}$ and $\ctrlstate(t)\R^{\ctrlstatedim}$, respectively. This situation is similar to the one addressed by the linear case of \Cref{sec:all_design_ssinv}. Thus, the matrices in \eqref{eq:ddall_sys} are decomposed into
-  \begin{equation}
+  The following numerical example is offered to show in practice the implications of the results presented above. The dynamics \eqref{eq:ddall_sys} are now interpreted as the output feedback interconnection of a plant and a controller, whose state vectors are denoted by $\plantstate(t)\in\R^{\plantstatedim}$ and $\ctrlstate(t)\R^{\ctrlstatedim}$, respectively. This situation is similar to the one addressed by the linear case of \Cref{sec:all_design_ssinv}. Thus, the matrices in \eqref{eq:ddall_sys} are decomposed into
+  \begin{align}
     \label{eq:ddall_example_sys}
-    A(\mu) = \bbm{\plantdynmat(\mu) & \plantctrmat(\mu)\ctrloutmat \\ \ctrlctrmat\plantoutmat(\mu) & \ctrldynmat}, \quad B(\mu) = \bbm{\plantctrmat(\mu) \\ 0}, \quad P(\mu) = \bbm{0 \\ \ctrlctrmat Q}.
-  \end{equation}
+    A(\mu) &= \bbm{\plantdynmat(\mu) & \plantctrmat(\mu)\ctrloutmat \\ \ctrlctrmat\plantoutmat(\mu) & \ctrldynmat}, & B(\mu) &= \bbm{\plantctrmat(\mu) \\ 0}, & P(\mu) &= \bbm{0 \\ \ctrlctrmat Q}.
+  \end{align}
   The nominal values for the plant are
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_example_A0}
-    \plantdynmat(0) = \left[\begin{array}{rrr}
+    \plantdynmat(0) &= \begin{bmatrix}
       -1 & 1 & -2 \\ 0 & -1 & 1 \\ 1 & -1 & -1
-    \end{array}\right], \quad \plantctrmat(0) = \left[\begin{array}{rr}
+    \end{bmatrix}, & \plantctrmat(0) &= \begin{bmatrix}
       1 & 1 \\ -1 & 0 \\ 2 & 1
-    \end{array}\right], \quad \plantoutmat(0) = \left[\begin{array}{rrr}
+    \end{bmatrix}, & \plantoutmat(0) &= \begin{bmatrix}
       1 & 1 & 0
-    \end{array}\right],
-  \end{equation}
-  and $Q = [-1 \hspace{0.2cm} 0]$.
+    \end{bmatrix},
+  \end{align}
+  and $Q = \begin{bmatrix}-1 & 0\end{bmatrix}$.
   The exosystem is defined by \eqref{eq:ddall_exo} with $\bbexostatedim = 2$ and $\omega_1 = 1$.
 
   % NOTATION OVERRIDE: copy-pasted text from DDALL, matrix names might not be parametrized.
-  By relying on a classic architecture, the design of the controller comprises an internal model unit $\Theta_1$, which contains a single copy (namely, as the number of regulated outputs) of the modes of the exosystem, and a dynamic stabilizer $\Theta_2$, which contains an observer for the cascade of the plant and $\Theta_1$ and a stabilizing feedback from the observer dynamics. In particular, a state-space realization of $\Theta_1$ is provided by the matrices $A_{\Theta_1} = S$, $C_{\Theta_1} = [1 \hspace{0.2cm} 0]$ and $B_{\Theta_1} = I_2$, while the interconnection between $\Theta_1$ and the system \eqref{eq:ddall_example_A0} is achieved by considering a constant \emph{squaring-down} matrix $\Xi = [1 \hspace{0.2cm} 2]'$. The state-space description of the compensator $\Theta_2$ is
-  \begin{equation}
+  By relying on a classic architecture, the design of the controller comprises an internal model unit $\Theta_1$, which contains a single copy (namely, as the number of regulated outputs) of the modes of the exosystem, and a dynamic stabilizer $\Theta_2$, which contains an observer for the cascade of the plant and $\Theta_1$ and a stabilizing feedback from the observer dynamics. In particular, a state-space realization of $\Theta_1$ is provided by the matrices $A_{\Theta_1} = S$, $C_{\Theta_1} = \begin{bmatrix}1 & 0\end{bmatrix}$ and $B_{\Theta_1} = I_2$, while the interconnection between $\Theta_1$ and the system \eqref{eq:ddall_example_A0} is achieved by considering a constant \emph{squaring-down} matrix $\Xi = \begin{bmatrix}1 & 2\end{bmatrix}'$. The state-space description of the compensator $\Theta_2$ is
+  \begin{align}
     \label{eq:example_C2}
-    \dot{x}_{\Theta_2}(t) =	(A_{\Theta_2} + B_{\Theta_2}K_{\Theta_2}-L_{\Theta_2}C_{\Theta_2})x_{\Theta_2}(t) + L_{\Theta_2}\bbouto(t), \quad t\in\R_{\geq 0},
-  \end{equation}
+    \dot{x}_{\Theta_2}(t) &=	(A_{\Theta_2} + B_{\Theta_2}K_{\Theta_2}-L_{\Theta_2}C_{\Theta_2})x_{\Theta_2}(t) + L_{\Theta_2}\bbouto(t), & t\in\R_{\geq 0},
+  \end{align}
   together with the interconnection given by
-  \begin{equation}
-    u_{\Theta_1}(t) = y_{\Theta_2}(t) = K_{\Theta_2}x_{\Theta_2}(t), \quad t\in\R_{\geq 0},
-  \end{equation}
+  \begin{align}
+    u_{\Theta_1}(t) &= y_{\Theta_2}(t) = K_{\Theta_2}x_{\Theta_2}(t), & t\in\R_{\geq 0},
+  \end{align}
   where
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_example_AC2}
-    A_{\Theta_2} = \left[\begin{array}{cc}A_p(0) & B_p(0)\Xi C_{\Theta_1} \\ 0 & A_{\Theta_1}\end{array}\right], \quad B_{\Theta_2} = \left[\begin{array}{c} 0 \\ I \end{array}\right], \quad C_{\Theta_2} = \left[\begin{array}{cc} C_p(0) & 0 \end{array}\right].
-  \end{equation}
+    A_{\Theta_2} &= \begin{bmatrix}A_p(0) & B_p(0)\Xi C_{\Theta_1} \\ 0 & A_{\Theta_1}\end{bmatrix}, & B_{\Theta_2} &= \begin{bmatrix}0 \\ I\end{bmatrix}, & C_{\Theta_2} &= \begin{bmatrix}C_p(0) & 0\end{bmatrix}.
+  \end{align}
   The gain matrices
   \begin{subequations}
     \label{eq:ddall_example_KC2}
@@ -810,24 +797,24 @@ The following result summarizes all the previous claims, and proves that the pro
     \end{align}
   \end{subequations}
   have been obtained with an LQR approach. Finally, the regulated and performance outputs are defined as in \eqref{eq:ddall_sys_z0} and \eqref{eq:ddall_sys_z}, respectively, with
-  \begin{equation}
-    C_1(\mu) = \left[\begin{array}{cc} C_p(\mu) & 0 \end{array} \right], \quad C_2(\mu) = \left[\begin{array}{ccc} 0 & C_{c}\end{array}\right], \quad C_c = \left[\begin{array}{cc} C_{\Theta_1} & 0 \end{array}\right],
-  \end{equation}
+  \begin{align}
+    C_1(\mu) &= \begin{bmatrix}C_p(\mu) & 0 \end{bmatrix}, & C_2(\mu) &= \begin{bmatrix}0 & C_{c}\end{bmatrix}, & C_c &= \begin{bmatrix}C_{\Theta_1} & 0\end{bmatrix},
+  \end{align}
   and $D_{21} = 0$, $D_{12} = Q$, $D_{21} = I$, $D_{22} = 0$.
 
   Denote by $y_c(t)\in\R^2$ the output vector of the full regulator and by $u(t)\in\R^2$ the input vector of the plant under control. The interconnection of the plant, the regulator, and the allocator to be designed is given by
-  \begin{equation}
-    u(t) = y_c(t) + \varsigma(t), \quad t\in\R_{\geq 0}.
-  \end{equation}
+  \begin{align}
+    u(t) &= y_c(t) + \varsigma(t), & t\in\R_{\geq 0}.
+  \end{align}
   A polynomial annihilator of the nominal transfer matrix $W_{\bbouto\bbaux}(s)$ is
-  \begin{equation}
-    N_a(s) = \bbm{-s^2-s-3 \\ -3s-3}, \quad s\in\C,
-  \end{equation}
+  \begin{align}
+    N_a(s) &= \bbm{-s^2-s-3 \\ -3s-3}, & s\in\C,
+  \end{align}
   hence, its state-space description is given by
-  \begin{equation}
+  \begin{align}
     \label{eq:ddall_example_control_all_ya}
-    A_a =  \bbm{-3 & -3 & -1 \\ 1 & 0 & 0 \\ 0 & 1 & 0}, \quad B_a=\bbm{1 \\ 0 \\ 0},	\quad	C_a = \bbm{-1 & -1 & -3 \\ 0 & -3 & -3}.
-  \end{equation}
+    A_a &= \bbm{-3 & -3 & -1 \\ 1 & 0 & 0 \\ 0 & 1 & 0}, & B_a &= \bbm{1 \\ 0 \\ 0}, & C_a &= \bbm{-1 & -1 & -3 \\ 0 & -3 & -3}.
+  \end{align}
   The optimization unit is designed as in \eqref{eq:ddall_control_all} with $R = I$ for multiple values of $\gamma$.
   \begin{figure}[t]
     \centering
@@ -865,6 +852,6 @@ The following result summarizes all the previous claims, and proves that the pro
 
   It is assumed that the matrices defined in \eqref{eq:ddall_example_A0} for the nominal case are perturbed according to $A(\mu) = A(0) + \Delta A$, $B(\mu) = B(0) + \Delta B$, and $C(\mu) = C(0) + \Delta C$, with the norms of the \emph{unstructured} perturbation matrices bounded by $0.15$. The perturbation is such that the uncertain plant in closed loop with the nominal controller remains asymptotically stable. \Cref{fig:ddall_uncertain_wu,fig:ddall_uncertain_zpz0} depict the continuous-time signals and their sampled data (denoted by the circles) employed to implement \Cref{alg:ddall_algo1,alg:ddall_mincoeffbasis}. By inspecting the top graph of \Cref{fig:ddall_uncertain_zpz0}, it is worth stressing the difference between the continuous-time measurements of $\bbouto$ and the samples $\bbouto^\delta(k\tau_s)$ used in line 8 of \Cref{alg:ddall_computeH}, in which the effect of the exosystem alone has been compensated. In the absence of measurement noise, these algorithms permit the exact computation of the matrices $\bar{M}_{\bboutp,\bbexostate}$ and	$W_a(s)$ on the basis of which the control allocator \eqref{eq:ddall_control_all} is implemented, thus obtaining arbitrarily fast and optimal allocation even in the uncertain case.
 
-  Consider again the nominal plant \eqref{eq:ddall_example_A0}, driven by the same exosystem defined in the nominal case, and suppose that the controller has been designed according to \eqref{eq:ddall_example_AC2}-\eqref{eq:ddall_example_KC2}. Suppose further that the cost functional is defined as in \eqref{eq:bbcost} with $\lambda(\cdot) = {\rm dz}_{\sigma}(\cdot)^2$ where ${\rm dz}_{\sigma}$ denotes the (component-wise) \emph{deadzone} function with levels prescribed by the vector $\sigma\in\mathbb{R}^{\bboutpdim}$. The purpose of the following numerical simulation is to compare alternative implementations of the definition of the dynamics in charge of generating the steady-state behavior of the allocator unit, \emph{i.e.}, of the matrix $A_{IM}$ in \eqref{eq:ddall_control_all_xim}. The latter is first defined with the property that $\spec(A_{IM}) = \spec(S)$, in line with the constructions of the LQ
-  setting above, and the achieved optimal behavior is compared with the control allocation induced by the selection $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4\spec(\kappa S)$, namely containing the modes of the exosystem together with a certain number of its higher-order harmonics. In the former case the output of the allocator is denoted by $\varsigma(t)$, whereas in the latter it is denoted by $\varsigma^{h}(t)$. The deadzone levels for the two components of the control input are $\sigma = [0.9, 0.35]'$. \Cref{fig:ddall_DeadZone_phase} depicts the behavior of the allocated control inputs at steady-state, together with the deadzone representation (dashed gray box). The presence of the higher-order harmonics permits to achieve a zero value of the cost functional, since at steady-state the inputs remain for all time within the dead-zone levels. \Cref{fig:ddall_DeadZone_time} shows the steady-state time histories of the non-allocated control input (top graph), with the time histories of control actions allocated via an allocator with $\spec(A_{IM}) = \spec(S)$ and in the presence of higher-order harmonics (middle and bottom graphs, respectively).\closeexample
+  Consider again the nominal plant \eqref{eq:ddall_example_A0}, driven by the same exosystem defined in the nominal case, and suppose that the controller has been designed according to \eqref{eq:ddall_example_AC2}--\eqref{eq:ddall_example_KC2}. Suppose further that the cost functional is defined as in \eqref{eq:bbcost} with $\lambda(\cdot) = {\rm dz}_{\sigma}(\cdot)^2$ where ${\rm dz}_{\sigma}$ denotes the (component-wise) \emph{deadzone} function with levels prescribed by the vector $\sigma\in\mathbb{R}^{\bboutpdim}$. The purpose of the following numerical simulation is to compare alternative implementations of the definition of the dynamics in charge of generating the steady-state behavior of the allocator unit, \emph{i.e.}, of the matrix $A_{IM}$ in \eqref{eq:ddall_control_all_xim}. The latter is first defined with the property that $\spec(A_{IM}) = \spec(S)$, in line with the constructions of the LQ
+  setting above, and the achieved optimal behavior is compared with the control allocation induced by the selection $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4\spec(\kappa S)$, namely containing the modes of the exosystem together with a certain number of its higher-order harmonics. In the former case the output of the allocator is denoted by $\varsigma(t)$, whereas in the latter it is denoted by $\varsigma^{h}(t)$. The deadzone levels for the two components of the control input are $\sigma = \begin{bmatrix}0.9 & 0.35\end{bmatrix}'$. \Cref{fig:ddall_DeadZone_phase} depicts the behavior of the allocated control inputs at steady-state, together with the deadzone representation (dashed gray box). The presence of the higher-order harmonics permits to achieve a zero value of the cost functional, since at steady-state the inputs remain for all time within the dead-zone levels. \Cref{fig:ddall_DeadZone_time} shows the steady-state time histories of the non-allocated control input (top graph), with the time histories of control actions allocated via an allocator with $\spec(A_{IM}) = \spec(S)$ and in the presence of higher-order harmonics (middle and bottom graphs, respectively).\closeexample
 \end{example}

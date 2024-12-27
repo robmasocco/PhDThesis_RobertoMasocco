@@ -211,8 +211,8 @@ Formally, let one suppose that $n\in\N$ sensors are available, each one producin
 \begin{subequations}
   \label{eq:iccad23:blending}
   \begin{align}
-    \mathfrak{B}(\bar{\Delta}_f[k],\bar{s}[k]) = \sum_{i=1}^{n} \bar{\alpha}_i[k]\Delta_{i,f}[k]\,,\\
-    \bar{\alpha}_i[k] = s_i[k]\alpha_i\left(1 + \frac{\sum_{j=1}^{n} (1-s_j[k])\alpha_j}{\sum_{j=1}^{n}s_j[k]\alpha_j}\right)\quad & i = 1,\dotsc,n\,.
+    \mathfrak{B}(\bar{\Delta}_f[k],\bar{s}[k]) &= \sum_{i=1}^{n} \bar{\alpha}_i[k]\Delta_{i,f}[k],\\
+    \bar{\alpha}_i[k] = s_i[k]\alpha_i\left(1 + \frac{\sum_{j=1}^{n} (1-s_j[k])\alpha_j}{\sum_{j=1}^{n}s_j[k]\alpha_j}\right), & i = 1,\dotsc,n.
   \end{align}
 \end{subequations}
 The formulation presented in \eqref{eq:iccad23:blending} exhibits simplicity while incorporating several advantageous characteristics. The parameters $(\alpha_1,\dotsc,\alpha_n)$ enable fine-tuned calibration to accommodate varying levels of sensor accuracy and reliability. The responsiveness of the method to sensor operational states facilitates resilient operation during both transient and permanent sensor failures, as demonstrated in the experimental validation discussed in \cite{bianchi_efficient_2023}. From a computational perspective, \eqref{eq:iccad23:blending} demonstrates high efficiency, as it reduces to a series of scalar products that can be executed with minimal computational overhead on standard microprocessor architectures.

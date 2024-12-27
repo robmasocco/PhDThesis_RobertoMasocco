@@ -256,10 +256,10 @@ Finally, define in addition
   \begin{align}
     \bar{R} &= I_K\otimes R, & \bar{R}\in\R^{\bbauxdim K \times \bbauxdim K},\\
     L &= \begin{bmatrix} L_1 & L_2 \end{bmatrix} = \begin{bmatrix}
-      \bar{M} \, \dexodynmat \, Z & \bar{N} \\
-      \bar{M} \, \dexodynmat^{2} \, Z & \bar{N} \, A_{IM} \\
+      \bar{M} \dexodynmat Z & \bar{N} \\
+      \bar{M} \dexodynmat^{2} Z & \bar{N} A_{IM} \\
       \vdots & \vdots \\
-      \bar{M} \, \dexodynmat^{K} \, Z & \bar{N} \,  A^{K-1}_{IM}
+      \bar{M} \dexodynmat^{K} Z & \bar{N} A^{K-1}_{IM}
       \end{bmatrix}, & L\in\R^{\bbauxdim K \times (\bbexostatedim\bbrefdim + n_{IM})},\label{eq:sdall_bigl}\\
     F_{\zeta} &= -(L_2'\bar{R}L_2)^{-1}L_2'\bar{R}L_1, & F_{\zeta}\in\R^{n_{IM}\times\bbexostatedim\bbrefdim},\label{eq:sdall_fxi}\\
     F_{IM} &= -(L_2'\bar{R}L_2)^{-1}L_2'\bar{R}L_2A_{IM}, & F_{IM}\in\R^{n_{IM}\times n_{IM}},\label{eq:sdall_fim}\\

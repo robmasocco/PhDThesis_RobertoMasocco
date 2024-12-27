@@ -24,7 +24,7 @@ To define the following symbols and operators, let
   \item $v\in\R^n$ be a vector,
   \item $V$ be a vector space,
   \item $A,R\in\R^{n \times n}$ be square matrices,
-  \item $B_1,B_2\in\R^{n \times m}$ be rectangular matrices,
+  \item $B,B_1,B_2\in\R^{n \times m}$ be rectangular matrices,
   \item $A_1,\dotsc,A_n\in\R^{n \times n}$ be square matrices,
   \item $M\in\R^{n \times m}$ be a block-partitioned matrix.
 \end{itemize}
@@ -67,9 +67,11 @@ The algebraic notation items are summarized in \Cref{tab:notation}.
     \hline
     $\row(A_1,\dotsc,A_n)$ & Concatenation of $A_1,\dotsc,A_n$ on a row.\\
     \hline
-    $I_n$ & \makecell{Identity matrix of order $n$\\(subscript omitted when clear from context).}\\
+    $\ve{B}$ & Vectorization of $B$.\\
     \hline
-    $0_{n \times m}$ & \makecell{Matrix of zeroes of dimensions $n$ by $m$\\(subscript omitted when clear from context).}\\
+    $I_n$ & \makecell{Identity matrix of order $n$\\(subscript is omitted when clear from context).}\\
+    \hline
+    $0_{n \times m}$ & \makecell{Matrix of zeroes of dimensions $n$ by $m$\\(subscript is omitted when clear from context).}\\
     \hline
     $M_{[k,h]}$ & $(k,h)-$th block of $M$.\\
     \hline

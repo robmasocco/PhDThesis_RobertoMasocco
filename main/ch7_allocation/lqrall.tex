@@ -44,7 +44,7 @@ The feedback controller \eqref{eq:lincontroller}, together with exosystem \eqref
 \begin{figure}[t!]
   \centering
   \includesvg[width=.9\linewidth]{images/ch7/lqrall/lqrall.svg}
-  \caption{Block diagram of the feedback control system \eqref{eq:linplant}-\eqref{eq:lincontroller} interconnected to the exosystem \eqref{eq:linexosystem}; the input allocation device is enclosed in the $\mathcal{A}\ell\ell$ block.}
+  \caption{Block diagram of the feedback control system \eqref{eq:linplant}--\eqref{eq:lincontroller} interconnected to the exosystem \eqref{eq:linexosystem}; the input allocation device is enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:lqrall}
 \end{figure}
 
@@ -76,7 +76,7 @@ Although the factorization \eqref{eq:lqrall_lcfs} is not unique, it can be shown
   J(\plantssinput) = \frac{1}{2} \int_{0}^{T} \left\Vert \plantssinput(\tau) \right\Vert^2_2\,d\tau.
 \end{equation}
 
-Requirements (P), (I), and (O) of \Cref{prb:ssinv} reveal the connection between \emph{dynamic control allocation} on one hand and \emph{constrained optimal control} on the other: the (P) item requires the asymptotic behavior to be $\bbperiod$-periodic, the (O) item introduces the cost to optimize, and finally the (I) item describes the constraint to be satisfied to ensure that the optimal steady-state solution does not affect the original steady-state output performance induced by the controller \eqref{eq:lincontroller}. To substantiate this evidence, the definition of a few more items is required. Let $(\feedbackdynmat,\feedbackctrmat,\feedbackoutmat,0)$ be a minimal state-space realization of the feedback loop $\bbsys$ having $\bbexostate$ as input and $\ctrlouput$ as output. Let $\Pi\in\R^{\bbstatedim \times \bbexostatedim}$ be the solution of the Sylvester equation
+Requirements (P), (I), and (O) of \Cref{prb:ssinv} reveal the connection between \emph{dynamic control allocation} on one hand and \emph{constrained optimal control} on the other: the (P) statement requires the asymptotic behavior to be $\bbperiod$-periodic, the (O) statement introduces the cost to optimize, and finally the (I) statement describes the constraint to be satisfied to ensure that the optimal steady-state solution does not affect the original steady-state output performance induced by the controller \eqref{eq:lincontroller}. To substantiate this evidence, the definition of a few more items is required. Let $(\feedbackdynmat,\feedbackctrmat,\feedbackoutmat,0)$ be a minimal state-space realization of the feedback loop $\bbsys$ having $\bbexostate$ as input and $\ctrlouput$ as output. Let $\Pi\in\R^{\bbstatedim \times \bbexostatedim}$ be the solution of the Sylvester equation
 \begin{subequations}
 	\label{eq:lqrall_memontinv_mbar}
 	\begin{equation}
@@ -89,17 +89,17 @@ Requirements (P), (I), and (O) of \Cref{prb:ssinv} reveal the connection between
 		\bar{M} = \feedbackoutmat\Pi,
 	\end{equation}
 \end{subequations}
-which is termed the \emph{pseudo-steady-state output map}. Let $\ctrlssoutput(\cdot)$ denote the steady-state controller output. The following equality holds (see \Cref{app:moments}, as well as \cite{astolfi_model_2010,scarciotti_data-driven_2017} for a proof):
-\begin{equation}
+which is termed the \emph{pseudo-steady-state output map}. Let $\ctrlssoutput$ denote the steady-state controller output. The following equality holds (see \Cref{app:moments}, as well as \cite{astolfi_model_2010,scarciotti_data-driven_2017} for a proof):
+\begin{align}
   \label{eq:lqrall_ssctrl}
-	\ctrlssoutput(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geq 0}.
-\end{equation}
+	\ctrlssoutput(t) &= \bar{M}\bbexostate(t), & t\in\R_{\geq 0}.
+\end{align}
 The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is formulated as follows.
 
 \begin{problem}[Optimal input allocation for linear dynamics]
 	\label{prb:lqrall_optcont}
 	Consider the continuous-time, linear time-invariant feedback control system described by \eqref{eq:linplant}, \eqref{eq:lincontroller}, and the exosystem \eqref{eq:linexosystem}. Suppose that \Cref{ass:bbiss,ass:bboveract,ass:bbssresp,ass:lqrall_closedloop,ass:lqrall_kernels} hold, and define $\bar{M}$ as in \eqref{eq:lqrall_memontinv_mbar}.
-	Determine, if it exists, a function $v^{\star}(\cdot)\in\mathcal{L}_2([0,\bbperiod])$ that
+	Determine, if it exists, a function $v^{\star}\in\mathcal{L}_2([0,\bbperiod])$ that
 	\begin{itemize}
 		\item[(i)] minimizes the cost functional
 		  \begin{equation}
@@ -107,26 +107,26 @@ The finite-horizon optimal control problem corresponding to \Cref{prb:ssinv} is 
 			  J(v) = \frac{1}{2} \int_{0}^{T} \left\Vert \bar{M}\bbexostate(\tau) + v(\tau) \right\Vert^2_2\,d\tau;
 		  \end{equation}
 		\item[(ii)] satisfies the integral constraint
-	    \begin{equation}
+	    \begin{align}
 	      \label{eq:lqrall_invint}
-	      \lim_{t_0 \to -\infty} \int_{t_0}^{t} \bboutmat e^{{\bbdynmat}(t - \tau)} \bbctrmat \hat{v}(\tau)\,d\tau = 0, \quad t\in\R_{\geq 0},
-	    \end{equation}
+	      \lim_{t_0 \to -\infty} \int_{t_0}^{t} \bboutmat e^{{\bbdynmat}(t - \tau)} \bbctrmat \hat{v}(\tau)\,d\tau &= 0, & t\in\R_{\geq 0},
+	    \end{align}
 	\end{itemize}
 	where $\hat{v} : \R \rightarrow \R^\bbauxdim$ denotes the periodic extension of $v$, namely $\hat{v}(t) = v(\Mod(t, \bbperiod))$, $t\in\R_{\geq 0}$.\closestatement
 \end{problem}
 
-It is worth pointing out that item (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, item (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}.
+It is worth pointing out that statement (ii) of \Cref{prb:lqrall_optcont} constitutes a somewhat novel class of constraints for optimal control problems. In particular, since the left-hand side of \eqref{eq:lqrall_invint} represents the steady-state output response of the closed loop identified by $(\bbdynmat,\bbctrmat,\bboutmat,0)$ with $\bbaux = v$, statement (I) of \Cref{prb:ssinv} is equivalent to the constraint \eqref{eq:lqrall_invint} of \Cref{prb:lqrall_optcont}.
 
 \begin{remark}
   \label{rem:lqrall_apply}
-  The relation between \Cref{prb:ssinv} and \Cref{prb:lqrall_optcont} establishes the basis for a deeper understanding of both. Having determined the solution $v^{\star}(\cdot)$ of \Cref{prb:lqrall_optcont}, it is possible to satisfy the requirements of \Cref{prb:ssinv} simply by injecting $\bbaux(t)=v^{\star}(\Mod(t,\bbperiod))$ into the closed loop; the linearity and asymptotic stability of $\bbsys$ imply that the resulting closed loop converges to a steady-state satisfying the requirements of \Cref{prb:ssinv}. Note that whereas an allocated closed loop using a generic allocator solving \Cref{prb:ssinv} generally exhibits transients in both $\bbaux(\cdot)$ (which is computed asymptotically) and in the overall system response; the proposed approach directly generates the steady-state evolution of $\bbaux(\cdot)$, although the remaining signals in the overall system response still exhibit transients before converging to their allocated evolution.\closeremark
+  The relation between \Cref{prb:ssinv} and \Cref{prb:lqrall_optcont} establishes the basis for a deeper understanding of both. Having determined the solution $v^{\star}$ of \Cref{prb:lqrall_optcont}, it is possible to satisfy the requirements of \Cref{prb:ssinv} simply by injecting $\bbaux(t)=v^{\star}(\Mod(t,\bbperiod))$ into the closed loop; the linearity and asymptotic stability of $\bbsys$ imply that the resulting closed loop converges to a steady-state satisfying the requirements of \Cref{prb:ssinv}. Note that whereas an allocated closed loop using a generic allocator solving \Cref{prb:ssinv} generally exhibits transients in both $\bbaux$ (which is computed asymptotically) and in the overall system response; the proposed approach directly generates the steady-state evolution of $\bbaux$, although the remaining signals in the overall system response still exhibit transients before converging to their allocated evolution.\closeremark
 \end{remark}
 
 It is possible to derive a closed-form solution to \Cref{prb:lqrall_optcont}, as shown in the following. However, some preliminary technical results are required. For clarity, introduce the notation
-\begin{equation}
+\begin{align}
   \label{eq:lqrall_zw}
-  \zeta(t) = \bar{M}\bbexostate(t), \quad t\in\R_{\geq 0}.
-\end{equation}
+  \zeta(t) &= \bar{M}\bbexostate(t), & t\in\R_{\geq 0}.
+\end{align}
 By standard results about Fourier series expansion of functions in $\mathcal{L}_2([0,\bbperiod])$, it is possible to write
 \begin{subequations}
 	\label{eq:lqrall_fseries}
@@ -140,22 +140,25 @@ where $\zeta_0,v^{\star}_0,a_k,b_k,\alpha_k,\beta_k\in\R^\bbauxdim$. Moreover, b
 \begin{lemma}
 	\label{lem:lqrall_solconstr}
 	Let $\bar{\omega} = 2\pi\bar{k}/\bbperiod$, with $\bar{k}\in\Z_{\geq 0}$, and
-	\begin{equation}
+	\begin{align}
 		\label{eq:lqrall_singlefdec}
-		v(t) = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), \quad t\in\R_{\geq 0},
-	\end{equation}
-	where $\alpha,\beta\in\R^\bbauxdim$; let $\vartheta = [\alpha' \; \beta']'$ and
+		v(t) &= \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), & t\in\R_{\geq 0},
+	\end{align}
+	where $\alpha,\beta\in\R^\bbauxdim$; let $\vartheta = \begin{bmatrix}\alpha' & \beta'\end{bmatrix}'$ and
 	\begin{equation}
 		\label{eq:lqrall_psi}
-		\Psi(\bar{\omega}) = \left[\begin{array}{rr} \Im(\plantalllcfn(j\bar{\omega})) & \Re(\plantalllcfn(j\bar{\omega})) \\ -\Re(\plantalllcfn(j\bar{\omega})) & \Im(\plantalllcfn(j\bar{\omega})) \end{array}\right].
+		\Psi(\bar{\omega}) = \begin{bmatrix}
+      \Im(\plantalllcfn(j\bar{\omega})) & \Re(\plantalllcfn(j\bar{\omega})) \\
+      -\Re(\plantalllcfn(j\bar{\omega})) & \Im(\plantalllcfn(j\bar{\omega}))
+    \end{bmatrix}.
 	\end{equation}
 	Then, \eqref{eq:lqrall_invint} holds for $v$ in \eqref{eq:lqrall_singlefdec} if and only if either one of the following conditions holds:
 	\begin{subequations}
 		\begin{align}
 			\label{eq:lqrall_psisys}
-			 & \Psi(\bar{\omega}) \vartheta = 0, \\
+			\Psi(\bar{\omega})\vartheta &= 0, &\\
 			\label{eq:lqrall_psisys_bis}
-			 & \vartheta = \Psi^\perp(\bar{\omega})z, \quad z\in\R^\nu,
+			\vartheta &= \Psi^\perp(\bar{\omega})z, & z\in\R^\nu,
 		\end{align}
 	\end{subequations}
 	where $\nu = \dim(\ker(\Psi(\bar{\omega})))$.\closestatement
@@ -195,14 +198,14 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 			v(t)     & = \alpha \sin(\bar{\omega}t) + \beta\cos(\bar{\omega}t), & t\in\R_{\geq 0},
 		\end{align}
 	\end{subequations}
-	where $a,b,\alpha,\beta\in\R^\bbauxdim$, $\theta:= [a' \; b']'$, $\vartheta:= [\alpha' \; \beta']'$.
+	where $a,b,\alpha,\beta\in\R^\bbauxdim$, $\theta = \begin{bmatrix}a' & b'\end{bmatrix}'$, $\vartheta = \begin{bmatrix}\alpha' & \beta'\end{bmatrix}'$.
 
 	Then, $v$ minimizes \eqref{eq:lqrall_optcontcost} under the constraint \eqref{eq:lqrall_invint} if and only if $\vartheta=\vartheta^{\star}(\bar{\omega})$, with
 	\begin{equation}
 		\label{eq:lqrall_optcoeffs}
 		\vartheta^{\star}(\bar{\omega}) = -\Psi^{\perp}(\bar{\omega})(\Psi^{\perp}(\bar{\omega}))^{\dagger}\theta,
 	\end{equation}
-	and $\vartheta^{\star}(\bar{\omega}) = [\alpha^{\star}(\bar{\omega})' \; \beta^{\star}(\bar{\omega})']'$.\closestatement
+	and $\vartheta^{\star}(\bar{\omega}) = \begin{bmatrix}\alpha^{\star}(\bar{\omega})' & \beta^{\star}(\bar{\omega})'\end{bmatrix}'$.\closestatement
 \end{lemma}
 \begin{proof}
 	The computation of the cost \eqref{eq:lqrall_optcontcost} with \eqref{eq:lqrall_singles} reduces to
@@ -210,12 +213,12 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
       \label{eq:lqrall_staticcost}
 			\frac{1}{2} \int_{0}^{\bbperiod} \left\Vert \zeta(\tau) + v(\tau) \right\Vert^2_2\,d\tau\\
 			=\frac{1}{2} \int_{0}^{\bbperiod} \left\Vert (a+\alpha) \sin(\bar{\omega}\tau) + (b+\beta)\cos(\bar{\omega}\tau) \right\Vert^2_2\,d\tau\\
-			=\frac{1}{4} \left\Vert\left[ \begin{array}{c}
+			=\frac{1}{4} \left\Vert\begin{bmatrix}
 					(a+\alpha) \\
 					(b+\beta)
-				\end{array} \right]\right\Vert^2_2,
+      \end{bmatrix}\right\Vert^2_2,
 		\end{multline}
-	where the integral over a period of the mixed term $\sin(\bar{\omega}\tau)\cos(\bar{\omega}\tau)$ is zero. From \Cref{lem:lqrall_solconstr}, the vector $\vartheta$ must be of the form \eqref{eq:lqrall_psisys_bis} to satisfy the constraint \eqref{eq:lqrall_invint}, namely $\vartheta = \Psi^\perp(\bar{\omega})z$ with $z\in\R^\nu$. Then, the coefficients $\vartheta^{\star}(\bar{\omega})=[\alpha^{\star}(\bar{\omega})'\;\beta^{\star}(\bar{\omega})']'$ are obtained by finding $z^{\star}\in\R^\nu$ such that
+	where the integral over a period of the mixed term $\sin(\bar{\omega}\tau)\cos(\bar{\omega}\tau)$ is zero. From \Cref{lem:lqrall_solconstr}, the vector $\vartheta$ must be of the form \eqref{eq:lqrall_psisys_bis} to satisfy the constraint \eqref{eq:lqrall_invint}, namely $\vartheta = \Psi^\perp(\bar{\omega})z$ with $z\in\R^\nu$. Then, the coefficients $\vartheta^{\star}(\bar{\omega})=\begin{bmatrix}\alpha^{\star}(\bar{\omega})' & \beta^{\star}(\bar{\omega})'\end{bmatrix}'$ are obtained by finding $z^{\star}\in\R^\nu$ such that
 	\begin{equation}
 		\label{eq:lqrall_finiteprb}
 		z^{\star} = \arg\min_{z\in\R^\nu}\bar{J}(z),
@@ -246,10 +249,10 @@ The property stated by \Cref{lem:lqrall_solconstr} parametrizes the functions $\
 \begin{remark}
 	\label{rmk:lqrall_mbar}
 	Consider \eqref{eq:lqrall_singlezeta} and recall \eqref{eq:lqrall_zw}, namely the fact that $\zeta(t) = \bar{M}\bbexostate(t)$ with $\bar{M}$ given by \eqref{eq:lqrall_memontinv_mbar}. The two expressions are reconciled noting that if
-	\begin{equation}
-		\bbexostate(t) = a_\bbexostate \sin(\bar{\omega}t) + b_\bbexostate \cos(\bar{\omega}t), \quad t\in\R_{\geq 0},
-	\end{equation}
-	with $a_\bbexostate,b_\bbexostate\in\R^\bbexostatedim$, then $\theta = [a' \; b']' = \bar{M}[a_\bbexostate' \; b_\bbexostate']'$ holds.\closeremark
+	\begin{align}
+		\bbexostate(t) &= a_\bbexostate \sin(\bar{\omega}t) + b_\bbexostate \cos(\bar{\omega}t), & t\in\R_{\geq 0},
+	\end{align}
+	with $a_\bbexostate,b_\bbexostate\in\R^\bbexostatedim$, then $\theta = \begin{bmatrix}a' & b'\end{bmatrix}' = \bar{M}\begin{bmatrix}a_\bbexostate' & b_\bbexostate'\end{bmatrix}'$ holds.\closeremark
 \end{remark}
 
 A straightforward corollary of the previous result follows from \eqref{eq:lqrall_optcoeffs}. It tells, in essence, that if $\zeta$ contains a single harmonic with zero amplitude, then the optimal $v$ with the same single harmonic has zero amplitude as well.
@@ -270,7 +273,7 @@ The following result exploits the previous lemmas and corollary to describe the 
       v^{\star}(t) &= v^{\star}_0 + \sum_{k=1}^{h} \alpha_k \sin(\omega_k t) + \beta_k \cos(\omega_k t), & t\in\R_{\geq 0},
     \end{align}
   \end{subequations}
-  and the coefficients $\theta_k = [a_k' \; b_k']'$, $\vartheta_k = [\alpha_k' \; \beta_k']'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega} = k\omega$.\closestatement
+  and the coefficients $\theta_k = \begin{bmatrix}a_k' & b_k'\end{bmatrix}'$, $\vartheta_k = \begin{bmatrix}\alpha_k' & \beta_k'\end{bmatrix}'$ are related by \eqref{eq:lqrall_optcoeffs} to $\bar{\omega} = k\omega$.\closestatement
 \end{lemma}
 
 \begin{proof}
@@ -280,11 +283,11 @@ The following result exploits the previous lemmas and corollary to describe the 
 		A_k &= a_k + \alpha_k, & B_k &= b_k + \beta_k, & k = 1,2,\dotsc,
 	\end{align}
 	which allow the instantaneous cost in \eqref{eq:lqrall_optcontcost} to be written as
-	\begin{multline}
+	\begin{align}
 		\label{eq:lqrall_groupedcost}
-		\frac{1}{2} \left\Vert \zeta(t) + v(t) \right\Vert^2_2 = \frac{1}{2} \left\Vert \gamma_0 + \delta(t) + \epsilon(t) \right\Vert^2_2 \\
-    = \frac{1}{2}(\gamma_0'\gamma_0 + \delta(t)'\delta(t) + \epsilon(t)'\epsilon(t)) + \gamma_0'\delta(t) + \delta(t)'\epsilon(t) + \gamma_0'\epsilon(t), \quad t\in\R_{\geq 0},
-	\end{multline}
+		&\frac{1}{2} \left\Vert \zeta(t) + v(t) \right\Vert^2_2 = \frac{1}{2} \left\Vert \gamma_0 + \delta(t) + \epsilon(t) \right\Vert^2_2&\notag\\
+    &\hspace{-2pt}= \frac{1}{2}(\gamma_0'\gamma_0 + \delta(t)'\delta(t) + \epsilon(t)'\epsilon(t)) + \gamma_0'\delta(t) + \delta(t)'\epsilon(t) + \gamma_0'\epsilon(t), & t\in\R_{\geq 0},
+	\end{align}
 	and the vector $\gamma_0$ and the functions $\delta$ and $\epsilon$ given by
 	\begin{subequations}
 		\begin{align}
@@ -312,20 +315,19 @@ The following result is thus obtained collecting the ones provided by the previo
 		v^{\star}(t) &= v_0^\star+ \sum_{i=1}^h \alpha^{\star}_i\sin(\omega_i t)+\beta^{\star}_i\cos(\omega_i t), & t\in\R_{\geq 0},
 	\end{align}
 	with
-	\begin{align}
-		v_0^\star & =-\plantalllcfn^{\perp}(0)(\plantalllcfn^{\perp}(0))^{\dagger}\zeta_0, \\
-		\left[\begin{array}{c}
+  \begin{subequations}
+    \begin{align}
+      v_0^\star & =-\plantalllcfn^{\perp}(0)(\plantalllcfn^{\perp}(0))^{\dagger}\zeta_0, \\
+      \begin{bmatrix}
 				\alpha^{\star}_i \\
 				\beta^{\star}_i
-			\end{array}
-		\right]   & =
-		-\Psi^{\perp}(\omega_i)(\Psi^{\perp}(\omega_i))^{\dagger}
-		\left[\begin{array}{c}
+      \end{bmatrix} &= -\Psi^{\perp}(\omega_i)(\Psi^{\perp}(\omega_i))^{\dagger}
+      \begin{bmatrix}
 				a_i \\
 				b_i
-			\end{array}
-			\right].
-	\end{align}
+      \end{bmatrix}, & i=1,\dotsc,h.
+    \end{align}
+  \end{subequations}
   \closestatement
 \end{theorem}
 
@@ -333,24 +335,21 @@ The following result is thus obtained collecting the ones provided by the previo
   Consider the following numerical model for the plant \eqref{eq:linplant}:
   \begin{align}
     \label{eq:lqrall_linplant}
-      A &= \left[
-        \begin{array}{cccc}
-          0 & \,  1  & \, 0 & \, 0 \\
-          0 & \, -2  & \, 0 & \, 0 \\
-          0 & \, 0   & \, 0 & \, 3 \\
-          0 & \,  -4 & \, 1 & \, 0
-        \end{array}\right], &
-      B &= \left[
-        \begin{array}{ccc}
-          1  & \,  0  & \,  -1 \\
-          1  & \, 0   & \,  1  \\
-          -1 & \, -1  & \,  0  \\
-          0  & \,  -1 & \, 1
-        \end{array}\right], &
-      C &= \left[
-        \begin{array}{cccc}
-          1 \quad   0 \quad 1 \quad  0
-        \end{array}\right].
+      A &= \begin{bmatrix}
+          0 & 1 & 0 & 0\\
+          0 & -2 & 0 & 0\\
+          0 & 0  & 0 & 3\\
+          0 & -4 & 1 & 0
+        \end{bmatrix}, &
+      B &= \begin{bmatrix}
+          1 & 0 & -1\\
+          1 & 0 & 1\\
+          -1 & -1 & 0\\
+          0 & -1 & 1
+        \end{bmatrix}, &
+      C &= \begin{bmatrix}
+          1 & 0 & 1 & 0
+        \end{bmatrix}.
   \end{align}
   The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of angular frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
   \begin{figure}[t]
