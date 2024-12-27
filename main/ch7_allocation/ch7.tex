@@ -1,7 +1,6 @@
 \chapter{Plasma shape control for tokamaks}
 \label{ch:allocation}
-\doublespacing
-\vspace{-2.5cm}
+\vspace{-1.3cm}
 
 In \Cref{ch:tokamaks}, the second application scenario of this work has been introduced. In particular, \Cref{sec:tcv} illustrated the Tokamak à Configuration Variable device, and \Cref{sec:scd} provided a thorough description of the Système de Contrôle Distribué that controls TCV. That description clarified how the distributed control system of TCV allows multiple diagnostics, algorithms, estimators, and controller to coexist and interact within a single control architecture. Thanks to this design, the experimental capabilities of TCV have been extended significantly. One of the latest innovations in this context has been the introduction of a \emph{shape controller}, \emph{i.e.}, a subsystem that acts as a reference governor and PID controller for the coil power supplies in order to track a desired plasma shape. Its implementation currently works in coordination with other SCD subsystem, in particular those that generate feedback measurements concerning the equilibrium reconstruction; the measurement that they provide are used to evaluate the shape control law in real-time.
 

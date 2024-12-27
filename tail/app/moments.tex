@@ -1,9 +1,10 @@
 \chapter{Moments of a linear system}
 \label{app:moments}
-\doublespacing
-\vspace{-2.5cm}
+\vspace{-1.3cm}
 
-The contents of this Appendix are based on \cite{astolfi_model_2010,scarciotti_data-driven_2017} and references therein; some more insights are also found in \cite{carnevale_external_2017,carnevale_data_2021}. The interested reader is referenced to those works for a detailed discussion of the following topics. Consider the system
+The contents of this appendix are based on \cite{astolfi_model_2010,scarciotti_data-driven_2017} and references therein. Some more insights are also found in \cite{carnevale_external_2017,carnevale_data_2021}, concerning in particular off-line and on-line estimation methods from input-output measurement data. The interested reader is referenced to those works for a detailed discussion of the following topics.
+
+Consider the system
 \begin{subequations}
   \label{eq:moments_my_sys}
 	\begin{align}
@@ -26,7 +27,7 @@ The transfer matrix of \eqref{eq:moments_my_sys} is
 	is $W(s^{\star})$.\closestatement
 \end{definition}
 
-The \emph{moment of $W(s)$ (or $(A,B,C,D)$) at $s^{\star}$}
+The \emph{moment of $\,W(s)$ (or $(A,B,C,D)$) at $s^{\star}$}
 has the following dynamic meaning:
 under the assumption that $s^{\star}\not\in\spec(A)$,
 if \eqref{eq:moments_my_sys} is subject to the
@@ -40,7 +41,7 @@ via the solution of the linear equations
 \begin{subequations}\label{eq:moments_M}
 	\begin{align}
 		\Pi S & = A\Pi + BL, \label{eq:moments_Ma}  \\
-		M     & = C \Pi + DL. \label{eq:moments_Mb}
+		M     & = C \Pi + DL, \label{eq:moments_Mb}
 	\end{align}
 \end{subequations}
 in the unknowns $\Pi$, $M$, provided that
