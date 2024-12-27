@@ -1,3 +1,3 @@
 # PhDThesis_RobertoMasocco
 
-PhD thesis.
+PhD thesis in Computer Science, Control and Geoinformation.
