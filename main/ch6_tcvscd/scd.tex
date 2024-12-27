@@ -26,7 +26,7 @@ Input and output operations rely on high-density ADC/DAC modules. A dedicated re
 \end{itemize}
 The primary control functionality, implemented on Node 02 with Node 03 as backup, represents a critical component of the system. This subsystem interfaces with a 192-channel ADC module, sending data streams through two high-speed fiber optic links to both the industrial PCs that implement the nodes. This redundant configuration ensures synchronized data delivery to both nodes, enabling parallel operation during plasma discharges.
 
-A central server orchestrates the entire control system, managing a main shot state machine that coordinates all distributed computers. This server maintains an MDSplus database \cite{santoro_exploring_2020} containing control system data and real-time algorithm configurations, hosts the development environment for control algorithm implementation, and provides a secure platform for authorized users to integrate new controllers into the TCV control framework.
+A central server orchestrates the entire control system, managing a main shot state machine that coordinates all distributed computers. This server maintains an MDSplus database (see \Cref{sec:related_work_marte2}) containing control system data and real-time algorithm configurations, hosts the development environment for control algorithm implementation, and provides a secure platform for authorized users to integrate new controllers into the TCV control framework.
 
 \begin{figure}[t!]
   \centering
