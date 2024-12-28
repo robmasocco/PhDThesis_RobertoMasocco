@@ -154,13 +154,13 @@ This scenario, completely new in the literature to the best of the author's know
   \emph{i.e.}, the annihilator output is fed to the plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device with sampling time $\tau_s$. The situation hereby described is depicted in \Cref{fig:sdall_dtann}. The output of \eqref{eq:sdall_cex_ctsys} in presence of its annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine} is shown in \Cref{fig:sdall_y_ctzct}.
   \begin{figure}[t]
     \centering
-    \includesvg[width=.8\textwidth]{images/ch7/sdall/dtann.svg}
+    \includesvg[width=.8\linewidth]{images/ch7/sdall/dtann.svg}
     \caption{Interconnection of the continuous-time annihilator (represented by the $Ann$ block) with the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device.}
     \label{fig:sdall_dtann}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/sdall/y_ctzct}
+    \includegraphics[width=.7\linewidth]{images/ch7/sdall/y_ctzct}
     \caption{Output of the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine}.}
     \label{fig:sdall_y_ctzct}
   \end{figure}
@@ -188,7 +188,9 @@ This scenario, completely new in the literature to the best of the author's know
     \vartheta_{k+1} &= A_a \vartheta_k + B_a v_k, & k\in\Z_{\geq 0},\\
     \allout_k &= C_a \vartheta_k, & k\in\Z_{\geq 0},
   \end{align}
-  where $\vartheta_k\in\R^{n_a}$ is the state vector at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.\closestatement
+  where $\vartheta_k\in\R^{n_a}$ is the state vector at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.
+
+  \closestatement
 \end{proposition}
 
 \begin{remark}
@@ -209,7 +211,9 @@ This scenario, completely new in the literature to the best of the author's know
 
 \begin{remark}
   \label{rem:sdall_sdinv}
-  It is worth pointing out that \eqref{eq:sdall_annss} is a discrete-time system designed such that \eqref{eq:sdall_annih} holds. Hence, the discrete-time annihilator given by \eqref{eq:sdall_annss} satisfies the sampled output invisibility requirement in \Cref{prb:sdall_all}. However, the annihilator \eqref{eq:sdall_annss} does not guarantee output invisibility between sampling instants and the effect of the allocator action on the plant output is not characterized.\closeremark
+  It is worth pointing out that \eqref{eq:sdall_annss} is a discrete-time system designed such that \eqref{eq:sdall_annih} holds. Hence, the discrete-time annihilator given by \eqref{eq:sdall_annss} satisfies the sampled output invisibility requirement in \Cref{prb:sdall_all}. However, the annihilator \eqref{eq:sdall_annss} does not guarantee output invisibility between sampling instants and the effect of the allocator action on the plant output is not characterized.
+
+  \closeremark
 \end{remark}
 
 The proof of \Cref{prop:sdall_annih_computation} follows a reasoning similar to that of \Cref{prop:ddall_annih_computation}, hence it is omitted. To describe the proposed steady-state optimizer, some preliminary definitions are in order. Recall \Cref{ass:sdall_periods} and consider the following cost functional, obtained as a sampled-data variant of \eqref{eq:sdall_ctcost}:

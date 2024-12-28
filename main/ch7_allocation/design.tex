@@ -24,7 +24,7 @@ The intuition at the heart of the design of dynamic allocators achieving full ou
 The interconnection of these three basic components is depicted in \Cref{fig:fullallocator}. Note that, when the considered steady-state is constant, a possible implementation of the optimizer is based on the gradient descent method \cite{khalil_nonlinear_2002} and the steady-state generator is naturally embedded within its integrator, thus reducing the architecture to only two distinct components instead of three.
 \begin{figure}
   \centering
-  \includesvg[width=.95\textwidth]{images/ch7/fullallocator.svg}
+  \includesvg[width=.95\linewidth]{images/ch7/fullallocator.svg}
   \caption{Block diagram of a dynamic allocator achieving full output invisibility as requested by \Cref{prb:fullinv}: the optimizer, steady-state generator, and annihilator subsystems are represented by the blocks $Opt$, $SSGen$, and $Ann$, respectively.}
   \label{fig:fullallocator}
 \end{figure}

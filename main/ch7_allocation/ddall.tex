@@ -7,7 +7,7 @@ Consider now a continuous-time, linear time-invariant model given by
     \bboutp(t) & = C_2(\mu)\bbstate(t) + D_{21}(\mu)\bbaux(t) + D_{22}(\mu)\bbexostate(t), & t\in\R_{\geq 0}, \label{eq:ddall_sys_z}
   \end{align}
 \end{subequations}
-where $\bbstate(t)\in\R^\bbstatedim$ is the state vector, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively, at time $t$. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
+where $\bbstate(t)\in\R^\bbstatedim$ is the state vector at time $t$, $\bbaux(t)\in\R^\bbauxdim$ is the auxiliary control input, $\bbexostate(t)\in\R^\bbexostatedim$ is the reference input, and $\bbouto(t)\in\R^{\bboutodim}$ and $\bboutp(t)\in\R^{\bboutpdim}$ are the regulated and the performance outputs, respectively. The reference input is again taken as the full state of the exosystem \eqref{eq:bbexosys}, \emph{i.e.}, $\bbref = \bbexostate$ and $\bbrefdim = \bbexostatedim$. The exosystem  $\bbexo$ is described by the continuous-time, linear time-invariant model
 \begin{align}
   \label{eq:ddall_exo}
   \dot{\bbexostate}(t) &= \exodynmat\bbexostate(t), & t\in\R_{\geq 0},
@@ -250,7 +250,8 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
   \end{subequations}
   If $\Delta$ is sufficiently small, the difference between the two cost integrand functions along the two solutions satisfy
   \begin{multline}
-	  \ell(\bbssoutp^{\delta}(\tau)) - \ell(\bbssoutp^{\circ}(\tau)) = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)} \hat{\tilde{\eta}}_p(\tau) + o(\|\hat{\tilde{\eta}}_p(\tau)\|)\\
+	  \ell(\bbssoutp^{\delta}(\tau)) - \ell(\bbssoutp^{\circ}(\tau))\\
+    = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)} \hat{\tilde{\eta}}_p(\tau) + o(\|\hat{\tilde{\eta}}_p(\tau)\|)\\
 	  = \left.\nabla \ell\right|_{\bbssoutp^{\circ}(\tau)}\bar{N}_\mu e^{A_{IM}(\tau-(t+\Delta))}\Delta\bar{B}\delta + o(\|\Delta\|),
   \end{multline}
   where the equality $o(\|\hat{\tilde{\eta}}_p(\tau)\|)=o(\|\Delta\|)$ follows from \eqref{eq:ddall_ztilde}, \eqref{eq:ddall_norm_Bbar}, implying in turn that
@@ -283,8 +284,12 @@ The following statement characterizes the properties of \eqref{eq:ddall_control_
     \dot{J}_t &= -\gamma\|F(t)\|^2, & t\in\R_{\geq 0}.
   \end{align}
   Note that $F(t)$ only depends on the nominal $\bbssoutp^{\circ}$ trajectory and is independent of $\Delta$, as required after \eqref{eq:ddall_mario}.
-	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that	$F(t)' = \left.L(\bbexostate,x_{IM})\right|_{\bbexostate=\bbexostate(t),x_{IM}=x_{IM}(t)}$ with the latter defined in \eqref{eq:ddall_G_xi}.
-	The latter equation	\eqref{eq:ddall_Jdot_gamma}, in turn, together with boundedness of $\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for any time as in \eqref{eq:ddall_K1mem}, implies that $x_{IM}$ in \eqref{eq:ddall_control_all_xim} is bounded and that, at steady-state, it is described by the differential equation $\dot{\tilde{x}}_{IM}(t) = A_{IM}\tilde{x}_{IM}(t)$, the solution of which is, by construction, periodic of period $\bbperiod$.
+	The change of the variable $\sigma = \tau - t$ in the definition of $F(t)$ shows that
+  \begin{align}
+    F(t)' &= \left.L(\bbexostate,x_{IM})\right|_{\bbexostate=\bbexostate(t),x_{IM}=x_{IM}(t)}, & t\in\R_{\geq 0},
+  \end{align}
+  with the latter defined in \eqref{eq:ddall_G_xi}.
+	The latter equation	\eqref{eq:ddall_Jdot_gamma}, in turn, together with boundedness of $\bar{M}_{\bboutp,\bbexostate}\bbexostate(t)$ for any $t\in\R_{\geq 0}$ as in \eqref{eq:ddall_K1mem}, implies that $x_{IM}$ in \eqref{eq:ddall_control_all_xim} is bounded and that, at steady-state, it is described by the differential equation $\dot{\tilde{x}}_{IM}(t) = A_{IM}\tilde{x}_{IM}(t)$, the solution of which is, by construction, periodic of period $\bbperiod$.
   Finally, the annihilator is asymptotically stable since the matrix $A_a$ in \eqref{eq:ddall_control_all_xa} is Hurwitz; hence, the condition on $\dot{J}_{t}$ implies	that items (ii) and (iii) of \Cref{prb:ddall_main_per} hold, concluding the proof.
 \end{proof}
 
@@ -323,7 +328,9 @@ The following result reveals that the structure of the control allocator \eqref{
     \label{eq:ddall_ss_opt_quadratic}
     \dot{x}_{IM}(t) &=	(A_{IM}-\gamma H_1) x_{IM}(t) - \gamma H_2 \bbexostate(t), & t\in\R_{\geq 0}.
   \end{align}
-	Moreover, if the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$ is observable, then the matrix $(A_{IM}-\gamma H_1)$ is Hurwitz for any $\gamma\in\R_{> 0}$.\closestatement
+	Moreover, if the pair $(A_{IM},R^{\frac{1}{2}}\bar{N}_{\mu})$ is observable, then the matrix $(A_{IM}-\gamma H_1)$ is Hurwitz for any $\gamma\in\R_{> 0}$.
+
+  \closestatement
 \end{proposition}
 \begin{proof}
   In this case, the gradient of the cost function $\ell$ in \eqref{eq:bbcost} is linear:
@@ -818,26 +825,26 @@ The following result summarizes all the previous claims, and proves that the pro
   The optimization unit is designed as in \eqref{eq:ddall_control_all} with $R = I$ for multiple values of $\gamma$.
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.7\textwidth]{images/ch7/ddall/nominal_u}
+    \includegraphics[width=.6\linewidth]{images/ch7/ddall/nominal_u}
     \caption{\emph{(Nominal case)} Top graph: time histories of $y_{c}(t)$, \emph{i.e.}, the non-allocated control input. Middle and bottom graphs: time histories of $u(t) = y_c(t)+\varsigma(t)$, \emph{i.e.}, the optimally-allocated control input, with $\gamma = 0.01$ and $\gamma = 0.1$. The steady-state values in the middle and bottom graphs are the same, but a larger $\gamma$ yields a faster convergence.}
     \label{fig:ddall_nominal_u}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/ddall/uncertain_zpz0}
+    \includegraphics[width=.9\linewidth]{images/ch7/ddall/uncertain_zpz0}
     % HARDCODED REFERENCE: see the caption, points to a line of the H computation algorithm.
     \caption{\emph{(Uncertain case)} Regulated (top graph) and performance (bottom graph) outputs of the uncertain plant during the two-phase identification process. The markers on each plot identify the sampling times and the values used by the data-driven procedures. In the last part of the upper plot, the markers show the values of $\bbouto^\delta(k\tau_s)$ (see line 8 of \Cref{alg:ddall_computeH}).}
     \label{fig:ddall_uncertain_zpz0}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/ddall/uncertain_wu}
+    \includegraphics[width=.9\linewidth]{images/ch7/ddall/uncertain_wu}
     \caption{\emph{(Uncertain case)} Time histories of the reference input (top graph) and of the controlled input (bottom graph) during the two-phase identification process. The markers identify the sampling times.}
     \label{fig:ddall_uncertain_wu}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/ddall/DeadZone_phase}
+    \includegraphics[width=.9\linewidth]{images/ch7/ddall/DeadZone_phase}
     \caption{\emph{(Deadzone)} Behavior of the allocated control inputs, together with the deadzone representation (dashed gray box). The control actions allocated via an allocator with $\spec(A_{IM}) = \bigcup_{\kappa = 1}^4 \spec(\kappa S)$ (red graph) achieve further amplitude reduction compared to an allocator with $\spec(A_{IM}) = \spec(S)$ (blue graph) (see \Cref{fig:ddall_DeadZone_time}).}
     \label{fig:ddall_DeadZone_phase}
   \end{figure}
