@@ -126,6 +126,10 @@
 	{\gdef\chapterlabel{\thechapter\ }} % The label
  	{0pt} % Separation between label and chapter-title
  	{%
+    \begingroup
+    \microtypesetup{expansion=false, protrusion=false}%
+    \hyphenpenalty=10000
+    \exhyphenpenalty=10000
     {\parskip=0pt
       \begin{tikzpicture}[remember picture,overlay]
         \node[yshift=-8cm] at (current page.north west)
@@ -140,7 +144,8 @@
           };
       \end{tikzpicture}
     }
-   \gdef\chapterlabel{}
+    \gdef\chapterlabel{}
+    \endgroup
   } % Code before the title body
 
 \titlespacing*{\chapter}{0pt}{110pt}{40pt}
