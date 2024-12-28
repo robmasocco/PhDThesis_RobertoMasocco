@@ -38,7 +38,7 @@ where $\bbexostate(t)\in\R^{\bbexostatedim}$ is the state vector, $\bbexostate(0
 In other words, \Cref{ass:bbexopoisson} states that given $\bbexostate_0\in\bbexoinitset$, the trajectory $\bbexostate(t)$ that originates in $\bbexostate_0$ passes arbitrarily close to $\bbexostate_0$ for $\left|t\right|\rightarrow +\infty$. This defines the point $\bbexostate_0$ as \emph{Poisson stable} (see \cite{isidori_nonlinear_1995}) and, since this holds for any $\bbexostate_0\in\bbexoinitset$, the system $\bbexo$ is said to be Poisson stable. This property implies that no trajectory of \eqref{eq:bbexosys} can decay to zero as time tends to infinity and that the reference input $r$ is periodic of period $\bbperiod\in\R_{>0}$. The interconnection of the system $\bbsys$ with the exosystem $\bbexo$ is depicted in \Cref{fig:bbsys}.
 \begin{figure}[!t]
   \centering
-  \includesvg[width=.7\linewidth]{images/ch7/nlsys.svg}
+  \includesvg[width=.6\linewidth]{images/ch7/nlsys.svg}
   \caption{Block diagram of the system \eqref{eq:bbsys} interconnected to the exosystem \eqref{eq:bbexosys}.}
   \label{fig:bbsys}
 \end{figure}
@@ -137,7 +137,7 @@ The two dynamic control allocation problems that are of interest for this work a
 It is finally worth to point out that, in both problems, the optimization process is allowed to exhibit a transient behavior: what distinguishes the two situations is whether the effect of this transient behavior on the regulated output can be visible or not. The desired configuration is depicted in \Cref{fig:allbbsys}.
 \begin{figure}[!t]
   \centering
-  \includesvg[width=.7\linewidth]{images/ch7/allnlsys.svg}
+  \includesvg[width=.6\linewidth]{images/ch7/allnlsys.svg}
   \caption{Block diagram of the system \eqref{eq:bbsys} interconnected to the exosystem \eqref{eq:bbexosys} and to the input allocation device, enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:allbbsys}
 \end{figure}

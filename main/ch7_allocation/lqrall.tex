@@ -43,7 +43,7 @@ with $\bbexostate(0) = \bbexostate_0\in\R^{\bbexostatedim}$. The angular frequen
 The feedback controller \eqref{eq:lincontroller}, together with exosystem \eqref{eq:linexoblocks}, ensure that \Cref{ass:bbiss,ass:bbssresp} hold. The complete block diagram of the closed loop is shown in \Cref{fig:lqrall}.
 \begin{figure}[t!]
   \centering
-  \includesvg[width=.9\linewidth]{images/ch7/lqrall/lqrall.svg}
+  \includesvg[width=.8\linewidth]{images/ch7/lqrall/lqrall.svg}
   \caption{Block diagram of the feedback control system \eqref{eq:linplant}--\eqref{eq:lincontroller} interconnected to the exosystem \eqref{eq:linexosystem}; the input allocation device is enclosed in the $\mathcal{A}\ell\ell$ block.}
   \label{fig:lqrall}
 \end{figure}
@@ -354,19 +354,19 @@ The following result is thus obtained collecting the ones provided by the previo
   The matrices describing the stabilizing controller \eqref{eq:lincontroller} have been obtained by an LQG design with unit weights, restricting the design to the first two inputs of the plant \eqref{eq:lqrall_linplant} only. This choice has been made to better highlight the optimization action of the allocation device, which is instead allowed to modulate the control action among all the three inputs of \eqref{eq:lqrall_linplant}. The exosystem is defined as in \eqref{eq:linexosystem} for the set of angular frequencies given by $\{\omega_1=5, \ \omega_2 = 10, \ \omega_3 = 15\}$, whereas its initial condition has been chosen equal to $w_0 = \begin{bmatrix}2 & 0 & 4 & 0 & 6 & 0\end{bmatrix}'$. Finally, it is assumed that the initial conditions for both the plant and the controller are equal to zero, and all simulations are carried out by setting the final time $t_f =$ \SI{7}{s}.
   \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{images/ch7/lqrall/sscosts}
+    \includegraphics[width=.95\linewidth]{images/ch7/lqrall/sscosts}
     \caption{Cost in the presence of input allocation by means of a hybrid allocator (red), and of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue). The last value is the relevant one.}
     \label{fig:lqrall_sscosts}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\linewidth]{images/ch7/lqrall/ydiffs}
+    \includegraphics[width=.8\linewidth]{images/ch7/lqrall/ydiffs}
     \caption{Difference $\bbouto - \bboutoa$ between the regulated outputs of the closed loop in absence and presence of the allocator, respectively, for the hybrid allocator (red) and for the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
     \label{fig:lqrall_ydiffs}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\linewidth]{images/ch7/lqrall/ya}
+    \includegraphics[width=.8\linewidth]{images/ch7/lqrall/ya}
     \caption{Outputs of a hybrid allocator (red) versus the components of the periodic extension of the optimal solution to \Cref{prb:lqrall_optcont} (blue).}
     \label{fig:lqrall_ya}
   \end{figure}
