@@ -5,7 +5,7 @@ The nonlinear case is now addressed. Consider the dynamic system \eqref{eq:bbsys
 \end{equation}
 In this scenario, as in many others reported in the literature (see \Cref{sec:sota_allocation}), the most cumbersome requirement set by \Cref{prb:ssinv} is the output invisibility statement (I), which, in the previous linear case of \Cref{prb:lqrall_optcont}, was still included as a problem constraint. Conversely, the approach hereby proposed for the original formulation of \Cref{prb:ssinv} involving \eqref{eq:bbsys}--\eqref{eq:bbexosys} stems from a different reasoning: \Cref{prb:ssinv} is reformulated as an optimal control problem that approximates the original one by penalizing the steady-state output invisibility requirement in the cost functional \cite{masocco_dynamic_2024}. Then, a numerical algorithm is developed to determine candidate solutions to the approximated problem.
 
-To substantiate this evidence few preliminary definitions are in order. Let $\bbstate_N(t)$, $\bbstate_N(t)\in\R^\bbstatedim$ denote the state vector of \eqref{eq:bbsys} at time $t$ in the absence or presence of the allocator, respectively, that is
+To substantiate this evidence few preliminary definitions are in order. Let $\bbstate_N(t)$, $\bbstate_A(t)\in\R^\bbstatedim$ denote the state vector of \eqref{eq:bbsys} at time $t$ in the absence or presence of the allocator, respectively, that is
 \begin{subequations}
   \label{eq:nlall_xnxa}
   \begin{align}
@@ -125,7 +125,7 @@ The proposed method is stated in \Cref{alg:nlall_sweep}, and its properties are 
 
 \begin{remark}
   \label{rem:nlall_dt}
-  Note that \Cref{alg:nlall_sweep} is purely methodological: in practical scenarios, numerical integrations over the considered time interval $[0,t_f]$ are necessary, adding multiple layers of configurable parameters to the algorithm. First, the choice of the numerical algorithm, \emph{e.g.}, \emph{Runge-Kutta} methods, is crucial to ensure the convergence of the backward integration of \eqref{eq:nlall_lambdadot}. Moreover, since discretizations are involved, a key aspect to consider is also the interpolation method to obtain all the signals from computed samples. Finally, another parameter of interest concerning the numerical implementation of \Cref{alg:nlall_sweep} is the sampling interval with respect to which the time interval $[0,t_f]$ is discretized. The magnitude of the sampling interval must usually be small to enable a feasible approximation of the continuous-time dynamics involved in \Cref{prb:ssinv} and has direct repercussions on the computational complexity of the integration steps.\closeremark
+  Note that \Cref{alg:nlall_sweep} is purely methodological: in practical scenarios, numerical integrations over the considered time interval $[0,t_f]$ are necessary, adding multiple layers of configurable parameters to the algorithm. First, the choice of the numerical algorithm, \emph{e.g.}, \emph{Runge-Kutta} methods, is crucial to ensure the convergence of the backward integration of \eqref{eq:nlall_lambdadot}. Moreover, since discretizations are involved, a key aspect to consider is also the interpolation method to obtain all the signals from computed samples. Finally, another parameter of interest concerning the numerical implementation of \Cref{alg:nlall_sweep} is the sampling interval with respect to which the time interval $[0,t_f]$ is discretized. The magnitude of the sampling interval should, in general, be small to enable a feasible approximation of the continuous-time dynamics involved in \Cref{prb:ssinv} and has direct repercussions on the computational complexity of the integration steps.\closeremark
 \end{remark}
 
 The choice of the update step in \Cref{alg:nlall_sweep} is a crucial design task. Many heuristic techniques have emerged in the literature to improve the convergence of this method, in particular thanks to its extensive diffusion in finite-dimensional optimization fields such as, \emph{e.g.}, machine learning for the training of neural networks \cite{goodfellow_deep_2016}.
@@ -183,38 +183,38 @@ The ADAM scheme yields the update rule given in \Cref{alg:nlall_adam}. With an a
 
   The control objective in this example is that of tracking, with the regulated output $\bbouto$, the reference input $\bbref_1(t)=\bbexostate_1(t)+\bbexostate_3(t)=\sin(\omega t)+2$, $t\in\R_{\geq 0}$. To this end, the control law $h_c$ has been designed to first apply a \emph{linearizing feedback} to the system \eqref{eq:nlall_simplant} and then to stabilize the resulting linearized dynamics. Subsequently, the tracking objective is achieved by injecting the reference input into the feedback control law. A detailed description of the synthesis procedure is provided in \cite[Chap. 4]{isidori_nonlinear_1995}.
   To highlight the optimization action operated by the auxiliary input $\bbaux$, in a similar way to the previous linear case, the control law $h_c$ has been designed to operate only on the first input, setting the second input to zero (as described in \cite[Chap. 4]{isidori_nonlinear_1995}, this is possible because an inspection of \eqref{eq:nlall_simplant} reveals that the system has relative degree $r=3$ from the first component of the input, affecting the system via the input map $\bbinmap_1(\chi) = \begin{bmatrix} e^{\bbstate_2} & e^{\bbstate_2} & 0 \end{bmatrix}'$, to the output $\bbouto$).
-  \begin{figure}[h!]
+  \begin{figure}[!t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/nlall/errs.eps}
+    \includegraphics[width=.7\linewidth]{images/ch7/nlall/errs.eps}
     \caption{Difference between the regulated output with and without input allocation, for different values of the invisibility weight $\alpha$, during the final run of \Cref{alg:nlall_sweep}.}
     \label{fig:nlall_errs}
   \end{figure}
   \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/nlall/cost.eps}
+    \includegraphics[width=.7\linewidth]{images/ch7/nlall/cost.eps}
     \caption{Cost during all the iterations performed with \Cref{alg:nlall_sweep} (red) versus those with \Cref{alg:nlall_adam} (blue).}
     \label{fig:nlall_cost}
   \end{figure}
   \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/nlall/hcn.eps}
+    \includegraphics[width=.7\linewidth]{images/ch7/nlall/hcn.eps}
     \caption{Nominal feedback-linearizing system input.}
     \label{fig:nlall_hcn}
   \end{figure}
   \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/nlall/ua.eps}
+    \includegraphics[width=.7\linewidth]{images/ch7/nlall/ua.eps}
     \caption{Auxiliary input determined by \Cref{alg:nlall_adam}.}
     \label{fig:nlall_ua}
   \end{figure}
   \begin{figure}[!ht]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/nlall/hca.eps}
+    \includegraphics[width=.7\linewidth]{images/ch7/nlall/hca.eps}
     \caption{Performance output subject to the input allocation determined by \Cref{alg:nlall_adam}, to be compared with the time histories in \Cref{fig:nlall_hcn}.}
     \label{fig:nlall_hca}
   \end{figure}
 
-  \Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,t_f) = (10^{-4}, 15)$, $v_0 = 0$, and the initial condition of \eqref{eq:nlall_simplant} given by $\bbstate(0)=\begin{bmatrix}0.1872 & -0.0767 & 0.2599\end{bmatrix}'$. All algorithms have been implemented numerically in MATLAB following the procedure described in \Cref{rem:nlall_dt}, \emph{i.e.}, by discretizing the time interval $[0,t_f]$ with a sampling interval of $10^{-2}$, performing fixed-step numerical integration of the state and costate dynamics, and operating with sampled signals.
+  \Cref{alg:nlall_sweep} has been tested with parameters $(\gamma,t_f) = (10^{-4}, 15)$, $v_0 = 0$, and the initial condition of \eqref{eq:nlall_simplant} given by $\bbstate(0)=\begin{bmatrix}0.1872 & -0.0767 & 0.2599\end{bmatrix}'$. All algorithms have been implemented numerically in MATLAB following the procedure described in \Cref{rem:nlall_dt}, \emph{i.e.}, by discretizing the time interval $[0,t_f]$ with a sampling interval of $10^{-2}$, performing fixed-step numerical integrations of the state and costate dynamics, and operating with sampled signals.
 
   The stopping criterion has been disregarded intentionally, setting a maximum number of iterations equal to $10^4$. The goal of this test is twofold: first, check the performance of the algorithm, and secondly, tune the parameter $\alpha$. \Cref{fig:nlall_errs} shows the steady-state tracking errors achieved with different values of $\alpha$: the problem remains computationally feasible and it is possible to set even a large invisibility weight, \emph{i.e.}, $\alpha=10^5$, achieving a small output error.
 

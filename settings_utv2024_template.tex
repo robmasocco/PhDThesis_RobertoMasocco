@@ -11,20 +11,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-\usepackage{geometry}
+\usepackage[left=1.5cm,right=1.5cm,top=1.5cm,bottom=2cm]{geometry}
 \usepackage{fourier} % Utopia font-typesetting including mathematical formula compatible with newer TeX-Distributions (>2010)
-%\usepackage{utopia} % On older systems -> use this package instead of fourier in combination with mathdesign for better looking results
-%\usepackage[adobe-utopia]{mathdesign}
-\setlength{\textwidth}{146.8mm} % = 210mm - 37mm - 26.2mm
-\setlength{\oddsidemargin}{11.6mm} % 37mm - 1in (from hoffset)
-\setlength{\evensidemargin}{0.8mm} % = 26.2mm - 1in (from hoffset)
-\setlength{\topmargin}{-2.2mm} % = 0mm -1in + 23.2mm
-\setlength{\textheight}{221.9mm} % = 297mm -29.5mm -31.6mm - 14mm (12 to accomodate footline with pagenumber)
-\setlength{\headheight}{15pt}
-\setlength{\parindent}{0pt}
+% \usepackage{utopia} % On older systems -> use this package instead of fourier in combination with mathdesign for better looking results
+% \usepackage[adobe-utopia]{mathdesign}
 
-\usepackage{setspace} % Increase interline spacing slightly
-\setstretch{1.1}
+\usepackage{setspace}
 
 \makeatletter
 \setlength{\@fptop}{0pt}  % For aligning all floating figures/tables etc. to the top margin
@@ -47,27 +39,48 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows.meta}
 
+%%%%% PAGE HEADER %%%%
 \usepackage{fancyhdr}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+% 1) Define how LaTeX stores chapter and section info in the marks:
+\renewcommand{\chaptermark}[1]{%
+  \markboth{\chaptername\ \thechapter\quad #1}{}%
+}
+\renewcommand{\sectionmark}[1]{%
+  \markright{\thesection\quad #1}%
+}
+
+% 2) Activate fancyhdr:
 \pagestyle{fancy}
-	\fancyhf{}
-	\renewcommand{\headrulewidth}{0.4pt}
-	\renewcommand{\footrulewidth}{0pt}
-  \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{#1}}
-  \fancyhead[L]{\bfseries \nouppercase{\leftmark}}
-  \fancyhead[R]{\bfseries \nouppercase{\rightmark}}
-  \fancyfoot[R]{\thepage}
-\fancypagestyle{plain}{
-	\fancyhf{}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
-	\fancyfoot[R]{\thepage}
-	}
-\fancypagestyle{addpagenumbersforpdfimports}{
-	\fancyhead{}
-	\renewcommand{\headrulewidth}{0pt}
-	\fancyfoot{}
-	\fancyfoot[R]{\thepage}
+\fancyhf{} % clear all headers and footers
+
+% 3) Rule widths:
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% 4) Define headers:
+% EVEN (LEFT) PAGES
+% Header: Chapter info on the left, nothing on the right
+\fancyhead[LE]{\bfseries \nouppercase{\leftmark}}
+\fancyhead[RE]{}
+% Footer: Page number on the left, nothing on the right
+\fancyfoot[LE]{\thepage}
+\fancyfoot[RE]{}
+
+% ODD (RIGHT) PAGES
+% Header: Nothing on the left, section info on the right
+\fancyhead[LO]{}
+\fancyhead[RO]{\bfseries \nouppercase{\rightmark}}
+% Footer: Nothing on the left, page number on the right
+\fancyfoot[LO]{}
+\fancyfoot[RO]{\thepage}
+
+% 5) Redefine plain style for chapter start pages:
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+  % Place page number at outer foot (left for even pages, right for odd pages)
+  \fancyfoot[LE,RO]{\thepage}%
 }
 
 \usepackage{listings}
@@ -109,49 +122,36 @@
 \newcommand*\chapterlabel{}
 %\renewcommand{\thechapter}{\Roman{chapter}}
 \titleformat{\chapter}[display]  % Type (section,chapter,etc...) to vary,  shape (e.g. display-type)
-	{\normalfont\bfseries\Huge} % Format of the chapter
+	{\normalfont\bfseries\huge} % Format of the chapter
 	{\gdef\chapterlabel{\thechapter\ }} % The label
  	{0pt} % Separation between label and chapter-title
- 	  {\begin{tikzpicture}[remember picture,overlay]
-    \node[yshift=-8cm] at (current page.north west)
-      {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=black] (0,0) rectangle(35.5mm,15mm);
-        \node[anchor=north east,yshift=-7.2cm,xshift=34mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
-        {\parbox[top][30mm][t]{15mm}{\raggedleft $\phantom{\textrm{l}}$\color{white}\chapterlabel}}; % The black l is just to get better base-line alingnement
-        \node[anchor=north west,yshift=-7.2cm,xshift=37mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
+ 	{%
+    \begingroup
+    \microtypesetup{expansion=false, protrusion=false}%
+    \hyphenpenalty=10000
+    \exhyphenpenalty=10000
+    {\parskip=0pt
+      \begin{tikzpicture}[remember picture,overlay]
+        \node[yshift=-8cm] at (current page.north west)
+          {%
+            \begin{tikzpicture}[remember picture, overlay]
+              \draw[fill=black] (0,0) rectangle(25mm,10mm);
+              \node[anchor=north east,yshift=-7.23cm,xshift=24mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
+              {\parbox[top][30mm][t]{15mm}{\raggedleft $\phantom{\textrm{l}}$\color{white}\chapterlabel}}; % The black l is just to get better base-line alignment
+              \node[anchor=north west,yshift=-7.23cm,xshift=27mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
               {\parbox[top][30mm][t]{\textwidth}{\color{black}#1}};
-       \end{tikzpicture}
-      };
-   \end{tikzpicture}
-   \gdef\chapterlabel{}
+            \end{tikzpicture}
+          };
+      \end{tikzpicture}
+    }
+    \gdef\chapterlabel{}
+    \endgroup
   } % Code before the title body
 
-\titlespacing*{\chapter}{0pt}{50pt}{30pt}
-\titlespacing*{\section}{0pt}{13.2pt}{*0} % 13.2pt is line spacing for a text with 11pt font size
-\titlespacing*{\subsection}{0pt}{13.2pt}{*0}
-\titlespacing*{\subsubsection}{0pt}{13.2pt}{*0}
-
-\newcounter{myparts}
-\newcommand*\partlabel{}
-\titleformat{\part}[display] % Type (section, chapter, etc.) to vary,  shape (e.g. display-type)
-	{\normalfont\bfseries\Huge} % Format of the part
-	{\gdef\partlabel{\thepart\ }} % The label
- 	{0pt} % Separation between label and part-title
- 	  {\setlength{\unitlength}{20mm}
-	  \addtocounter{myparts}{1}
-	  \begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=north west,xshift=-65mm,yshift=-6.9cm-\value{myparts}*20mm] at (current page.north east) % For unknown reasons: 3mm missing -> 65 instead of 62
-      {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=black] (0,0) rectangle(62mm,20mm); % -\value{myparts}\unitlength
-        \node[anchor=north west,yshift=-6.1cm-\value{myparts}*20mm,xshift=-60.5mm,minimum height=30mm,inner sep=0mm] at (current page.north east)
-        {\parbox[top][30mm][t]{55mm}{\raggedright \color{white}Part \partlabel $\phantom{\textrm{l}}$}}; % The phantom l is just to get better base-line alingnement
-        \node[anchor=north east,yshift=-6.1cm-\value{myparts}*20mm,xshift=-63.5mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north east)
-              {\parbox[top][30mm][t]{\textwidth}{\raggedleft \color{black}#1}};
-       \end{tikzpicture}
-      };
-   \end{tikzpicture}
-   \gdef\partlabel{}
-  } % Code before the title body
+\titlespacing*{\chapter}{0pt}{110pt}{40pt}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{12pt}{6pt}
 
 \usepackage{array}
 \usepackage{amsmath}
@@ -206,31 +206,6 @@
 \crefname{proposition}{Proposition}{Propositions}
 \crefname{example}{Example}{Examples}
 \crefname{algorithm}{Algorithm}{Algorithms}
-
-% \usepackage[capitalise,sort]{cleveref}
-
-% \newtheorem{assumption}{Assumption}[chapter]
-% \newtheorem{definition}{Definition}[chapter]
-% \newtheorem{problem}{Problem}[chapter]
-% \newtheorem{theorem}{Theorem}[chapter]
-% \newtheorem{lemma}{Lemma}[chapter]
-% \newtheorem{claim}{Claim}[chapter]
-% \newtheorem{remark}{Remark}[chapter]
-% \newtheorem{corollary}{Corollary}[chapter]
-% \newtheorem{proposition}{Proposition}[chapter]
-% \newtheorem{example}{Example}[chapter]
-
-% \crefname{example}{Example}{Examples}
-% \crefname{proposition}{Proposition}{Propositions}
-% \crefname{corollary}{Corollary}{Corollaries}
-% \crefname{remark}{Remark}{Remarks}
-% \crefname{claim}{Claim}{Claims}
-% \crefname{lemma}{Lemma}{Lemmas}
-% \crefname{theorem}{Theorem}{Theorems}
-% \crefname{problem}{Problem}{Problems}
-% \crefname{definition}{Definition}{Definitions}
-% \crefname{assumption}{Assumption}{Assumptions}
-% \crefname{algorithm}{Algorithm}{Algorithms}
 
 \usepackage[labelfont=bf]{caption}
 \usepackage{svg}

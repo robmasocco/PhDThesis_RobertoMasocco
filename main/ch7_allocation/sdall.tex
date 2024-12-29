@@ -149,18 +149,18 @@ This scenario, completely new in the literature to the best of the author's know
   \begin{align}
     \label{eq:sdall_cex_interconn}
     u_a(t) &= v(t), & t\in\R_{\geq 0},\\
-    \plantinput(t) &= \allout(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s), k\in\Z_{\geq 0},
+    \plantinput(t) &= \allout(k\tau_s), & t\in [k\tau_s,(k+1)\tau_s),\,k\in\Z_{\geq 0},
   \end{align}
   \emph{i.e.}, the annihilator output is fed to the plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device with sampling time $\tau_s$. The situation hereby described is depicted in \Cref{fig:sdall_dtann}. The output of \eqref{eq:sdall_cex_ctsys} in presence of its annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine} is shown in \Cref{fig:sdall_y_ctzct}.
   \begin{figure}[t]
     \centering
-    \includesvg[width=.8\textwidth]{images/ch7/sdall/dtann.svg}
+    \includesvg[width=.7\linewidth]{images/ch7/sdall/dtann.svg}
     \caption{Interconnection of the continuous-time annihilator (represented by the $Ann$ block) with the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} by means of a zero-order hold device.}
     \label{fig:sdall_dtann}
   \end{figure}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=.9\textwidth]{images/ch7/sdall/y_ctzct}
+    \includegraphics[width=.7\linewidth]{images/ch7/sdall/y_ctzct}
     \caption{Output of the continuous-time, linear time-invariant plant \eqref{eq:sdall_cex_ctsys} in presence of its polynomial annihilator subject to the sinusoidal input \eqref{eq:sdall_cex_sine}.}
     \label{fig:sdall_y_ctzct}
   \end{figure}
@@ -188,7 +188,9 @@ This scenario, completely new in the literature to the best of the author's know
     \vartheta_{k+1} &= A_a \vartheta_k + B_a v_k, & k\in\Z_{\geq 0},\\
     \allout_k &= C_a \vartheta_k, & k\in\Z_{\geq 0},
   \end{align}
-  where $\vartheta_k\in\R^{n_a}$ is the state vector at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.\closestatement
+  where $\vartheta_k\in\R^{n_a}$ is the state vector at time $k$, and $v_k\in\R^{m_a}$, is a \emph{discrete-time annihilator} for plant \eqref{eq:sdall_dtsys}.
+
+  \closestatement
 \end{proposition}
 
 \begin{remark}
@@ -209,7 +211,7 @@ This scenario, completely new in the literature to the best of the author's know
 
 \begin{remark}
   \label{rem:sdall_sdinv}
-  It is worth pointing out that \eqref{eq:sdall_annss} is a discrete-time system designed such that \eqref{eq:sdall_annih} holds. Hence, the discrete-time annihilator given by \eqref{eq:sdall_annss} satisfies the sampled output invisibility requirement in \Cref{prb:sdall_all}. However, the annihilator \eqref{eq:sdall_annss} does not guarantee output invisibility between sampling instants and the effect of the allocator action on the plant output is not characterized.\closeremark
+  The discrete-time system \eqref{eq:sdall_annss} is such that \eqref{eq:sdall_annih} holds. Hence, the discrete-time annihilator \eqref{eq:sdall_annss} satisfies the sampled output invisibility requirement in \Cref{prb:sdall_all}. However, the effect of the allocator on the plant output between the sampling instants is not characterized.\closeremark
 \end{remark}
 
 The proof of \Cref{prop:sdall_annih_computation} follows a reasoning similar to that of \Cref{prop:ddall_annih_computation}, hence it is omitted. To describe the proposed steady-state optimizer, some preliminary definitions are in order. Recall \Cref{ass:sdall_periods} and consider the following cost functional, obtained as a sampled-data variant of \eqref{eq:sdall_ctcost}:
@@ -245,14 +247,16 @@ yielding (see, again, \Cref{app:moments} and references therein)
     \bar{N} &= C_{a}\Pi_{\bar{N}},\label{eq:nbar}
   \end{align}
 \end{subequations}
-with $\bar{M}\in\R^{\bbauxdim\times\bbexostatedim}$, $\bar{N}\in\R^{\bbauxdim\times n_{IM}}$. Let
+with $\bar{M}\in\R^{\bbauxdim\times\bbexostatedim}$, $\bar{N}\in\R^{\bbauxdim\times n_{IM}}$.
+
+To simplify the notation, let
 \begin{equation}
   \label{eq:sdall_Z}
   Z = \dexodynmat^{\bbexostatedim}O(\exooutmat,\dexodynmat)^\dagger.
 \end{equation}
 Finally, define in addition
 \begin{subequations}
-  \label{eq:sdall_bigl_zetass_ssoptgains}
+  \label{eq:sdall_bigl_zetass_ssoptgains1}
   \begin{align}
     \bar{R} &= I_K\otimes R, & \bar{R}\in\R^{\bbauxdim K \times \bbauxdim K},\\
     L &= \begin{bmatrix} L_1 & L_2 \end{bmatrix} = \begin{bmatrix}
@@ -260,7 +264,13 @@ Finally, define in addition
       \bar{M} \dexodynmat^{2} Z & \bar{N} A_{IM} \\
       \vdots & \vdots \\
       \bar{M} \dexodynmat^{K} Z & \bar{N} A^{K-1}_{IM}
-      \end{bmatrix}, & L\in\R^{\bbauxdim K \times (\bbexostatedim\bbrefdim + n_{IM})},\label{eq:sdall_bigl}\\
+      \end{bmatrix}, & L\in\R^{\bbauxdim K \times (\bbexostatedim\bbrefdim + n_{IM})},\label{eq:sdall_bigl}
+  \end{align}
+\end{subequations}
+and
+\begin{subequations}
+  \label{eq:sdall_bigl_zetass_ssoptgains2}
+  \begin{align}
     F_{\zeta} &= -(L_2'\bar{R}L_2)^{-1}L_2'\bar{R}L_1, & F_{\zeta}\in\R^{n_{IM}\times\bbexostatedim\bbrefdim},\label{eq:sdall_fxi}\\
     F_{IM} &= -(L_2'\bar{R}L_2)^{-1}L_2'\bar{R}L_2A_{IM}, & F_{IM}\in\R^{n_{IM}\times n_{IM}},\label{eq:sdall_fim}\\
     A_{\zeta} &= \begin{bmatrix}
@@ -270,7 +280,7 @@ Finally, define in addition
       0 & 0 & 0 & \cdots & 0 & I_{\bbrefdim} \\
       0 &&& \hspace{-22pt}\cdots && 0
       \end{bmatrix}, & A_{\zeta}\in\R^{\bbexostatedim\bbrefdim\times\bbexostatedim\bbrefdim},\label{eq:sdall_azeta}\\
-    B_{\zeta} &= \begin{bmatrix} 0 \\ \vdots \\ 0 \\ I_{\bbrefdim}\end{bmatrix}, & B_{\zeta}\in\R^{\bbexostatedim\bbrefdim\times\bbrefdim}.\label{eq:sdall_bzeta}
+    B_{\zeta} &= \begin{bmatrix} 0 & \cdots & 0 & I_{\bbrefdim}\end{bmatrix}', & B_{\zeta}\in\R^{\bbexostatedim\bbrefdim\times\bbrefdim}.\label{eq:sdall_bzeta}
   \end{align}
 \end{subequations}
 
@@ -295,12 +305,14 @@ where $\psi_k\in\R^{n_{IM}}$ is the state vector of the steady-state optimizer a
   solves \Cref{prb:sdall_all}.\closestatement
 \end{theorem}
 \begin{proof}
-  The discrete-time annihilator \eqref{eq:sdall_annss} ensures that the sampled output invisibility requirement holds by construction, as stated in \Cref{prop:sdall_annih_computation}. The motivation at the heart of the structure of \eqref{eq:sdall_ssopt} is that, at each time $k$, $\psi$ must be steered towards an optimal trajectory $\psi^\star$ along which the cost functional \eqref{eq:sdall_ctcost} is minimized; the formulation of \Cref{prb:sdall_all} guarantees that such a trajectory exists. Denote the steady-state controller output by $\ctrlssoutput$ and let
+  The discrete-time annihilator \eqref{eq:sdall_annss} ensures that the sampled output invisibility requirement holds by construction, as stated in \Cref{prop:sdall_annih_computation}. The motivation at the heart of the structure of \eqref{eq:sdall_ssopt} is that, at each time $k$, $\psi$ must be steered towards an optimal trajectory $\psi^\star$ along which the cost functional \eqref{eq:sdall_ctcost} is minimized; the formulation of \Cref{prb:sdall_all} guarantees that such a trajectory exists.
+
+  Denote the steady-state controller output by $\ctrlssoutput$ and let
   \begin{subequations}
     \label{eq:sdall_pis}
     \begin{align}
       \pi_{k,i} &= \ctrlssoutput_{k+i} + \bar{N}\psi_{k+i}, & i=1,\dotsc,K,\,k\in\Z_{\geq 0},\\
-      \pi_k &= \begin{bmatrix} \pi_{k,1} \\ \pi_{k,2} \\ \vdots \\ \pi_{k,K}\end{bmatrix}, & k\in\Z_{\geq 0}.
+      \pi_k &= \begin{bmatrix}\pi_{k,1}' & \pi_{k,2}' & \cdots & \pi_{k,K}'\end{bmatrix}', & k\in\Z_{\geq 0}.
     \end{align}
   \end{subequations}
   Equations \eqref{eq:sdall_dtsscost}, \eqref{eq:sdall_pis} yield
@@ -388,7 +400,7 @@ Recall that discrete-time systems are termed \emph{deadbeat}, namely such that t
 
 \begin{remark}
   \label{rem:sdall_tnotinz}
-  As anticipated above, \Cref{ass:sdall_periods} may be relaxed in practice provided a few observations are discussed. To begin with, the intrinsic mismatch between the continuous time period $\bbperiod$ and any positive integer multiple of the sampling time $\tau_s$ prevents the possibility of covering exactly one period of the reference input with an integer number of discrete-time samples. This in turn implies that the correction term $\delta$ in \eqref{eq:sdall_ssoptpred} exhibits a persistent oscillation for which $\psi$ cannot converge to $\psi^{\star}$. As a further consequence, also the cost functional \eqref{eq:sdall_ctcost} would not settle to a constant value, oscillating instead around the minimal steady-state cost. Finally, note that $K$ can still be chosen according to
+  As anticipated above, \Cref{ass:sdall_periods} may be relaxed in practice provided a few observations are discussed. To begin with, the intrinsic mismatch between the continuous time period $\bbperiod$ and any positive integer multiple of the sampling time $\tau_s$ prevents the possibility of covering exactly one period of the reference input with an integer number of discrete-time samples. This in turn implies that the correction term $\delta$ in \eqref{eq:sdall_ssoptpred} exhibits a persistent oscillation for which $\psi$ cannot converge to $\psi^{\star}$. As a further consequence, also the cost functional \eqref{eq:sdall_ctcost} does not settle to a constant value, oscillating instead around the minimal steady-state cost. Finally, note that $K$ can still be chosen according to
   \begin{equation}
     \label{eq:sdall_krule}
     K = \begin{cases}

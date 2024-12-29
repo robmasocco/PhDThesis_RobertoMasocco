@@ -18,8 +18,9 @@
 
 % *********** The citation style ***********
 \usepackage{csquotes} % needed for biblatex
-\usepackage[backend=biber,style=numeric, sorting=nyt]{biblatex}
+\usepackage[backend=biber,style=numeric,sortcites,sorting=nyt]{biblatex}
 \addbibresource{tail/references.bib}
+\DeclareNameAlias{author}{family-given}
 
 % Additional library to copy and paste the references in-line (not used here)
 % \usepackage{bibentry}
@@ -59,3 +60,4 @@
 % \renewcommand{\thefootnoteA}{\alph{footnoteA}}
 
 % *********** Custom commands ***********
+\newcommand{\whitepage}{\clearpage\thispagestyle{empty}\mbox{}\clearpage}
