@@ -52,58 +52,7 @@ For each package, both \texttt{Reliable} and \texttt{BestEffort} libraries then 
   \item \texttt{get\_scan\_qos}: returns a QoS profile for LiDAR scans, spatial scans, or similar data. The peculiarity of this data is that while it may have relatively high or low frequencies, it gets easily very large in size, so a low history depth is suggested here to reduce the risk of network congestion and memory exhaustion.
   \item \texttt{get\_image\_qos}: returns a QoS profile for images, whose size may vary from small to very large but whose frequency rarely exceeds a few tens of Hertz. The history depth default value is not as low as for scans but still lower than for generic data and configurable by the user.
 \end{itemize}
-The only difference among the two libraries is that the \texttt{Reliable} one also provides another method named \texttt{get\_persistent\_qos}, a particular type of policy intended for reliable transmissions that may be resumed at a later point in time. This is possible thanks to a feature of the DDS standard called the \texttt{DurabilityPolicy}, discussed in \Cref{sec:dds}, which allows a publisher to store all samples in a persistent storage and send them again them when a new subscriber appears. This is useful for data that may not be produced continuously but is still important, like configuration data or state information, and is used in this library together with a higher history depth to ensure that all samples are stored and sent.
-
-\subsection{Improving node development: params\_manager, dua\_node}
-\label{sec:params_manager_dua_node}
-Among the many \ROS features (see \Cref{sec:ros2}), there is and important one concerning the nodes: the possibility of specifying configurable variables for them that can be inspected and set at any point in time, known as \emph{node parameters}. These parameters are usually set at launch time, either by the user or by the launch system via configuration files, and are then read by the node to configure its behavior. The \ROS middleware provides an API to manage these parameters, whose task is that of building and storing in each node a database of the parameters that it has. The keys used in this database are strings that contain the name of a parameter. Each parameter is then associated with its type, which can be a string, an integer, a floating-point number, a boolean, or a list of any of these types, and its current value. There are also other flags and fields, identifying whether a parameter is read-only or, in case it is of numeric type, its valid ranges.
-
-\ROS configuration files allow the user to specify only parameter values, meaning that all the aforementioned information has to be provided when the parameter is \emph{declared}. In \ROS code, a \emph{parameter declaration} is the act of calling an API that creates an entry into the parameter database of the node, writing all such information which is passed as arguments to the API. One has to write quite the quantity of code to correctly declare parameters passing all the correct and relevant information. This is not a problem when the number of parameters is small but it can become inconvenient when the number of parameters grows, especially if they are of different types and have different constraints. As mentioned earlier, this is a classic example of ``boilerplate'' code.
-
-Another issue concerns parameter updates and their usage in the actual code of the node. Each time a parameter has to be read, the node code has to include an API call that retrieves the parameter from the node's database and then casts it to the correct type. This is not a great concern if the parameter is read only once or with a low frequency but when it is, \emph{e.g.}, the gain of a control law that must be evaluated at each iteration of a fast control loop, the overhead caused by the database queries might become significant. Assuming that the parameter type is never going to change, it is preferable to store the parameter value directly in the node and update it only when the parameter is updated. This way, parameter read operations are much faster. To achieve this, a callback has to be registered to be called when an update is requested for a set of parameters: when this happens, some checks like the range of the parameter have already been performed but other ones like the type of the parameter have not.
-
-The amount of code that one has to write to achieve the aforementioned functionalities, in every \ROS software and every time in the same way, grows uncontrollably with respect to the amount of parameters that each node has. The code that manages parameters in a \ROS node becomes unnecessarily long and complex, difficult to manage and debug. This is the motivation behind the development of the \texttt{params\_manager} package \cite{masocco_params_manager_nodate}, which provides a set of utilities to simplify the management of parameters in \ROS nodes. This package currently contains only an implementation for C++ packages.
-
-The first component of the \texttt{params\_manager} package is a Python script that can be used to automatically generate the code that declares the parameters in the \ROS node class. This script is automatically called by a CMake directive that extends the ament installation (see \Cref{sec:ros2_buildsys}). Thus, the first step, as shown in the documentation of \cite{masocco_params_manager_nodate}, is to add a YAML file to the source code of the node that, with a specific syntax shown in \Cref{lst:paramsmanager}, contains the list of parameters that the node has to manage together with all their metadata. The script then parses this file and generate a C++ source file that is added to the node build process, containing a routine called \texttt{init\_parameters} that declares all parameters in the node and registers the update callback.
-\begin{center}
-\begin{minipage}[t]{.9\textwidth}
-\begin{lstlisting}[caption={Example of \texttt{params\_manager} YAML configuration file \cite{masocco_params_manager_nodate}.}, label={lst:paramsmanager}]
-header_include_path: dir/node_header.hpp
-namespace: node_namespace # This is optional
-manager_name: manager # This is optional
-node_class_name: MyNode
-
-params:
-  camera_offset:
-    type: double
-    default_value: 0.1
-    min_value: 0.0
-    max_value: 0.5
-    step: 0.0
-    description: "Distance between camera and drone center."
-    constraints: "Must be in meters."
-    read_only: false
-    validator: function_name3 # This is optional
-
-  hsv_from:
-    type: integer_array
-    default_value:
-      - 0
-      - 1
-    min_value: 0
-    max_value: 255
-    step: 1
-    description: "HSV color lower range."
-    constraints: "."
-    read_only: false
-    var_name: hsv_from_ # This is optional
-\end{lstlisting}
-\end{minipage}
-\end{center}
-
-\Cref{lst:paramsmanager} shows also two other useful features of the \texttt{params\_manager} package. The first is the possibility to specify either a \emph{validator} routine or a variable name: the autogenerated parameter update callback checks the name and type of a parameter and, if a match is found, may perform other operations before approving the update. One of these is to perform an additional check, whose outcome decides if the parameter update is approved, which may be coded by the user in a function informally referred to as a \emph{validator}. Alternatively, to account for the necessity to quickly store the new value directly inside the node as explained above, the user can specify the name of a variable member of the node class that the callback accesses and overwrites with the new parameter value. Of course, the two things can be done at the same time: it is up to the user in the first case to code the variable member update inside the validator routine. To keep track of each parameter's metadata together with these two additional values, the \texttt{params\_manager} library uses the \texttt{std::set} data structure from the \texttt{<set>} C++ standard library header, which is implemented as a red-black tree for maximum efficiency \cite{guibas_dichromatic_1978}.
-
-After the \texttt{params\_manager} library has been implemented and successfully tested, the question arose if it is possible to eliminate the necessity of the user to write the five lines of code that instantiate the \texttt{Manager} object, call the \texttt{init\_parameters} function in the node constructor, and then clear the \texttt{Manager} at the end. Hiding the \texttt{Manager} would be possible in case the base \ROS node class that each node is derived from already included an object of the \texttt{Manager} class as a variable member. In the \texttt{dua\_node} package \cite{masocco_dua_node_nodate}, an alternative \ROS base node class is provided that includes the \texttt{Manager} object and handles its lifecycle together with that of the node. This way, the only necessary lines of code to manage parameters in a \ROS node are those that declare and call the \texttt{init\_parameters} function; this is due to the fact that, by the current implementation, \texttt{init\_parameters} is a member function of the derived class and can only be called by its constructor, after the base class one has run. The \texttt{dua\_node} package is intended to be used in conjunction with the \texttt{params\_manager} package, and is included in the \texttt{dua-utils} collection.
+There is also a third library named \texttt{Persistent} that provides another \texttt{get\_datum\_qos} API, which returns a particular policy intended for reliable transmissions that may be resumed at a later point in time. This is possible thanks to a feature of the DDS standard called the \texttt{DurabilityPolicy}, discussed in \Cref{sec:dds}, which allows a publisher to store all samples in a persistent storage and send them again them when a new subscriber appears. This is useful for data that may not be produced continuously but is still important, like configuration data or state information, and is used in this library together with a higher history depth to ensure that all samples are stored and sent.
 
 \subsection{Wrapping clients: simple\_serviceclient, simple\_actionclient}
 \label{sec:simple_serviceclient_actionclient}
@@ -111,7 +60,7 @@ After the \texttt{params\_manager} library has been implemented and successfully
 
 For both services and actions, the client side is completely different. In both C++ and Python, the client-side API is based on asynchronous programming, which is a programming paradigm that allows one to perform multiple tasks concurrently without the need to wait for the completion of one before starting the next. This is achieved by using callbacks together with \emph{futures}, which can be essentially described as variables whose value becomes available at a later point in time.
 
-The developer writing code making use of a service client has to first instantiate such an object, and then send a service request through it. The result of this API call is a future, which eventually holds the value of the service response. The developer can act in three ways here, all made possible by the \ROS API: they can block and synchronously wait for the future to get a value, they can attach a callback to the future that is called when the value is available, or they can poll the future at any time they want in the code and check for its value. The API to manage each of these cases is not particularly complex but it can get quite verbose. As for all the previous sections describing packages of \texttt{dua\_utils}, the next one is motivated by a convenience that arises when one writes actual \ROS software: in the vast majority of cases, if a service is called, the response data is necessary right after the call. This is why the first eventuality among the three described above is the most common but it still requires the developer to write quite some code to manage the future, put the node in a synchronous wait state by spinning an executor, and then get the value from the future. This is the reason why the \texttt{simple\_serviceclient} package \cite{masocco_simple_serviceclient_nodate} has been developed.
+The developer writing code making use of a service client has to first instantiate such an object and then send a service request through it. The result of this API call is a future, which eventually holds the value of the service response. The developer can act in three ways here, all made possible by the \ROS API: they can block and synchronously wait for the future to get a value, they can attach a callback to the future that is called when the value is available, or they can poll the future at any time they want in the code and check for its value. The API to manage each of these cases is not particularly complex but it can get quite verbose. As for all the previous sections describing packages of \texttt{dua-utils}, the next one is motivated by a convenience that arises when one writes actual \ROS software: in the vast majority of cases, if a service is called, the response data is necessary right after the call. This is why the first eventuality among the three described above is the most common but it still requires the developer to write quite some code to manage the future, put the node in a synchronous wait state by spinning an executor, and then get the value from the future. This is the reason why the \texttt{simple\_serviceclient} package \cite{masocco_simple_serviceclient_nodate} has been developed.
 
 This package offers two equivalent libraries for both C++ and Python, which offer the same methods in both languages. The libraries implement a client class that wraps the original \ROS service client, extending its functionalities. Since the other situations are better handled with the official \ROS API, the \texttt{simple\_serviceclient} libraries offer only the following two methods.
 \begin{itemize}
@@ -152,6 +101,58 @@ std::tuple<bool,rclcpp_action::ResultCode,std::shared_ptr<ActionResultT>>
 \end{lstlisting}
 \end{minipage}
 \end{center}
+
+\subsection{Improving node development: params\_manager\_cpp, dua\_node\_cpp}
+\label{sec:params_manager_dua_node}
+Among the many \ROS features (see \Cref{sec:ros2}), there is and important one concerning the nodes: the possibility of specifying configurable variables for them that can be inspected and set at any point in time, known as \emph{node parameters}. These parameters are usually set at launch time, either by the user or by the launch system via configuration files, and are then read by the node to configure its behavior. The \ROS middleware provides an API to manage these parameters, whose task is that of building and storing in each node a database of the parameters that it has. The keys used in this database are strings that contain the name of a parameter. Each parameter is then associated with its type, which can be a string, an integer, a floating-point number, a boolean, or a list of any of these types, and its current value. There are also other flags and fields, identifying whether a parameter is read-only or, in case it is of numeric type, its valid ranges.
+
+\ROS configuration files allow the user to specify only parameter values, meaning that all the aforementioned information has to be provided when the parameter is \emph{declared}. In \ROS code, a \emph{parameter declaration} is the act of calling an API that creates an entry into the parameter database of the node, writing all such information which is passed as arguments to the API. One has to write quite the quantity of code to correctly declare parameters passing all the correct and relevant information. This is not a problem when the number of parameters is small but it can become inconvenient when the number of parameters grows, especially if they are of different types and have different constraints. As mentioned earlier, this is a classic example of ``boilerplate'' code.
+
+Another issue concerns parameter updates and their usage in the actual code of the node. Each time a parameter has to be read, the node code has to include an API call that retrieves the parameter from the node's database and then casts it to the correct type. This is not a great concern if the parameter is read only once or with a low frequency but when it is, \emph{e.g.}, the gain of a control law that must be evaluated at each iteration of a fast control loop, the overhead caused by the database queries might become significant. Assuming that the parameter type is never going to change, it is preferable to store the parameter value directly in the node and update it only when the parameter is updated. This way, parameter read operations are much faster. To achieve this, a callback has to be registered to be called when an update is requested for a set of parameters: when this happens, some checks like the range of the parameter have already been performed but other ones like the type of the parameter have not.
+
+The amount of code that one has to write to achieve the aforementioned functionalities, in every \ROS software and every time in the same way, grows uncontrollably with respect to the amount of parameters that each node has. The code that manages parameters in a \ROS node becomes unnecessarily long and complex, difficult to manage and debug. This is the motivation behind the development of the \texttt{params\_manager\_cpp} package \cite{masocco_params_manager_cpp_nodate}, which provides a set of utilities to simplify the management of parameters in \ROS nodes. This package currently contains only an implementation for C++ packages.
+
+The first component of the \texttt{params\_manager\_cpp} package is a Python script that can be used to automatically generate the code that declares the parameters in the \ROS node class. This script is automatically called by a CMake directive that extends the ament installation (see \Cref{sec:ros2_buildsys}). Thus, the first step, as shown in the documentation of \cite{masocco_params_manager_cpp_nodate}, is to add a YAML file to the source code of the node that, with a specific syntax shown in \Cref{lst:paramsmanager}, contains the list of parameters that the node has to manage together with all their metadata. The script then parses this file and generate a C++ source file that is added to the node build process, containing a routine called \texttt{init\_parameters} that declares all parameters in the node and registers the update callback.
+\begin{center}
+\begin{minipage}[t]{.9\textwidth}
+\begin{lstlisting}[caption={Example of \texttt{params\_manager\_cpp} YAML configuration file \cite{masocco_params_manager_cpp_nodate}.}, label={lst:paramsmanager}]
+header_include_path: dir/node_header.hpp
+namespace: node_namespace # This is optional
+manager_name: manager # This is optional
+node_class_name: MyNode
+
+params:
+  camera_offset:
+    type: double
+    default_value: 0.1
+    min_value: 0.0
+    max_value: 0.5
+    step: 0.0
+    description: "Distance between camera and drone center."
+    constraints: "Must be in meters."
+    read_only: false
+    validator: function_name3 # This is optional
+
+  hsv_from:
+    type: integer_array
+    default_value:
+      - 0
+      - 1
+    min_value: 0
+    max_value: 255
+    step: 1
+    description: "HSV color lower range."
+    constraints: "."
+    read_only: false
+    var_name: hsv_from_ # This is optional
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+\Cref{lst:paramsmanager} shows also two other useful features of the \texttt{params\_manager\_cpp} package. The first is the possibility to specify either a \emph{validator} routine or a variable name: the autogenerated parameter update callback checks the name and type of a parameter and, if a match is found, may perform other operations before approving the update. One of these is to perform an additional check, whose outcome decides if the parameter update is approved, which may be coded by the user in a function informally referred to as a \emph{validator}. Alternatively, to account for the necessity to quickly store the new value directly inside the node as explained above, the user can specify the name of a variable member of the node class that the callback accesses and overwrites with the new parameter value. Of course, the two things can be done at the same time: it is up to the user in the first case to code the variable member update inside the validator routine. To keep track of each parameter's metadata together with these two additional values, the \texttt{params\_manager\_cpp} library uses the \texttt{std::set} data structure from the \texttt{<set>} C++ standard library header, which is implemented as a red-black tree for maximum efficiency \cite{guibas_dichromatic_1978}.
+
+After the \texttt{params\_manager\_cpp} library has been implemented and successfully tested, the question arose if it is possible to eliminate the necessity of the user to write the five lines of code that instantiate the \texttt{Manager} object, call the \texttt{init\_parameters} function in the node constructor, and then clear the \texttt{Manager} at the end. Hiding the \texttt{Manager} would be possible in case the base \ROS node class that each node is derived from already included an object of the \texttt{Manager} class as a variable member. In the \texttt{dua\_node\_cpp} package \cite{masocco_dua_node_cpp_nodate}, an alternative \ROS base node class is provided, named \texttt{dua\_node::NodeBase}, that includes the \texttt{Manager} object and handles its lifecycle together with that of the node.
+Furthermore, the \texttt{NodeBase} class provides ad-hoc methods to create almost every kind of ROS 2 entity: from topic publishers to the service and action clients introduced in \Cref{sec:simple_serviceclient_actionclient}, and even timers, defaulting to the QoS profiles provided by the \texttt{dua\_qos} package where applicable. The developer only has to override the node initialization methods they need for their specific use case and call the relevant entity creation APIs. This way, the structure of a ROS 2 node as an operational unit within the DUA framework is consolidated and standardized, streamlining not only the development process but also the continuous update and maintenance of every codebase powered by DUA.
 
 \subsection{Implementing \ROS automata: transitions\_ros}
 \label{sec:transitions_ros}
