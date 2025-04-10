@@ -82,15 +82,15 @@ This experiment is compared against pulse $\#81032$, in which a state-of-the-art
 
 \subsection{Saturation and deadzone avoidance}
 \label{sec:shots_satdz}
-This experiment corresponds to the pulse $\#81460$ and it is motivated by practical necessities that arise when dealing with the actual TCV EF coils, with which a dynamic allocator is conceptually helpful. The EF coil power supplies are subject to deadzone effects, \emph{i.e.}, when the requested current values are below $\SI{1}{\kilo\ampere}$ in absolute value, the power supplies may not respond and produce a current that is not only different from the requested one but also unpredictable and uncontrollable. This issue is known but can currently be addressed only by ensuring that the current requests do not drop below the deadzone threshold, identified by the TCV team practically at $\pm\SI{600}{\ampere}$. This requirement, as stated in \Cref{sec:tcvshapectrl_limitations}, is not observed by the shape controller, which may request currents below the deadzone threshold. Let $\bar{a}_{i},\ubar{a}_{i},\bar{\delta}_{i},\ubar{\delta}_{i} \in \R_{\geq 0}$, then let $\bar{b}_{i},\ubar{b}_{i},\bar{c}_{i},\ubar{c}_{i}\in\R$, and consider
+This experiment corresponds to the pulse $\#81460$ and it is motivated by practical necessities that arise when dealing with the actual TCV EF coils, with which a dynamic allocator is conceptually helpful. The EF coil power supplies are subject to deadzone effects, \emph{i.e.}, when the requested current values are below $\SI{1}{\kilo\ampere}$ in absolute value, the power supplies may not respond and produce a current that is not only different from the requested one but also unpredictable and uncontrollable. This issue is known but can currently be addressed only by ensuring that the current requests do not drop below the deadzone threshold, identified by the TCV team practically at $\pm\SI{600}{\ampere}$. This requirement, as stated in \Cref{sec:tcvshapectrl_limitations}, is not observed by the shape controller, which may request currents below the deadzone threshold. Let $\bar{a}_{i},\ubar{a}_{i},\bar{\delta}_{i},\ubar{\delta}_{i} \in \R_{\geq 0}$, then let $\bar{b}_{i},\ubar{b}_{i},\bar{c}_{i},\ubar{c}_{i}\in\R$ such that $\bar{b}_{i} > \bar{c}_{i} > 0 > \ubar{c}_{i} > \ubar{b}_{i}$, and consider
 \begin{align}
   \label{eq:shots_satdz_xi}
   \xi_{i}(\tilde{I}_{EF,i}) &= \left\{
     \begin{aligned}
-        &\frac{1}{2}\bar{a}_{i} (\tilde{I}_{EF,i} - \bar{b}_{i})^2 &\text{if } &\tilde{I}_{EF,i} > \bar{b}_{i},\\
-        &\frac{1}{2}\bar{\delta}_{i} (\tilde{I}_{EF,i} - \bar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [0,\bar{c}_{i}],\\
-        &\frac{1}{2}\ubar{\delta}_{i} (\tilde{I}_{EF,i} - \ubar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [\ubar{c}_{i},0],\\
         &\frac{1}{2}\ubar{a}_{i} (\tilde{I}_{EF,i} - \ubar{b}_{i})^2 &\text{if } &\tilde{I}_{EF,i} < \ubar{b}_{i},\\
+        &\frac{1}{2}\ubar{\delta}_{i} (\tilde{I}_{EF,i} - \ubar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [\ubar{c}_{i},0],\\
+        &\frac{1}{2}\bar{\delta}_{i} (\tilde{I}_{EF,i} - \bar{c}_{i})^2 &\text{if } &\tilde{I}_{EF,i} \in [0,\bar{c}_{i}],\\
+        &\frac{1}{2}\bar{a}_{i} (\tilde{I}_{EF,i} - \bar{b}_{i})^2 &\text{if } &\tilde{I}_{EF,i} > \bar{b}_{i},\\
         &0 &\, &\hspace{-9.5pt}\text{otherwise},
     \end{aligned}
   \right. & i=1,\dotsc,16.
